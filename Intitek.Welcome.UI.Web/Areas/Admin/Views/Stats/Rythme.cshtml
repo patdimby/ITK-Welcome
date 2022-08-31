@@ -1,0 +1,249 @@
+﻿@model  Intitek.Welcome.UI.Web.Admin.StatsResponseViewModel
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.Statistiques_Analyse);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    List<CategoryViewModel> categories = ((IEnumerable<DocumentViewModel>)Model.ListDocument).Where(x => x.ID_Category > 0).GroupBy(o => new { categoryId = o.ID_Category, categoryName = o.NameCategory, defaultCategory = o.DefaultNameCategory, ordreCategory = o.OrdreCategory }).Select(m => new CategoryViewModel() { ID = m.Key.categoryId.Value, Name = m.Key.categoryName, DefaultName = m.Key.defaultCategory, OrdreCategory = m.Key.ordreCategory }).ToList();
+    categories.Add(new CategoryViewModel() { ID = 0, Name = Resource.NoCategory });
+}
+@Scripts.Render("~/bundles/chartjs")
+@section Styles
+{
+    @Styles.Render("~/Content/bootstrap-multiselect")
+    <style type="text/css">
+        .custom-collapsed-container {
+            border-radius: 30px;
+        }
+
+        .custom-col {
+            padding-left: calc(16.666667% - 62px);
+        }
+
+        .control-label {
+            padding-top: 8px;
+        }
+
+        .table-responsive {
+            min-height: unset;
+        }
+
+        .custom-form-control {
+            padding: 9px 12px;
+            height: 39px;
+        }
+
+        select .placeholder, select:focus.placeholder {
+            color: inherit;
+            font-style: normal;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.Statistiques_Analyse</li>
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.Statistiques_Analyse</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <div id="color"></div>
+                        <form id="getstats" method="post" action="@Url.Action("Rythme", "Stats")" style="width:100%;">
+                            <div class="row ml-0 mr-0">
+                                <label class="col-sm-2 control-label">@Resource.Filter : </label>
+                                <input type="hidden" id="NbDay" name="NbDay" value="@Model.NbDay" />
+                                <select id="MultiDocSelect" name="MultiDocSelect[]" multiple="multiple" style="display:none;">
+                                    @foreach (CategoryViewModel category in categories)
+                                    {
+                                        List<DocumentViewModel> items;
+                                        if (category.ID == 0)
+                                        {
+                                            items = ((IEnumerable<DocumentViewModel>)Model.ListDocument).Where(x => x.ID_Category == 0 || x.ID_Category == null).ToList();
+                                        }
+                                        else
+                                        {
+                                            items = ((IEnumerable<DocumentViewModel>)Model.ListDocument).Where(x => x.ID_Category == category.ID).ToList();
+                                        }
+                                        <optgroup label="@category.NameDisplay" class="@category.ClassDefautName">
+                                            @foreach (var item in items)
+                                            {
+                                                var selected = "";
+                                                var classe = "";
+                                                if (Model.MultiDocSelect != null && Model.MultiDocSelect.Contains(item.ID))
+                                                {
+                                                    selected = "selected";
+                                                }
+                                                if (item.IsDefaultLangName)
+                                                {
+                                                    classe = "defaultName";
+                                                }
+                                                <option value="@item.ID" class="@classe" @selected>@WebUtility.HtmlDecode(item.Name)</option>
+                                            }
+                                        </optgroup>
+                                    }
+                                    }
+                                </select>&nbsp;
+                                <select id="MultiEntitySelect" name="MultiEntitySelect[]" multiple="multiple" style="display:none;">
+                                    @foreach (var item in Model.EntityNameList)
+                                    {
+                                        <optgroup label="@WebUtility.HtmlDecode(item.Text)" value="ent_@item.Key"></optgroup>
+                                        foreach (var agence in item.SubList)
+                                        {
+                                            var selected = "";
+                                            if (Model.MultiEntitySelect != null && Model.MultiEntitySelect.Contains(item.Key + "|" + agence.Key))
+                                            {
+                                                selected = "selected";
+                                            }
+                                            <option value="@item.Key|@agence.Key" @selected>@WebUtility.HtmlDecode(agence.Text)</option>
+                                        }
+                                    }
+                                </select>&nbsp;
+                                @Html.DropDownListFor(y=>y.EmployeeSelect,
+                                   new SelectList(Model.EmployeesList.Select(s => new SelectListItem() { Value = s.Value.ToString(), Text = s.Text }), "Value", "Text"),
+                                   new { @class= "custom-form-control" })
+                                &nbsp;&nbsp;<button type="submit" class="btn btn-wme btn-green" name="SubmitButton" value="Filter">
+                                    @*<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green"></span>*@
+                                    <span id="butValid">@Resource.buttonValidate</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        @if (Model.MultiEntitySelect != null || Model.MultiDocSelect != null)
+                        {
+                            <div class="chart">
+                                @Html.Partial("_Chart", @Model)
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/bootstrap-multiselect")
+    <script>
+        function getChart(nbday, currentNbDay){
+            if (nbday != currentNbDay) {
+                openLoading();
+                $.ajax({
+                    url: '@Url.Action("RythmeAjax", "Stats")',
+                    data: {
+                        'MultiDocSelect': $('#MultiDocSelect').val(),
+                        'MultiEntitySelect': $('#MultiEntitySelect').val(),
+                        'EmployeeSelect': $('#EmployeeSelect').val(),
+                        'NbDay': nbday
+                    },
+                type: 'post',
+                cache: false
+                }).done(function (response) {
+                    //console.log(response);
+                    $(".chart").html(response);
+                    closeLoading();
+                    console.log("done");
+                    return false;
+                }).fail(function (xhr) {
+                    closeLoading();
+                    console.log("error..");
+                    var errorMessage = $.trim(xhr.responseText);
+                    console.log("errorMessage", errorMessage);
+                    return false;
+                });
+                return false;
+            }
+            return false;
+        }
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script type="text/javascript">
+        $('#MultiDocSelect').hide();
+        $('#MultiEntitySelect').hide();
+        for (i = 0; i <= COLORS.length; i++) {
+            $('#color').append("<div  style=\"display:inline-block;width:20px;height:20px;background-color:" + COLORS[i] + "\">&nbsp;</div>");
+        }
+       $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#sidebar-analysis').addClass('active');
+            $('#MultiDocSelect').multiselect({
+                buttonWidth: '300px',
+                maxHeight: 400,
+                enableCollapsibleOptGroups: true,
+                enableClickableOptGroups :false,
+                includeSelectAllOption: false,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                enableAccentInsensitive :true,
+                buttonContainer: '<div class="custom-collapsed-container"/>',
+                selectAllText : '@Html.Raw(Resource.selectAll)',
+                nonSelectedText: '@Html.Raw(Resource.selectAllDocument)',
+                filterPlaceholder: '@Html.Raw(Resource.search)',
+                nSelectedText: '@Html.Raw(Resource.nSelectedText)',
+                allSelectedText: '@Html.Raw(Resource.AllSelected)',
+                onFiltering: function ($filter) {
+                    var container = $filter.closest('.custom-collapsed-container');
+                    var $ul = $('ul.multiselect-container', container);
+                    var $li = $('li', $ul).not(".multiselect-filter-hidden, .multiselect-filter, .multiselect-all");
+                    var $liAll = $('li.multiselect-all', $ul);
+                    if ($li && $li.length > 0) {
+                        $liAll.css('display', 'block');
+                    }
+                    else {
+                        $liAll.css('display', 'none');
+                    }
+                }
+            });
+            $('#MultiEntitySelect').multiselect({
+                buttonWidth: '300px',
+                maxHeight: 400,
+                enableCollapsibleOptGroups: true,
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                buttonContainer: '<div class="custom-collapsed-container"/>',
+                selectAllText : '@Html.Raw(Resource.selectAll)',
+                nonSelectedText: '@Html.Raw(Resource.selectAllEntity)',
+                filterPlaceholder: '@Html.Raw(Resource.search)',
+                nSelectedText: '@Html.Raw(Resource.nSelectedText)',
+                allSelectedText: '@Html.Raw(Resource.AllSelected)',
+                onFiltering: function ($filter) {
+                    var container = $filter.closest('.custom-collapsed-container');
+                    var $ul = $('ul.multiselect-container', container);
+                    var $li = $('li', $ul).not(".multiselect-filter-hidden, .multiselect-filter, .multiselect-all");
+                    var $liAll = $('li.multiselect-all', $ul);
+                    if ($li && $li.length > 0) {
+                        $liAll.css('display', 'block');
+                    }
+                    else {
+                        $liAll.css('display', 'none');
+                    }
+                }
+           });
+        });
+    </script>
+}
+

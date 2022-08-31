@@ -1,0 +1,27 @@
+﻿@using GridMvc.Html;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<BlackListViewModel>
+
+@helper Actions(BlackListViewModel vm)
+{
+    @*<a href="@Url.Action("Edit", "Blacklist", new { Id = vm.Path })" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionModifier" onclick="openLoading();">
+        <i class="fas fa-edit"></i>
+    </a>*@
+
+    <a href="@Url.Action("ConfirmDelete", "Blacklist", new { Id = vm.Path })" role="button" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionSupprimer" data-target="deleteModal">
+        <i class="fas fa-trash text-danger"></i>
+    </a>
+}
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Path)
+    .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.DateCre).Format("{0:dd/MM/yyyy H:mm:ss}").SetWidth(150)
+    .Filterable(false).Sortable(false);
+
+    columns.Add().Titled(@Resource.actions).RenderValueAs(o => Actions(o)).Filterable(false).Sortable(false).IsHtml(true).SetWidth(50).Css("center col-actions");
+
+}).EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg)
+
+
+

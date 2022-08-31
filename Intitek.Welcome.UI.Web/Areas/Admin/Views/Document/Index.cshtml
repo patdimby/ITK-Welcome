@@ -1,0 +1,276 @@
+﻿@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<DocumentViewModel>
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.documentsList);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    @Styles.Render("~/Content/documents")
+    @Styles.Render("~/Content/modalcss")
+}
+<style type="text/css">
+
+    .col-name {
+        min-width: 10px;
+        max-width: 10px;
+        width: 10px !important;
+    }
+
+    .table.grid-table {
+        width: 99.5%;
+    }
+
+    .ui-dialog {
+        height: auto;
+        width: 400px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        position: fixed;
+    }
+</style>
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.documentsList</li>
+                @*<li class="breadcrumb-item active" aria-current="page">@Resource.newDocument</li>*@
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.documentsList</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <div class="row ml-0 mr-0 mb-3">
+                            <a href="@Url.Action("Edit","Document",  new { area = "Admin" })" class="btn btn-wme btn-green" onclick="openLoading();">@Resource.newDocument</a>
+                        </div>
+                        <div class="row ml-0 mr-0">
+                            <div class="col-6 pl-0">
+                                <form class="display-inline" action="javascript:void(0);"
+                                      id="searchForm" name="searchForm" onsubmit="javascript: return rechercher(event, this);">
+                                    <div class="inline-input inline-input-sm card-header-custom height-auto has-input-icon-left">
+                                        <button type="button"
+                                                class="btn btn-white margin-right opacity-1 btn-search" onclick="submitForm(this)">
+                                            <span for="filter-2"><i class="fa fa-search"></i></span>
+                                        </button>
+                                        <input type="search" id="search" name="search"
+                                               data-i18n-placeholder="search"
+                                               class="custom-form-control" value="@Model.Search">
+                                        <input type="hidden" id="filtre" name="filtre" value="@Model.Search">
+                                        <input type="hidden" id="categories" name="categories" value="@Model.Categories">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-right">
+                                    @Html.Partial("_PageSizes", Model.Pager, new ViewDataDictionary { { "grid", "docGrid" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div id="parent_docGrid">
+                            @Html.Partial("_DocumentGrid", @Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_LinkDialog")
+
+@section Scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    @Scripts.Render("~/bundles/jquery.fileDownload")
+
+
+    <script>
+        var wScrollTop = -1;
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script>
+        function _showDocument(docId) {
+            //openLoading();
+            //location.href = '@Url.Action("Edit", "Document", new { area = "Admin", Id="_0_" })'.replace("_0_", docId);
+            return false;
+        }
+
+        function _showDocumentLink(urlDoc, documentName,event) {
+            event.preventDefault();
+            var baseurl = window.location.origin;
+            openLoading();
+            var name = documentName;
+            const currentUrl = baseurl + "/UserDocument/ShowFromLink/?rrr=" + urlDoc + "&" + new Date().getTime();
+            showSharableLink(name, currentUrl);
+            copyToClipboard(currentUrl);
+        }
+
+        //copy link
+        function copyLink() {
+            var copyText = document.getElementById("linkMessage");
+            copyToClipboard(copyText.value);
+
+        }
+
+        function copyToClipboard(text) {
+            var sampleTextarea = document.createElement("textarea");
+            document.body.appendChild(sampleTextarea);
+            sampleTextarea.value = text; //save main text in it
+            sampleTextarea.select(); //select textarea contenrs
+            document.execCommand("copy");
+            document.body.removeChild(sampleTextarea);
+
+        }
+
+
+
+    </script>
+    <script>
+        var gridName = "docGrid";
+        $(function () {
+            $('#sidebar-document').addClass('active');
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+            if (window.pageGrids[gridName] != null) {
+                window.pageGrids[gridName].addFilterWidget(new CategoriesFilterWidget());
+                window.pageGrids[gridName].addFilterWidget(new SubCategoriesFilterWidget());
+                window.pageGrids[gridName].addFilterWidget(new ActionsFilterWidget());
+                window.pageGrids[gridName].ajaxify({
+                    getData: '@Url.Action("AjaxDocGrid", "Document")',
+                    gridFilterForm: $('#searchForm'),
+                });
+            }
+            $('#search').keydown(function (e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode == 13) {
+                    var search = $(this).val();
+                    e.preventDefault();
+                    submitForm(this);
+                    return false;
+                }
+            });
+
+            $(document).on('click', '[data-target="deleteModal"]', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                openLoading();
+                $.get(url, function (reponse) {
+                    $("body").append(reponse);
+                    $('#deleteDial').on('show.bs.modal', function () {
+                        var contentHeight = $(window).height();
+                        var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+                        var maxHeight = contentHeight - footerHeight;
+                        $(this).find('.modal-body').css({
+                            'max-height': maxHeight,
+                            'overflow-y': 'auto',
+                        });
+                        $(this).before($('.modal-backdrop'));
+                        $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    });
+                    $("#deleteDial").on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    });
+                    $("#deleteDial").modal({
+                        "show": true,
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                }).done(function () {
+                    console.log("second success");
+                }).fail(function () {
+                    console.log("error");
+                }).always(function () {
+                    closeLoading();
+                });
+                return false;
+            });
+           /* $(document).on('click', 'tr.category', function (e) {
+                var categoriesTab = new Array();
+                var self = $(this);
+                var categories = $("#categories").val();
+                if (categories != "") {
+                    categoriesTab = $("#categories").val().split(',');
+                }
+                var categ = self.attr('id').replace("categ_", "");
+                if (categoriesTab.indexOf(categ) == -1) {
+                    categoriesTab.push(categ);
+                }
+                //console.log('categoriesTab', categoriesTab);
+                var newcateg = categoriesTab.join(',');
+                //console.log('newcateg', newcateg);
+                $("#categories").val(newcateg);
+                refreshCollape(self);
+            });*/
+             $(document).on('click', '[data-target="download"]', function (e) {
+                var grid = $(e.target).closest('div.grid-mvc');
+                var gridName = grid.attr('id');
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                //openLoading();
+                $.fileDownload(url, {
+                    httpMethod: "GET",
+                    successCallback: function (url) {
+                        closeLoading();
+                    },
+                    failCallback: function (responseHtml, url) {
+                        closeLoading();
+                    }
+                });
+                return false;
+            });
+
+        });
+
+        function refreshCollape(trCollapse) {
+            var context = trCollapse.closest('.grid-mvc');
+            var gridName = context.attr('id');
+            var parameterPage = gridName + "-page";
+            var page = $("#currentpage", context).val();
+            //console.log('page', page);
+            var mvcGrid = window.pageGrids[gridName];
+            var gridQuery = mvcGrid.getGridUrl(mvcGrid.loadDataAction, mvcGrid.gridColumnFilters, null);
+            var gridUrl = URI(gridQuery).addQuery(parameterPage, page).normalizeSearch().addQuery("grid", gridName);
+
+            gridUrl = URI.decode(gridUrl);
+            //console.log("URL=" + gridUrl);
+            loadGrid(gridUrl, mvcGrid, function (response) {
+                $("#total-" + gridName).text(response.total);
+            });
+            return false;
+        }
+
+        function rechercher(e, element) {
+            e.preventDefault();
+            var search = $("#search").val();
+            $("#filtre").val(search);
+            rechercherFiltre(gridName);
+        }
+
+    </script>
+}
+@Html.Partial("_TemplateFiltre")

@@ -1,0 +1,78 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<QcmViewModel>
+
+@helper CustomRenderingOfActions(QcmViewModel vm)
+{
+    //if (vm.IsUpdatable)
+    //{
+    <a href="@Url.Action("Edit", "Qcm", new { Id = vm.ID })" role="button" data-toggle="tooltip" title="@Resource.actionEdit">
+        <i class="fas fa-edit" style="color:blue"></i>
+    </a>
+    @*}*@
+    @*else
+        {
+            <span class="noaction">&nbsp;</span>
+        }*@
+    <a href="@Url.Action("Edit", "Qcm", new { Id = vm.ID, viewOnly = true })" role="button" data-toggle="tooltip" title="@Resource.qcm_actionVisualize">
+        <i class="fas fa-eye" style="color:green"></i>
+    </a>
+    <a href="@Url.Action("ExportExcel", "Qcm", new { Id = vm.ID })" role="button" data-toggle="tooltip" title="@Resource.exportQuizz">
+        <i class="fas fa-file-excel" style="color:limegreen"></i>
+    </a>
+    //if (vm.Inactif == "false")
+    //{
+    <a href="@Url.Action("ConfirmDelete", "Qcm", new { Id= vm.ID})" role="button" data-toggle="tooltip" title="@Resource.actionDelete" data-target="deleteModal">
+        <i class="fas fa-trash" style="color:red"></i>
+    </a>
+    @*}
+        else
+        {
+            <span style="width:20px;"></span>
+        }*@
+}
+
+@helper CustomRenderingOfInactif(QcmViewModel vm)
+{
+    if (vm.Inactif)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+
+@helper RenderNameWithTooltip(QcmViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name" class="@(vm.IsDefaultTradName ? "defaultName" : string.Empty)">@vm.Name</span>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name).IsHtml(true)
+        .Css("col-name ellipsis col-quiz")
+        .RenderValueAs(o => RenderNameWithTooltip(o))
+        .SortInitialDirection(GridSortDirection.Ascending)
+        .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.NoteMinimal).Css("center")
+    .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.DateCreation).Format("{0:dd/MM/yyyy}").Css("center col-date-100")
+    .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.NbQuestions).Css("center")
+           .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.Inactif).RenderValueAs(o => CustomRenderingOfInactif(o)).Css("center")
+    .Filterable(true).Sortable(true).IsHtml(true);
+
+    columns.Add().Titled(Resource.actions).RenderValueAs(o => CustomRenderingOfActions(o)).IsHtml(true).Css("actions center col-actions")
+           .Filterable(false).Sortable(false);
+
+}).WithPaging().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e => true ? "admclickable" : string.Empty)
+
+
+

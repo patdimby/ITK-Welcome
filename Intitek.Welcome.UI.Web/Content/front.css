@@ -1,0 +1,57 @@
+﻿/**Erreur validation backEnd */
+.validation-summary-errors {
+    color: #e71829;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.validation-summary-errors ul{
+    margin-bottom: 0;
+}
+
+.login-error-messages {
+    height: 45px;
+    position: relative;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+.hidden{
+    display:none ;
+}
+td.center {
+    text-align: center !important;
+}
+
+td.left {
+    text-align: left !important;
+}
+
+.bagde_container {
+    display: flex;
+    flex-direction: row;
+    /*top: -90px;*/
+    position: relative;
+    flex-wrap: wrap;
+    margin: 0 0 0 auto;
+    float: right;
+}
+
+.badge_item {
+    height: 96px;
+    width: 100px;
+}
+
+div .badge_item img {
+    height: 81px;
+}
+
+/*Validation JS*/
+ul#validationMessages {
+    margin-bottom: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 0;
+    left: 5px;
+}

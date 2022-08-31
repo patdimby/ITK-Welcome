@@ -1,0 +1,110 @@
+﻿<script id="renderwidget-template-categories" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;">{{ lang_selectClientToFilter }} :</p>
+    <div id="categorylistDivID" style="width:260px;overflow-y:auto;" class="grid-filter-type categorieslist form-control">
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>
+<script id="renderwidget-template-subcategories" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;">{{ lang_selectClientToFilter }} :</p>
+    <div id="subcategorylistDivID" style="width:200px;height:200px;overflow-y:auto;" class="grid-filter-type subcategorieslist form-control">
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>
+<script id="renderwidget-template-actions" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;">{{ lang_selectClientToFilter }} :</p>
+    <div id="actionlistDivID" style="width:216px; overflow-y:auto;" class="grid-filter-type actionslist form-control">
+        <ul style="list-style: none;padding-left:0px;">
+            <li>
+                <input type="checkbox" value="1" {{#ifIn '1' filters}} checked{{/ifIn}} />
+                <i class="fas fa-times-circle text-danger"></i>&nbsp;&nbsp;<span>@Resource.documentLegend1</span>
+            </li>
+
+            <li>
+                <input type="checkbox" value="2" {{#ifIn '2' filters}} checked{{/ifIn}} />
+                <i class="fas fa-check-circle text-success"></i>&nbsp;&nbsp;<span>@Resource.documentLegend2</span>
+            </li>
+            <li>
+                <input type="checkbox" value="3" {{#ifIn '3' filters}} checked{{/ifIn}} />
+                <i class="fas fa-minus-circle"></i>&nbsp;&nbsp;<span>@Resource.documentLegend3</span>
+            </li>
+        </ul>
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>
+<script id="renderwidget-template-actions-read" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;">{{ lang_selectClientToFilter }} :</p>
+    <div id="actionlistDivID" style="width:216px; overflow-y:auto;" class="grid-filter-type actionslist form-control">
+        <ul style="list-style: none;padding-left:0px;">
+            <li>
+                <input style="display:inline;" name="tmp" type="radio" value="1" {{#ifIn '1' filters}} checked{{/ifIn}} />
+                <i class="fas fa-times-circle text-danger"></i>&nbsp;&nbsp;<span>@Resource.documentLegend1</span>
+            </li>
+
+            <li>
+                <input style="display:inline;" name="tmp" type="radio" value="2" {{#ifIn '2' filters}} checked{{/ifIn}} />
+                <i class="fas fa-check-circle text-success"></i>&nbsp;&nbsp;<span>@Resource.documentLegend2</span>
+            </li>
+        </ul>
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>
+<script id="renderwidget-template-profils" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;">@Resource.selectProfilToFilter
+  :</p>
+    <div id="profillistDivID" style="width:200px; overflow-y:auto;" class="grid-filter-type profilslist form-control">
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>
+<script id="renderwidget-template-agences" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;">@Resource.selectAgenceToFilter :</p>
+    <div id="agencelistDivID" style="width:200px; overflow-y:auto;" class="grid-filter-type agenceslist form-control">
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>
+<script id="renderwidget-template-checkbox" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;">{{ lang_selectClientToFilter }} :</p>
+    <div id="checkboxeslistDivID" style="width:200px; overflow-y:auto;" class="grid-filter-type checkboxlist form-control">
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>
+<script id="renderwidget-template-type-intitekUser" type="text/x-handlebars-template">
+    <p style="white-space: nowrap;"><b>{{ lang_selectClientToFilter }}</b></p>
+    <div id="typeUserlistDivID" style="width:250px; overflow-y:auto;" class="grid-filter-type typeUserslist">
+        <ul style="list-style: none;padding-left:0px;">
+            <li>
+                <input style="display:inline;" name="Type" type="radio" value="MET" {{#ifIn 'MET' filters}} checked{{/ifIn}} />
+                <span onclick="selectMetier()">@Resource.typeMetier</span>
+            </li>
+
+            <li>
+                <input style="display:inline;" name="Type" type="radio" value="STR" {{#ifIn 'STR' filters}} checked{{/ifIn}} />
+                <span onclick="selectStructure()">@Resource.typeStructure</span>
+            </li>
+        </ul>
+    </div>
+    <br />
+    <div class="grid-filter-buttons">
+        <button type="button" class="btn btn-wme btn-green w-100 grid-apply">{{ lang_applyFilterButtonText }}</button>
+    </div>
+</script>

@@ -1,0 +1,39 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<ProfilViewModel>
+@{
+    var usrActif = true;
+    if (ViewData["UsrActive"] != null)
+    {
+        usrActif = (bool)ViewData["UsrActive"];
+    }
+}
+@helper Assigned(ProfilViewModel vm, bool usrActif)
+{
+    if (usrActif)
+    {
+        var checkd = "";
+        if (vm.IsSessionChecked) { checkd = "checked"; }
+        <div style="margin:0 auto;" onclick="affecterProfil('@vm.ID', event);"><input value="@vm.ID" name="ProfsList" type="checkbox" @checkd /></div>
+        <input value="@vm.Affecte.ToString()" name="docState_@vm.ID" id="docState_@vm.ID" type="hidden" />
+    }
+    else
+    {
+        var checkd = "";
+        if (vm.Affecte) { checkd = "checked"; }
+        <input value="@vm.ID" name="ProfsList" type="checkbox" @checkd onclick="return false;" />
+    }
+}
+
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name).IsHtml(true)
+        .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.IsSessionChecked).RenderValueAs(o => Assigned(o, usrActif)).IsHtml(true).Css("center")
+           .Filterable(true).Sortable(false);
+
+}).WithGridItemsCount(Resource.labelNbEnreg).SetRowCssClasses(e => true ? "clickable" : string.Empty)
+
+

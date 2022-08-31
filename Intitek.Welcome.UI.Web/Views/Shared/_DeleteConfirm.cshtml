@@ -1,0 +1,17 @@
+﻿<!--@model ...-->
+<div id="deleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <span id="modalDelete"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;&nbsp;<span>xxxx</span></span>
+            </div>
+            <div class="modal-body">
+                <p>@Resources.modalContentDelete</p>
+                <div class="modal-bouton-action">
+                    <a href="#" class="btn btn-dark btn-abm btn-xs" data-dismiss="modal">@Resources.buttonCancel</a>
+                    <input type="button" onclick="Delete(1)" id="modalBtnDelete" data-dismiss="modal" class="btn btn-danger btn-abm btn-xs" value="@Resources.buttonDelete" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@model Intitek.Welcome.UI.ViewModels.WelcomeViewModel
+
+
+@if (Model.StatModel != null && Model.StatModel.Length > 0)
+{
+
+<div class="card card-form p-0 card-odd">
+    <div class="card-header card-header-form">
+        <h5 class="mb-0">
+            <button class="btn btn-link btn-link-collapse collapsed" data-toggle="collapse" data-target="#collapseStep4" aria-expanded="false" aria-controls="collapseSeven">
+                <span class="fas fa-arrow-down"></span>
+            </button>
+            <div class="accordion-subtitle row">
+                <div class="">@Model.StatModel.Title</div>&nbsp;<div class="number-items" id="total-grid1">@Model.StatModel.ColorTrace.GetLabel()</div>
+            </div>
+        </h5>
+    </div>
+    <div id="collapseStep4" class="card-body collapse" aria-labelledby="Step" style="">
+       
+        <div id="parent_grid1">
+            <div class="grid-mvc" id="grid1" data-lang="fr" data-gridname="grid1" data-selectable="true" data-multiplefilters="true">
+                <div class="grid-wrap table-responsive">
+                    <table class="table intitek grid-table">
+                        <thead>
+                            <tr>
+                                <th class="grid-header" data-name="Name" data-noresizable="1" style="width:250px;">
+                                    <div class="grid-header-title"><span>Collaborateur</span></div>
+                                </th>
+                                <th class="grid-header nopadding" data-name="Couleur" data-noresizable="1">
+                                    <div class="grid-header-title"><span>Ses sensibilisations</span></div>
+                                </th>
+                                <th class="grid-header nopadding" data-name="Label" data-noresizable="1">
+                                    <div class="grid-header-title"><span>Sensibilisation de son équipe</span></div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var elt in Model.StatModel.Collaborateurs)
+                            {
+                            <tr class="grid-row admclickable">
+                                <td class="grid-cell" data-name="Name">@elt.Name</td>
+                                <td class="grid-cell nopadding" data-name="Couleur">
+                                    <div class="progress-@elt.Couleur">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; background=@elt.Couleur"><span class="value"></span> </div>
+                                    </div>
+                                </td>
+                                @if (!string.IsNullOrEmpty(elt.Label))
+                                {
+                                    <td class="grid-cell nopadding">
+                                        <div class="progress" style="height:20px;">
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100" style="width: @elt.pZ; background-color: red; height:20px;">
+                                                <span class="value">@string.Concat(elt.ColorTrace.Z.ToString(), " / ", elt.ColorTrace.Length.ToString())</span>
+                                            </div>
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100" style="width: @elt.pX;  background-color: orange; height:20px;">
+                                                <span class="value">@string.Concat(elt.ColorTrace.X.ToString(), " / ", elt.ColorTrace.Length.ToString())</span>
+                                            </div>
+                                            <div class="progress-bar" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100" style="width: @elt.pY;  background-color: green; height:20px;">
+                                                <span class="value">@string.Concat(elt.ColorTrace.Y.ToString(), " / ", elt.ColorTrace.Length.ToString())</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="grid-footer"> </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

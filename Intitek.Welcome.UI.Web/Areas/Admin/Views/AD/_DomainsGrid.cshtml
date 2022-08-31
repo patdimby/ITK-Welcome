@@ -1,0 +1,60 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers
+
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<ADViewModel>
+@helper CustomRenderingOfSynchronized(ADViewModel vm)
+{
+    if (vm.ToBeSynchronized)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper Actions(ADViewModel vm)
+{
+    <a href="@Url.Action("Edit", "AD", new { Id = vm.ID })" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionModifier" onclick="openLoading();">
+        <i class="fas fa-edit"></i>
+    </a>
+
+    <a href="@Url.Action("ConfirmDelete", "AD", new { Id = vm.ID })" role="button" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionSupprimer" data-target="deleteModal">
+        <i class="fas fa-trash text-danger"></i>
+    </a>
+}
+
+@helper RenderColWithTooltip(string str)
+{
+    <span data-toggle="tooltip" title="@str">@str</span>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name).Css("fixed-width ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(o.Name)).IsHtml(true)
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.Address).Css("fixed-width ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(o.Address)).IsHtml(true)
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.Domain).Css("fixed-width ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(o.Domain)).IsHtml(true)
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.Username).Css("username-width ellipsis min-width")
+    .RenderValueAs(o => RenderColWithTooltip(o.Username)).IsHtml(true)
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.ToBeSynchronized).RenderValueAs(o => CustomRenderingOfSynchronized(o)).IsHtml(true).Css("min-width")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.LastSynchronized).Format("{0:dd/MM/yyyy H:mm:ss}").Css("min-width")
+    .Filterable(true).Sortable(true);
+
+    columns.Add().Titled(@Resource.actions).RenderValueAs(o => Actions(o)).Filterable(false).Sortable(false).IsHtml(true).SetWidth(50).Css("center col-actions");
+
+}).WithPaging().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "admclickable fit-content-columns" : string.Empty).SetOnDblClick("showInformationOfColumn(this, 'Description');")
+

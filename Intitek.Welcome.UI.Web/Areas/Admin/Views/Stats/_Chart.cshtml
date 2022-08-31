@@ -1,0 +1,190 @@
+﻿<style type="text/css">
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    .chart {
+        border: 1px solid #dcdcdc;
+        border-radius: 3px;
+    }
+
+    .chart-title {
+        font-weight: 500;
+        background-color: #f5f5f5;
+        padding: 2px 10px;
+    }
+
+    .legendLabels {
+        display: flex;
+        flex-direction: column;
+        padding-left: 0px;
+    }
+
+    #chartLegend {
+        font-size: 11px;
+        font-weight: 400;
+        font-style: italic;
+        float: right;
+        padding-top: 10px;
+        padding-right: 10px;
+    }
+
+    .chart-button {
+        padding: 5px;
+    }
+
+    .page-link.active {
+        color: #fff;
+        cursor: default !important;
+        background-color: var(--green-color) !important;
+        border-color: var(--green-color) !important;
+    }
+</style>
+@model  Intitek.Welcome.UI.Web.Admin.StatsResponseViewModel
+<div class="chart-title"><span class="font-bold"><i class="fas fa-chart-line"></i>&nbsp;&nbsp;@Resource.rythme</span></div>
+<div>
+    <div id="chartLegend"></div>
+    <canvas id="chart1" height="100"></canvas>
+</div>
+<div class="chart-button">
+    <a class="page-link @Model.ActiveLink(7)" href="#" onclick="getChart(7, @Model.NbDay);return false;">7</a>
+    <a class="page-link @Model.ActiveLink(30)" href="#" onclick="getChart(30, @Model.NbDay);return false;">30</a>
+    <a class="page-link @Model.ActiveLink(90)" href="#" onclick="getChart(90, @Model.NbDay);return false;">90</a>
+</div>
+<script>
+    var NbDay = @Model.NbDay ;
+    var config = {
+        type: 'line',
+        data: {
+            datasets: @Html.Raw(Model.JsonDatasets)
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 0
+            },
+            title: {
+                display: false,
+            },
+            legend: {
+                display:false,
+            },
+            legendCallback: function (chart) {
+                const labels = document.createElement("ul");
+                labels.setAttribute("class", "legendLabels");
+                chart.data.datasets.forEach((dataset, i) => {
+                    const item = document.createElement("li");
+                    item.style.listStyle = "none";
+
+                    const icon = document.createElement("div");
+                    icon.style.width = "15px";
+                    icon.style.height = "15px";
+                    icon.style.display = "inline-block";
+                    icon.style.backgroundColor = dataset.borderColor ;
+                    icon.style.margin = "0 6px";
+
+                    item.appendChild(icon);
+                    item.innerHTML += "<span>" + dataset.label + "</span>";
+                    labels.appendChild(item);
+                });
+                return labels.outerHTML;
+            },
+            elements: {
+                line: {
+                    borderWidth: 2,
+                    //tension: 0,//default 0.4
+                    fill: false,
+                }
+            },
+            tooltips: {
+                isHtml: true,
+                mode: 'nearest',
+                intersect: false,
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        var dataset = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        var yLabel = tooltipItem.yLabel +"";
+                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                        if (label) {
+                            label += ' : ';
+                        }
+                        label += dataset.valeur + " collab. (" + yLabel.replace('.', ',') + " %)" ;
+                        return label;
+                    }
+                }
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: 'DD/MM/YYYY',
+                            week: 'DD/MM/YYYY',
+                            month: 'DD/MM/YYYY'
+                        },
+                        tooltipFormat: 'DD/MM/YYYY'
+                    },
+                    distribution: 'series',//les données sont réparties à la même distance les unes des autres
+                    offset: true,
+                    gridLines: {
+                        //afficher en gras le gridline si le jour de la semaine=Monday
+                        lineWidth: @Model.LineWidths
+                    },
+                    ticks: {
+                        major: {
+                            enabled: false,
+                            fontStyle: 'bold',
+                        },
+                        source: 'data',//'data': generates ticks from data (including labels from data {t|x|y} objects)
+                        autoSkip: false,//false si afficher toutes les labels
+                        autoSkipPadding: 0,
+                        maxRotation: 0,
+                        callback: function (value, index, values) {
+                            //si nombre de jour=30 ou 90
+                            if (NbDay > 20) {
+                                var dt = moment(values[index].value);
+                                //afficher le label si jour de la semaine=Monday
+                                if (dt.day() == 1) {
+                                    return value;
+                                }
+                                return '';
+                            }
+                            return value;
+                        }
+                    }
+                }],
+                yAxes: [{
+                    type: 'linear',
+                    scaleLabel: {
+                        display: true,
+                        labelString: '@Html.Raw(Resource.percent_pers_sensitized)'
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        min:0,
+                        max:100,
+                        stepSize: 2,
+                        callback: function (value, index, values) {
+                            //console.log("value", value);
+                            if (value % 10==0) {
+                                return value;
+                            }
+                            return '';
+                        }
+                    },
+                }]
+            }
+        }
+    };
+    var chartContainer = document.getElementById('chart1');
+    if (chartContainer) {
+        var ctx = chartContainer.getContext('2d');
+        //ctx.canvas.height = 100;
+        const chart = new Chart(ctx, config);
+        const myLegendContainer = document.getElementById('chartLegend');
+        myLegendContainer.innerHTML = chart.generateLegend();
+    }
+ </script>

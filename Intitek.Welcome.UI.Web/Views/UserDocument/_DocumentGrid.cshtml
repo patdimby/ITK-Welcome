@@ -1,0 +1,187 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers;
+@model Intitek.Welcome.UI.Web.Models.DocumentGrid
+@{
+    var bInformatif = false;
+    var IsReadOnly = Model.IsReadOnly;
+    var DefaultCodeLangue = string.Empty;
+    if (ViewData["Informatif"] != null)
+    {
+        bInformatif = (bool)ViewData["Informatif"];
+    }
+    if (ViewData["DefaultCodeLangue"] != null)
+    {
+        DefaultCodeLangue = (string)ViewData["DefaultCodeLangue"];
+    }
+}
+
+@helper CustomRenderingOfRead(DocumentViewModel vm)
+{
+vm.IsReadOnly = Model.IsReadOnly;
+if (vm.IsBoolRead)
+{
+        <i class="fas fa-check-circle text-success"></i>
+    }
+    else
+    {
+        <i class="fas fa-times-circle text-danger"></i>
+    }
+
+}
+@helper CustomRenderingOfApproved(DocumentViewModel vm)
+{
+
+if (vm.Approbation.HasValue && vm.Approbation == 1)
+{
+    if (vm.IsBoolApproved)
+    {
+            <i class="fas fa-check-circle text-success"></i>
+        }
+        else
+        {
+            <i class="fas fa-times-circle text-danger"></i>
+        }
+    }
+    else
+    {
+        if (vm.IsBoolApproved)
+        {
+            <i class="fas fa-check-circle text-success"></i>
+        }
+        else
+        {
+            <i class="fas fa-minus-circle"></i>
+        }
+    }
+}
+
+@helper CustomRenderingOfTest(DocumentViewModel vm)
+{
+
+if (vm.Test.HasValue && vm.Test == 1)
+{
+    if (vm.IsBoolTested)
+    {
+            <i class="fas fa-check-circle text-success"></i>
+        }
+        else
+        {
+            <i class="fas fa-times-circle text-danger"></i>
+        }
+    }
+    else
+    {
+        if (vm.IsBoolTested)
+        {
+            <i class="fas fa-check-circle text-success"></i>
+        }
+        else
+        {
+            <i class="fas fa-minus-circle"></i>
+        }
+    }
+}
+
+@helper NoteofTest(DocumentViewModel vm)
+{
+
+if (vm.Mark == 1)
+{
+        <i><img data-toggle="tooltip" data-html="true" title="@vm.InfoBulles" src="~/Content/images/qcm_goodmark.png" height="15" style="margin-top:-4px;" /></i>
+    }
+    else if (vm.Mark == 2)
+    {
+        <i><img data-toggle="tooltip" data-html="true" title="@vm.InfoBulles" src="~/Content/images/qcm_badmark.png" height="16" style="margin-top:-4px;" /></i>
+    }
+}
+
+@helper DownloadDoc(DocumentViewModel vm, string defaultCodeLangue, bool readOnly = false)
+{
+
+if (vm.ReadDownload && Html.VideoExistFront(vm.ID, vm.Extension, defaultCodeLangue, vm.Version))
+{
+    var filename = HttpUtility.HtmlDecode(vm.NomOrigineFichier) + vm.Extension;
+            <a class="link" data-toggle="tooltip" data-target="download" href="@Html.Raw(Url.Action("GetFileFromDatabase", "UserDocument", new { documentID = @vm.ID,inline=false, IsReadOnly = vm.IsReadOnly }))" title="@Resource.actionTelecharger @filename">
+                <i class="fas fa-download"></i>
+            </a>
+    }
+
+}
+
+
+@helper DownloadDocInformatif(DocumentViewModel vm, string defaultCodeLangue)
+{
+
+if (vm.ReadDownload && Html.VideoExistFront(vm.ID, vm.Extension, defaultCodeLangue, vm.Version))
+{
+    var filename = HttpUtility.HtmlDecode(vm.NomOrigineFichier) + vm.Extension;
+            <a class="link download" data-toggle="tooltip" data-target="download" href="@Html.Raw(Url.Action("DownoloadDocInfo", "UserDocument", new { documentID = @vm.ID,inline=false, IsReadOnly = vm.IsReadOnly  }))" title="@Resource.actionTelecharger @filename">
+                <i class="fas fa-download"></i>
+            </a>        
+    }
+}
+@helper CustomRenderingOfName(DocumentViewModel vm)
+{
+
+    <text>@vm.Name</text>
+    if (!string.IsNullOrEmpty(vm.NomOrigineFichier) && ".mp4".Equals(vm.Extension, StringComparison.InvariantCultureIgnoreCase))
+    {
+        <text>&nbsp;
+            <img src="~/Content/images/movie-icon.png" align="right" />
+        </text>
+    }
+}
+
+@Html.Grid(Model, "_GridDocument").Columns(columns =>
+{
+    columns.Add(o => o.ID_Category).RenderValueAs(o => "").Css("category")
+    .SetFilterWidgetType("CategoryNameFilterWidget", "/Document/SearchCategories")
+    .Filterable(true).Sortable(false);
+
+    columns.Add(o => o.ID_SubCategory).RenderValueAs(o => "").Css("subcategory")
+   .SetFilterWidgetType("SubCategoryNameFilterWidget", "/Document/SearchSousCategories")
+   .Filterable(true).Sortable(false);
+
+    /*columns.Add(o => o.SharableLink).SetWidth(120).RenderValueAs(o => LinkDoc(o, DefaultCodeLangue)).Filterable(false).Sortable(false).IsHtml(true).Css("center");*/
+
+    columns.Add(o => o.Name).RenderValueAs(o => CustomRenderingOfName(o))
+        .SortInitialDirection(GridSortDirection.Ascending)
+        .Filterable(true).Sortable(true).Css("docname").IsHtml(true).SetColspan(3);
+
+    columns.Add(o => o.Version).Css("center")
+    .SetFilterWidgetType("CategoryNameFilterWidget", "/Document/SearchVersions")
+    .SetWidth(120).Filterable(true).Sortable(true);
+
+
+    if (bInformatif)
+    {
+        columns.Add(o => o.Link).SetWidth(120).RenderValueAs(o => DownloadDocInformatif(o, DefaultCodeLangue)).Filterable(false).Sortable(false).IsHtml(true).Css("center");
+        columns.Add().RenderValueAs(o => "").SetWidth(120);
+
+        columns.Add().RenderValueAs(o => "").SetWidth(120);
+
+        columns.Add().RenderValueAs(o => "").SetWidth(120);
+        columns.Add().RenderValueAs(o => "").SetWidth(32).Filterable(false).Sortable(false);
+    }
+    else
+    {
+        columns.Add(o => o.Link).SetWidth(120).RenderValueAs(o => DownloadDoc(o, DefaultCodeLangue, Model.IsReadOnly)).Filterable(false).Sortable(false).IsHtml(true).Css("center");
+        columns.Add(o => o.FiltreRead).Css("center")
+        .SetFilterWidgetType("ActionsNameFilterWidget")
+        .RenderValueAs(o => CustomRenderingOfRead(o)).SetWidth(120).Filterable(true).Sortable(false).IsHtml(true);
+
+        columns.Add(o => o.FiltreApproved).Css("center")
+        .SetFilterWidgetType("ActionsNameFilterWidget")
+        .RenderValueAs(o => CustomRenderingOfApproved(o)).SetWidth(120).Filterable(true).Sortable(false).IsHtml(true);
+
+        columns.Add(o => o.FiltreTested).Css("center")
+        .SetFilterWidgetType("ActionsNameFilterWidget")
+        .RenderValueAs(o => CustomRenderingOfTest(o)).SetWidth(120).Filterable(true).Sortable(false).IsHtml(true);
+
+        columns.Add().RenderValueAs(o => NoteofTest(o)).SetWidth(32).Filterable(false).Sortable(false).IsHtml(true);
+    }
+
+
+}).WithPaging().WithMultipleFilters().SetRowCssClasses(e => true ? "clickable" : string.Empty)
+

@@ -1,0 +1,30 @@
+﻿@using Intitek.Welcome.UI.ViewModels
+@model UserReponseQcmViewModel
+<div class="list-group-item question-false">
+    <div class="question-container">
+        <div class="question-container-inner">
+            <span class="active">
+                <span>@HttpUtility.HtmlDecode(Model.TexteQuestion)</span>
+                <span class="question-badge right"><span> @Resource.question</span> &nbsp;@Model.QuestionOrder</span>
+            </span>
+        </div>
+    </div>
+    <div class="row question-results">
+        <div class="col-lg-2 col-4 question-results-state"><span class="input-group-addon"> @Resource.wrongAnswer</span></div>
+        <div class="col-lg-10 col-8 question-results-response">
+            <span>
+                @*<span>@HttpUtility.HtmlDecode(Model.UserReponse)</span>*@
+                <span>@HttpUtility.HtmlDecode(Model.UserReponse)</span>
+            </span>
+            <span class="question-results-icon"><i class="fas fa-times-circle icon-danger"></i></span>
+        </div>
+    </div>
+    <div class="row question-justification">
+        <div class="col-lg-2 col-4 question-justification-state"><span class="input-group-addon"> @Resource.justification</span></div>
+        <div class="col-lg-10 col-8 question-results-response">
+            <span>@HttpUtility.HtmlDecode(Model.TexteJustification)</span>
+
+        </div>
+    </div>
+</div>
+

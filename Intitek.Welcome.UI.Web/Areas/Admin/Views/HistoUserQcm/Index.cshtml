@@ -1,0 +1,121 @@
+﻿
+@model Intitek.Welcome.UI.Web.Admin.Models.GridBO<HistoUserQcmViewModel>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = $"Administration | {Resource.mcqPerformed}";
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    <style type="text/css">
+        .col-qcmname {
+            min-width: 180px;
+            max-width: 180px;
+            width: 180px !important;
+        }
+
+        .col-docname {
+            min-width: 180px;
+            max-width: 150px;
+            width: 180px !important;
+        }
+
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link">@Resource.mcqPerformedList</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.mcqPerformedList</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <div class="row ml-0 mr-0">
+                            <div class="col-6 pl-0">
+                                <form class="display-inline" action="javascript:void(0);"
+                                      id="searchForm" name="searchForm" onsubmit="javascript: return rechercher(event, this);">
+                                    <div class="inline-input inline-input-sm card-header-custom height-auto has-input-icon-left">
+                                        <button type="button"
+                                                class="btn btn-white margin-right opacity-1 btn-search" onclick="submitForm(this)">
+                                            <span for="filter-2"><i class="fa fa-search"></i></span>
+                                        </button>
+                                        <input type="search" id="search" name="search"
+                                               data-i18n-placeholder="search"
+                                               class="custom-form-control" value="@Model.Search">
+                                        <input type="hidden" id="filtre" name="filtre" value="@Model.Search">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-right">
+                                    @Html.Partial("_PageSizes", Model.Pager, new ViewDataDictionary { { "grid", "histoUserQcmGrid" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div id="parent_histoUserQcmGrid">
+                            @Html.Partial("_HistoUserQcmGrid", @Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    <script>
+        var gridName = "histoUserQcmGrid";
+
+        $(function () {
+            $('#sidebar-history').addClass('active');
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+            if (window.pageGrids[gridName] != null) {
+                //console.log("J'entre");
+                window.pageGrids[gridName].addFilterWidget(new CategoriesFilterWidget());
+                window.pageGrids[gridName].addFilterWidget(new ActionsFilterWidget());
+                window.pageGrids[gridName].ajaxify({
+                    getData: '@Url.Action("AjaxHistoUserQcmGrid", "HistoUserQcm")',
+                    gridFilterForm: $('#searchForm'),
+                });
+            }
+            $('#search').keydown(function (e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode == 13) {
+                    var search = $(this).val();
+                    e.preventDefault();
+                    submitForm(this);
+                    return false;
+                }
+            });
+
+        });
+
+        function rechercher(e, element) {
+            e.preventDefault();
+            var search = $("#search").val();
+            $("#filtre").val(search);
+            //alert(gridName);
+            rechercherFiltre(gridName);
+        }
+    </script>
+}
+@Html.Partial("_TemplateFiltre")

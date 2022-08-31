@@ -1,0 +1,404 @@
+﻿@using Intitek.Welcome.Infrastructure.Helpers
+@using Intitek.Welcome.Service.Back
+@model  Intitek.Welcome.UI.Web.Admin.StatsResponseViewModel
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.Statistiques_Analyse_Manager);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    List<CategoryViewModel> categories = ((IEnumerable<DocumentViewModel>)Model.ListDocument).Where(x => x.ID_Category > 0).GroupBy(o => new { categoryId = o.ID_Category, categoryName = o.NameCategory, defaultCategory = o.DefaultNameCategory, ordreCategory = o.OrdreCategory }).Select(m => new CategoryViewModel() { ID = m.Key.categoryId.Value, Name = m.Key.categoryName, DefaultName = m.Key.defaultCategory, OrdreCategory = m.Key.ordreCategory }).ToList();
+    categories.Add(new CategoryViewModel() { ID = 0, Name = Resource.NoCategory });
+    var indexGrid = 0;
+}
+@Scripts.Render("~/bundles/chartjs")
+@section Styles
+{
+    @Styles.Render("~/Content/bootstrap-multiselect")
+    <style type="text/css">
+        .division {
+            margin: 0px;
+            color: #fff;
+            background: linear-gradient(120deg, rgb(0, 105, 118) 25%, #d4f4ff 100%);
+            padding-left: 8px;
+        }
+
+        .custom-collapsed-container {
+            border-radius: 30px;
+        }
+
+        .custom-col {
+            padding-left: calc(16.666667% - 62px);
+        }
+
+        .control-label {
+            padding-top: 8px;
+        }
+
+        .table-responsive {
+            min-height: unset;
+        }
+
+        .custom-form-control {
+            padding: 9px 12px;
+            height: 39px;
+        }
+
+        select .placeholder, select:focus.placeholder {
+            color: inherit;
+            font-style: normal;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.Statistiques_Analyse_Manager</li>
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular" style="opacity:1;">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.Statistiques_Analyse_Manager</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <form id="getstats" method="post" action="@Url.Action("Manager", "Stats")" style="width:100%;">
+                            <div class="row flex-nowrap ml-0 mr-0">
+                                <label class="col-sm-2 control-label">@Resource.Filter : </label>
+                                <div class="row col-sm-8 flex-nowrap mr-0">
+                                    <input type="hidden" id="NbDay" name="NbDay" value="@Model.NbDay" />
+                                    <select id="MultiDocSelect" name="MultiDocSelect[]" multiple="multiple" style="display:none;">
+                                        @foreach (CategoryViewModel category in categories)
+                                        {
+                                            List<DocumentViewModel> items;
+                                            if (category.ID == 0)
+                                            {
+                                                items = ((IEnumerable<DocumentViewModel>)Model.ListDocument).Where(x => x.ID_Category == 0 || x.ID_Category == null).ToList();
+                                            }
+                                            else
+                                            {
+                                                items = ((IEnumerable<DocumentViewModel>)Model.ListDocument).Where(x => x.ID_Category == category.ID).ToList();
+                                            }
+                                            <optgroup label="@category.NameDisplay" class="@category.ClassDefautName">
+                                                @foreach (var item in items)
+                                                {
+                                                    var selected = "";
+                                                    var classe = "";
+                                                    if (Model.MultiDocSelect != null && Model.MultiDocSelect.Contains(item.ID))
+                                                    {
+                                                        selected = "selected";
+                                                    }
+                                                    if (item.IsDefaultLangName)
+                                                    {
+                                                        classe = "defaultName";
+                                                    }
+                                                    <option value="@item.ID" class="@classe" @selected>@WebUtility.HtmlDecode(item.Name)</option>
+                                                }
+                                            </optgroup>
+                                        }
+                                    </select>&nbsp;
+                                    <select id="MultiManagerSelect" name="MultiManagerSelect[]" multiple="multiple" style="display:none;">
+                                        @foreach (var item in Model.ManagerList)
+                                        {
+                                            <optgroup label="@WebUtility.HtmlDecode(item.Text)" value="dep_@item.Key"></optgroup>
+                                            foreach (var manager in item.SubList)
+                                            {
+                                                var selected = "";
+                                                if (Model.MultiManagerSelect != null && Model.MultiManagerSelect.Contains(manager.Key))
+                                                {
+                                                    selected = "selected";
+                                                }
+                                                <option value="@manager.Key" @selected>@WebUtility.HtmlDecode(manager.Text)</option>
+                                            }
+                                        }
+                                    </select>&nbsp;
+                                    @Html.DropDownListFor(y=>y.EmployeeSelect,
+                                       new SelectList(Model.EmployeesList.Select(s => new SelectListItem() { Value = s.Value.ToString(), Text = s.Text }), "Value", "Text"),
+                                       new { @class= "custom-form-control" })
+                                </div>
+                            </div>
+                            <div class="divider">&nbsp;</div>
+                            <div class="row ml-0 mr-0">
+                                <label class="col-sm-2 control-label">@Resource.periodAnalysis : </label>
+                                <div class="row col-sm-6">
+                                    <div class="my-auto">
+                                        <div class='date'>
+                                            @Html.TextBoxFor(m => m.StartDate, "{0:dd/MM/yyyy}", new { @class = "datepicker custom-form-control", @size = 12, @maxlength = 10, @data_date_format = "dd/mm/yyyy" })
+                                        </div>
+                                    </div>
+                                    <label class="input-group-btn" for="StartDate" style="margin-left:-45px">
+                                        <span class="btn btn-default">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </label>
+                                    <label class="col-auto control-label">@Resource.to</label>
+                                    <div class="my-auto">
+                                        <div class='date'>
+                                            @Html.TextBoxFor(m => m.EndDate, "{0:dd/MM/yyyy}", new { @class = "datepicker custom-form-control", @size = 12, @maxlength = 10, @data_date_format = "dd/mm/yyyy" })
+                                        </div>
+                                    </div>
+                                    <label class="input-group-btn" for="EndDate" style="margin-left:-45px">
+                                        <span class="btn btn-default">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </label> 
+                                </div>
+                                <button type="submit" class="btn btn-wme btn-green" style="margin-left:45px" name="SubmitButton" value="Filter">
+                                    @*<span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green"></span>*@
+                                    <span id="butValid">@Resource.buttonValidate</span>
+                                </button>
+                            </div>
+                            <div class="divider">&nbsp;</div>
+                            <div class="row ml-0 mr-0">
+                                <label class="col-sm-2 control-label">@Resource.modeDownload : </label>
+                                <span id="FormButton">
+                                    <button type="submit" class="btn-wme excel-btn btn btn-warning" name="SubmitButton" value="ExcelFull">
+                                        <span id="butValid">@Resource.Listing_complet</span>
+                                    </button>&nbsp;&nbsp;&nbsp;
+                                    <button type="submit" class="btn-wme excel-btn btn btn-info" name="SubmitButton" value="ExcelLate">
+                                        <span id="butValid">@Resource.Listing_relance</span>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                        @if (Model.MultiManagerSelect != null || Model.MultiDocSelect != null)
+                        {
+                            <div class="divider">&nbsp;</div>
+                            <h3>@Resource.Vision_global</h3>
+                            <div class="row">
+                                <div class="custom-col">&nbsp;</div>
+                                <div class="col-lg-3">
+                                    <div id="GaugeRead" class="300x240px"></div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div id="GaugeApproved" class="300x240px"></div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div id="GaugeTested" class="300x240px"></div>
+                                </div>
+                            </div>
+                            <div class="chart">
+                                @Html.Partial("_Chart", @Model)
+                            </div>
+                        }
+
+                        <div class="divider">&nbsp;</div>
+                        @foreach (var division in Model.ReponseEntityNames)
+                        {
+                            var grid = Model.GridStats[indexGrid++];
+                            <br /><h5 class="division">@division</h5>
+                            <div id="parent_@grid.Named">
+                                @Html.Partial("_CollabGrid", grid)
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/justgage")
+    @Scripts.Render("~/bundles/bootstrap-multiselect")
+    @Scripts.Render("~/bundles/jquery.fileDownload")
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+    <script>
+        function getChart(nbday, currentNbDay){
+            if (nbday != currentNbDay) {
+                openLoading();
+                $.ajax({
+                    url: '@Url.Action("RythmeManagerAjax", "Stats")',
+                    data: {
+                        'MultiDocSelect': $('#MultiDocSelect').val(),
+                        'MultiManagerSelect': $('#MultiManagerSelect').val(),
+                        'EmployeeSelect': $('#EmployeeSelect').val(),
+                        'StartDate': $('#StartDate').val(),
+                        'EndDate': $('#EndDate').val(),
+                        'NbDay': nbday
+                    },
+                type: 'post',
+                cache: false
+                }).done(function (response) {
+                    //console.log(response);
+                    $(".chart").html(response);
+                    closeLoading();
+                    console.log("done");
+                    return false;
+                }).fail(function (xhr) {
+                    closeLoading();
+                    console.log("error..");
+                    var errorMessage = $.trim(xhr.responseText);
+                    console.log("errorMessage", errorMessage);
+                    return false;
+                });
+                return false;
+            }
+            return false;
+        }
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script type="text/javascript">
+        $('#MultiDocSelect').hide();
+        $('#MultiManagerSelect').hide();
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#sidebar-analysis').addClass('active');
+            $('#sidebar-analysis-manager').addClass('active');
+            $('#MultiDocSelect').multiselect({
+                buttonWidth: '300px',
+                maxHeight: 400,
+                enableCollapsibleOptGroups: true,
+                enableClickableOptGroups :true,
+                includeSelectAllOption: false,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                enableAccentInsensitive :true,
+                buttonContainer: '<div class="custom-collapsed-container"/>',
+                selectAllText : '@Html.Raw(Resource.selectAll)',
+                nonSelectedText: '@Html.Raw(Resource.selectAllDocument)',
+                filterPlaceholder: '@Html.Raw(Resource.search)',
+                nSelectedText: '@Html.Raw(Resource.nSelectedText)',
+                allSelectedText: '@Html.Raw(Resource.AllSelected)',
+                onFiltering: function ($filter) {
+                    var container = $filter.closest('.custom-collapsed-container');
+                    var $ul = $('ul.multiselect-container', container);
+                    var $li = $('li', $ul).not(".multiselect-filter-hidden, .multiselect-filter, .multiselect-all");
+                    var $liAll = $('li.multiselect-all', $ul);
+                    if ($li && $li.length > 0) {
+                        $liAll.css('display', 'block');
+                    }
+                    else {
+                        $liAll.css('display', 'none');
+                    }
+                }
+            });
+            $('#MultiManagerSelect').multiselect({
+                buttonWidth: '300px',
+                maxHeight: 400,
+                enableCollapsibleOptGroups: true,
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                enableAccentInsensitive: true,
+                buttonContainer: '<div class="custom-collapsed-container"/>',
+                selectAllText: '@Html.Raw(Resource.selectAll)',
+                selectAllValue: '1',
+                selectAllName: 'IsSelectAllManager',
+                nonSelectedText: '@Html.Raw(Resource.selectAllManager)',
+                filterPlaceholder: '@Html.Raw(Resource.search)',
+                nSelectedText: '@Html.Raw(Resource.nSelectedText)',
+                allSelectedText: '@Html.Raw(Resource.AllSelected)',
+                onFiltering: function ($filter) {
+                    var container = $filter.closest('.custom-collapsed-container');
+                    var $ul = $('ul.multiselect-container', container);
+                    var $li = $('li', $ul).not(".multiselect-filter-hidden, .multiselect-filter, .multiselect-all");
+                    var $liAll = $('li.multiselect-all', $ul);
+                    if ($li && $li.length > 0) {
+                        $liAll.css('display', 'block');
+                    }
+                    else {
+                        $liAll.css('display', 'none');
+                    }
+                }
+            });
+            // Gauge READ
+            var gR = new JustGage({
+                id: "GaugeRead",
+                labelFontColor:"black",
+                value: @Model.NotRead,
+                min: 0,
+                max: @Model.Total,
+                title: "@Html.Raw(Resource.doc_Reading)",
+                gaugeColor: "rgba(52, 191, 53, 0.8)",
+                levelColors: ["@Html.GaugeColor(@Model.NotRead, Model.Total)"]
+            });
+            // Gauge APPROVED
+            var gA = new JustGage({
+                id: "GaugeApproved",
+                labelFontColor:"black",
+                value: @Model.NotApproved,
+                min: 0,
+                max: @Model.ToApproved,
+                title: "@Resource.approval",
+                gaugeColor: "rgba(52, 191, 53, 0.8)",
+                levelColors: ["@Html.GaugeColor(@Model.NotApproved, Model.ToApproved)"]
+            });
+            // Gauge TEST
+            var gT = new JustGage({
+                id: "GaugeTested",
+                labelFontColor:"black",
+                value: @Model.NotTested,
+                min: 0,
+                max: @Model.ToTested,
+                title: "@Resource.doc_Test",
+                gaugeColor: "rgba(52, 191, 53, 0.8)",
+                //levelColors: ["#009c49"]
+                levelColors: ["@Html.GaugeColor(@Model.NotTested, Model.ToTested)"]
+            });
+            
+            $("#getstats").submit(function (event) {                
+                var $Btn = $(this).find("button[type=submit]:focus");
+                //console.log("butonn======",$Btn.val());
+                if ($Btn.val() == "Filter") {
+                    openLoading();                   
+                }
+                else {
+                    //openLoading();                   
+                    $("#FormButton").hide();                   
+                    $.fileDownload("@Url.Action("DoStatsManager", "Stats")", {
+                        httpMethod: "POST",
+                            async:true,
+                            data: $("#getstats").serialize() + "&SubmitButton=" + $Btn.val(),
+                        success: function (url) {  
+                            console.log("done");   
+                                $("#FormButton").show();
+                                closeLoading();                               
+                            },
+                        fail: function (responseHtml, url) {
+                            console.log("fail");   
+                                $("#FormButton").show();
+                                $("#FormButton").append("<div class=\"alert alert-danger fade in\" role=\"alert\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>" + responseHtml + "</div>");
+                                closeLoading();                               
+                            }
+                    }).done(function (response) {
+                        console.log(response);                       
+                        console.log("done");                        
+                    }).fail(function (xhr) {                        
+                        console.log("error..");
+                        var errorMessage = $.trim(xhr.responseText);
+                        console.log("errorMessage", errorMessage);                       
+                    });;
+                   $("#FormButton").show();
+                    event.preventDefault();
+                }                
+               
+            });
+
+            $('.datepicker').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+            });
+        });
+    </script>
+}
+

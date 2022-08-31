@@ -1,0 +1,178 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<DocumentViewModel>
+@helper Actions(DocumentViewModel vm)
+{
+    var filename = HttpUtility.HtmlDecode(vm.NomOrigineFichier) + vm.Extension;
+    <div class="row">
+        <div class="col-4">
+            @if (!string.IsNullOrEmpty(vm.NomOrigineFichier) && Html.VideoExistBO(vm.ID, vm.Version, vm.Extension))
+            {
+                <a href="@Html.Raw(Url.Action("GetFileFromDatabase", "Document", new { documentID = vm.ID,inline=false }))" data-toggle="tooltip" data-target="download" title="@Resource.actionTelecharger @filename" class="action-icon icon-green">
+                    <i class="far fa-arrow-alt-circle-down"></i>
+                </a>
+            }
+        </div>
+        <div class="col-4">
+            <a href="@Url.Action("Edit","Document",  new { area = "Admin", Id=vm.ID })" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionModifier" onclick="openLoading();">
+                <i class="fas fa-edit"></i>
+            </a>
+        </div>
+        <div class="col-4">
+            @if (vm.Inactif == false)
+            {
+                <a href="@Url.Action("ConfirmDelete", "Document", new { Id= vm.ID})" role="button" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionSupprimer" data-target="deleteModal">
+                    <i class="fas fa-trash text-danger"></i>
+                </a>
+            }
+        </div>
+    </div>
+}
+@helper LinkDoc(DocumentViewModel vm)
+{
+    if (vm != null)
+    {
+        var urlDoc = string.Format("doc={0}", vm.ID);
+        var docName = string.IsNullOrEmpty(vm.Name) ? vm.Name : vm.Name.Replace("'", "\\'");
+        <a class="link sharable-link-doc" data-toggle="tooltip" href="" onclick="_showDocumentLink('@Html.EncryptURL(urlDoc)', '@docName', event)" ;">
+            <i style="font-size:16px;" class="fas fa-link"></i>
+        </a>
+    }
+
+}
+
+@helper CustomRenderingOfInformatif(DocumentViewModel vm)
+{
+    if (vm.IsNoActionRequired)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfInactif(DocumentViewModel vm)
+{
+    if (vm.Inactif)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfApproved(DocumentViewModel vm)
+{
+    if (vm.Approbation.HasValue && vm.Approbation == 1)
+    {
+        <i class="fas fa-check-circle text-success"></i>
+    }
+    else
+    {
+        <i class="fas fa-minus-circle"></i>
+    }
+}
+
+@helper CustomRenderingOfTest(DocumentViewModel vm)
+{
+    if (vm.Test.HasValue && vm.Test == 1)
+    {
+        <i class="fas fa-check-circle text-success"></i>
+    }
+    else
+    {
+        <i class="fas fa-minus-circle"></i>
+    }
+}
+
+@helper RenderNameWithTooltip(DocumentViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name" class="@(vm.IsDefaultLangName ? "defaultName": string.Empty)">@vm.Name</span>
+}
+@helper CustomRenderingOfMetier(DocumentViewModel vm)
+{
+    if (vm.IsMetier)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfStructure(DocumentViewModel vm)
+{
+    if (vm.IsStructure)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfIcone(DocumentViewModel vm)
+{
+    if (!string.IsNullOrEmpty(vm.NomOrigineFichier) && ".mp4".Equals(vm.Extension, StringComparison.InvariantCultureIgnoreCase))
+    {
+        <img src="~/Content/images/movie-icon.png" />
+    }
+}
+@Html.Grid(Model, "_GridDocument").Columns(columns =>
+{
+    columns.Add(o => o.ID_Category).RenderValueAs(o => "").Css("category")
+    .SetFilterWidgetType("CategoryNameFilterWidget", "/Admin/Document/SearchCategories")
+    .Filterable(true).Sortable(false);
+
+    columns.Add(o => o.ID_SubCategory).RenderValueAs(o => "").Css("subcategory")
+   .SetFilterWidgetType("SubCategoryNameFilterWidget", "/Admin/Document/SearchSousCategories")
+   .Filterable(true).Sortable(false);
+
+    columns.Add(o => o.Name).Css("docname col-name ellipsis").SetColspan(3)
+        .RenderValueAs(o => RenderNameWithTooltip(o))
+        .Filterable(true)
+        .Sortable(true)
+        .IsHtml(true);
+    columns.Add(o => o.NomOrigineFichier).Titled("")
+        .RenderValueAs(o => CustomRenderingOfIcone(o))
+        .Css("video")
+        .Filterable(false)
+        .Sortable(false)
+        .IsHtml(true);
+    columns.Add(o => o.ID).Titled(Resource.doc_Sharable_Link)
+         .RenderValueAs(o => LinkDoc(o))
+         .Css("center")
+         .Filterable(false)
+         .Sortable(false)
+         .IsHtml(true);
+
+
+
+    columns.Add(o => o.Version).SetDataPriority(1)
+ .SetFilterWidgetType("CategoryNameFilterWidget", "/Admin/Document/SearchVersions")
+ .SetWidth(120).Filterable(true).Sortable(true).Css("center");
+
+
+    columns.Add(o => o.Date).Format("{0:dd/MM/yyyy}").SetWidth(60).Filterable(false).Sortable(true).Css("center col-date").SetDataPriority(2);
+    columns.Add(o => o.IsMetier).Titled("MET").RenderValueAs(o => CustomRenderingOfMetier(o)).SetWidth(20).Filterable(true).Sortable(true).IsHtml(true).Css("center").SetDataPriority(2);
+    columns.Add(o => o.IsStructure).Titled("STR").RenderValueAs(o => CustomRenderingOfStructure(o)).SetWidth(20).Filterable(true).Sortable(true).IsHtml(true).Css("center").SetDataPriority(3);
+    columns.Add(o => o.IsNoActionRequired).Titled("Info").RenderValueAs(o => CustomRenderingOfInformatif(o)).SetWidth(20).Filterable(true).Sortable(true).IsHtml(true).Css("center").SetDataPriority(5);
+    columns.Add(o => o.Approbation).Titled("Appro").RenderValueAs(o => CustomRenderingOfApproved(o)).SetWidth(20).IsHtml(true).Css("center").SetDataPriority(6)
+    .SetFilterWidgetType("System.Boolean")
+    .Filterable(true).Sortable(true);
+    columns.Add(o => o.Test).RenderValueAs(o => CustomRenderingOfTest(o)).SetWidth(95).IsHtml(true).Css("center").SetDataPriority(6)
+     .SetFilterWidgetType("System.Boolean")
+     .Filterable(true).Sortable(true);
+    columns.Add(o => o.TypeAffectation).SetWidth(120).Filterable(false).Sortable(true).SetDataPriority(7);
+    //columns.Add(o => o.Commentaire).SetWidth(135).Filterable(true).Sortable(true);
+    columns.Add(o => o.Inactif).RenderValueAs(o => CustomRenderingOfInactif(o)).Filterable(true).Sortable(true).IsHtml(true).SetWidth(150).Css("center").SetDataPriority(4);
+    //columns.Add().Titled(Resource.actions).RenderValueAs(o => CustomRenderingOfActions(o)).IsHtml(true).Css("actions")
+    //       .Filterable(false).Sortable(false);
+    columns.Add(o => o.Actions).Titled(@Resource.actions).RenderValueAs(o => Actions(o)).Filterable(false).Sortable(false).IsHtml(true).Css("center col-actions").SetWidth(70);
+
+
+}).WithPaging().WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e => true ? "admclickable" : string.Empty)
+

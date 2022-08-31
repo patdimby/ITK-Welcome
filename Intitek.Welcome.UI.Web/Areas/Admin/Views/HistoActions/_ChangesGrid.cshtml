@@ -1,0 +1,43 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers
+
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<ChangesViewModel>
+
+@helper RenderColWithTooltip(string str)
+{
+    <span data-toggle="tooltip" title="@HttpUtility.HtmlDecode(str)">@HttpUtility.HtmlDecode(str)</span>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.DateAction).Css("col-date")
+    .Format("{0:dd/MM/yyyy H:mm:ss}")
+    .Filterable(true).Sortable(true).SetWidth(60);
+
+    columns.Add(o => o.ObjectCode).Css("col-donnee ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(o.ObjectCode)).IsHtml(true)
+    .SetFilterWidgetType("CheckboxFilterWidget", "/Admin/HistoActions/SearchObjectCodes")
+    .Filterable(true).Sortable(true).SetWidth(155);
+
+    columns.Add(o => o.Action).Css("col-action ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(Resource.ResourceManager.GetString($"histoAction_{o.Action}"))).IsHtml(true)
+    .SetFilterWidgetType("CheckboxFilterWidget", "/Admin/HistoActions/SearchActions")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.Username).Css("col-username ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(o.Username)).IsHtml(true)
+    .Filterable(true).Sortable(true).SetWidth(100);
+
+    columns.Add(o => o.ID_Object).Css("center")
+    .Filterable(false).Sortable(true).SetWidth(20);
+
+    columns.Add(o => o.Description).RenderValueAs(o => RenderColWithTooltip(o.Description)).IsHtml(true)
+    .Css("col-description ellipsis")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.LinkedObjects).Css("col-linkedobjects ellipsis").Titled(o => o.LinkedObjects).RenderValueAs(o => RenderColWithTooltip(o.LinkedObjects)).IsHtml(true)
+    .Filterable(true).Sortable(true);
+
+}).WithPaging().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "admclickable dblclickable fit-content-columns" : string.Empty).SetOnClick("showInformationOfColumn(this, 'Description');")
+

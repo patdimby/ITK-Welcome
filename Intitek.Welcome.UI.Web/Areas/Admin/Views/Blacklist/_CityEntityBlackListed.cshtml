@@ -1,0 +1,22 @@
+﻿@using GridMvc.Html;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<CityEntityBlacklistViewModel>
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.City)
+    .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.Entity)
+   .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.DateCre).Format("{0:dd/MM/yyyy H:mm:ss}").SetWidth(150)
+    .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.NbCollabInactif).Css("center")
+        .Filterable(false).Sortable(false);
+    columns.Add(o => o.NbCollabActif).Css("center")
+       .Filterable(false).Sortable(false);
+}).EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg)
+
+
+

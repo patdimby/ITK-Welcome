@@ -1,0 +1,172 @@
+﻿@using Intitek.Welcome.UI.ViewModels
+@model QcmViewModel
+@{
+        ViewBag.Title = string.Format("{0}: {1} ", @Resource.mcqTitlePage, Model.Qcm.QcmTrad != null ? HttpUtility.HtmlDecode(Model.Qcm.QcmTrad.QcmName) : HttpUtility.HtmlDecode(Model.Qcm.DefaultTrad.QcmName));
+    }
+<div>
+    @Html.Partial("_header")
+</div>
+<!-- wrapper  -->
+<!-- ============================================================== -->
+<div class="main-wrapper">
+    <input type="hidden" id="DocumentID" value="@Model.DocumentID" />
+    <input type="hidden" id="DocumentVersion" value="@Model.DocumentVersion" />
+    <input type="hidden" id="QcmScoreMinmal" value="@Model.Qcm.Qcm.NoteMinimal" />
+    <input type="hidden" id="NbQuestions" value="@Model.Qcm.Qcm.NbQuestions" />
+    <input type="hidden" id="DateCre" value="@Model.DateCre" />
+    @*<input type="hidden" id="IsRead" value="@Model.IsRead" />
+        <input type="hidden" id="IsApproved" value="@Model.IsApproved" />
+        <input type="hidden" id="IsTested" value="@Model.IsTested" />*@
+    <div class="page-header">
+        <div class="row page-breadcrumb">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="@Url.Action("Index","UserDocument")" class="breadcrumb-link">@Resource.menuHome</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page"> @Resource.mcq</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="row m-r-0 m-l-0 p-r-15 p-l-0">
+                <div class="pageheader-title">
+                    <span> @Resource.mcq</span>
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+                       class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-form mb-2">
+        <div class="card-header text-center m-0 p-t-10">
+            <h3 class="m-t-0 m-b-0">
+                <span> @Resource.mcqTitle</span>
+                <span>@(Model.Qcm.QcmTrad != null ? HttpUtility.HtmlDecode(Model.Qcm.QcmTrad.QcmName) : HttpUtility.HtmlDecode(Model.Qcm.DefaultTrad.QcmName))</span>
+                <input type="hidden" id="QcmID" value="@Model.Qcm.Qcm.Id" />
+            </h3>
+        </div>
+        <div class="card-body">
+            <form class="question-form" action="@Url.Action("Result","Qcm")" method="post">
+                <div class="list-group">
+                    @{
+                        var i = 1;
+                        foreach (var question in Model.Questions)
+                        {
+
+                            if (question.Question.IsMultipleReponse)
+                            {
+                                @Html.Partial("_QuestionMultiple", question)
+                            }
+                            else
+                            {
+                                @Html.Partial("_QuestionSimple", question)
+                            }
+                            i++;
+                        }
+                    }
+                </div>
+                <div class="row">
+                    <div class="col center p-t-25 mb-2">
+                        <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                onclick="goBack()">
+                            @Resource.buttonCancel
+                        </button>
+
+                        <button id="MCQ-validate" disabled type="submit"
+                                class="btn btn-wme btn-green next-btn space-betwen-btn btnValider">
+                            @Resource.buttonValidate
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- end wrapper  -->
+    <!-- ============================================================== -->
+
+</div>
+<!-- ============================================================== -->
+<!-- end wrapper -->
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+    </script>
+    <script>
+
+        var responseAnswered = [];
+
+        $('.questionQcm input[type=checkbox],input[type=radio]').change(function () {
+
+            $('.questionQcm').each(function (index) {
+                responseAnswered[index] = $(this).find('input[type = checkbox], input[type = radio]').is(":checked");
+
+            });
+            _validatorsMCQ();
+        });
+
+        _validatorsMCQ();
+        function _validatorsMCQ() {
+            var allQuestionAnswered = false;
+            $.each(responseAnswered, function (index) {
+                allQuestionAnswered = responseAnswered[index];
+                if (!responseAnswered[index]) {
+                    return false;
+                }
+            });
+            if (allQuestionAnswered) {
+                $('#MCQ-validate').prop('disabled', false);
+            } else {
+                $('#MCQ-validate').prop('disabled', true);
+            }
+        }
+
+        $(".btnValider").on("click", function (e) {
+            e.preventDefault();
+            openLoading();
+            var reponses = [];
+            $('.questionQcm input[type=checkbox],input[type=radio]').each(function () {
+
+                if ($(this).is(":checked")) {
+                    //var reponse = {
+                    //    id: $(this).data('id')
+                    //};
+                    reponses.push($(this).data('id'));
+                }
+            });
+
+            var userQcmVM = {
+                DocumentId: $("#DocumentID").val(),
+                DocumentVersion: $("#DocumentVersion").val(),
+                DateCre: $("#DateCre").val(),
+                QcmID: $("#QcmID").val(),
+                QcmScoreMinimal: $("#QcmScoreMinmal").val(),
+                NbQuestions: $("#NbQuestions").val(),
+                UserID: $("#UserID").val(),
+                Reponses: reponses
+            };
+
+            $.ajax({
+                url: host + "Qcm/Save",
+                type: 'POST',
+                data: '{"model":' + JSON.stringify(userQcmVM) + '}',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    if (result.success === true) {
+                        document.location = host + 'Qcm/Result?qcmId=' + result.data.QcmID + '&userId=' + result.data.UserID + '&docId=' + $("#DocumentID").val() + '&docV=' + $("#DocumentVersion").val();
+                    } else {
+
+                    }
+                    closeLoading();
+                }
+            });
+        });
+    </script>
+}

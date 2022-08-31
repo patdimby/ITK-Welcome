@@ -1,0 +1,116 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Intitek.Welcome.UI.Web.Security;
+@using Intitek.Welcome.UI.Resources;
+@using System.Configuration;
+@{
+    Layout = null;
+    Boolean isMcqList = this.ViewContext.RouteData.Values["controller"].ToString() == "Qcm" && this.ViewContext.RouteData.Values["action"].ToString() == "Index";
+    Boolean isMcqEdit = this.ViewContext.RouteData.Values["controller"].ToString() == "Qcm" && this.ViewContext.RouteData.Values["action"].ToString() == "Edit";
+    Boolean isDocEdit = this.ViewContext.RouteData.Values["controller"].ToString() == "Document" && this.ViewContext.RouteData.Values["action"].ToString() == "Edit";
+}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Cache-Control" content="private, no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="icon" href="@Url.Content("~/Content/images/logo_astek.png")" />
+    @Styles.Render("~/Content/custom-css")
+    @Styles.Render("~/Content/sidebar-css")
+    @Styles.Render("~/Content/backcss")
+    @RenderSection("styles", required: false)
+    <title>@ViewBag.Title</title>
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- main container -->
+    <!-- ============================================================== -->
+    <div class="main-container">
+        <div class="wrapper">
+            <!-- ============================================================== -->
+            <!-- navbar -->
+            <!-- ============================================================== -->
+            @Html.Partial("_sidebar")
+            <!-- ============================================================== -->
+            <!-- end navbar -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- wrapper  -->
+            <div id="content" class="main-wrapper admin-wrapper">
+                @Html.Partial("_HeaderInside")
+                @RenderBody()
+                <!-- ============================================================== -->
+            </div>
+
+            <div>
+                @Html.Partial("_footer")
+            </div>
+        </div>
+
+        <!-- <div w3-include-html="common/footer.html"></div> -->
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- end wrapper  -->
+    <!-- ============================================================== -->
+    <!-- Del generic popup -->
+    @*@Html.Partial("_DeleteDialog")*@
+    @if (isDocEdit)
+    {
+        @Html.Partial("_ConfirmDocumentEdition")
+    }
+    @if (isMcqList)
+    {
+        <!-- New QCM popup -->
+        @Html.Partial("_QcmNewDialog");
+    }
+    @*if (isMcqEdit)
+        {
+             Modif Question/Answers popup
+            @Html.Partial("_QcmQuestionEdit");
+        }*@
+    <!-- End -->
+    <!-- ============================================================== -->
+    <!-- end main wrapper  -->
+    <!-- ============================================================== -->
+    <!-- Optional JavaScript -->
+    @Scripts.Render("~/bundles/jquery-bootstrap")
+    @Scripts.Render("~/bundles/custom.js")
+    <script src="@Url.Content("~/Scripts/js/popup-validator.js")" defer></script>
+
+    <script type="text/javascript" charset="utf-8">
+        const pdfPath = "@ConfigurationManager.AppSettings["TempPDFFolder"]";
+        //const host = "@ConfigurationManager.AppSettings["Host"]";
+        const host = "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))";
+        const maxFileUploadSize = parseInt("@ConfigurationManager.AppSettings["MaxFileUploadSize"]");
+
+        const ErrorDocumentNameRequired = '@Resource.errorDocumentNameRequired';
+        const ErrorVersionRequired = '@Resource.errorVersionRequired';
+        const ErrorFileRequired = '@Resource.errorFileRequired';
+        const ErrorFileSelected = '@Resource.errorFileSelected';
+        const ErrorQcmRequired = '@Resource.errorQcmRequired';
+        const ErrorDocumentNameDuplicated = '@Resource.errorDocumentNameDuplicated';
+        const ErrorFileTooBig = '@Resource.errorFileTooBig';
+        const ErrorCategoryNameRequired = '@Resource.errorCategoryNameRequired';
+        const ErrorCategoryNotSelected = '@Resource.errorCategoryNotSelected';
+        const ErrorSubCategoryNameRequired = '@Resource.errorSubCategoryNameRequired';
+        const ErrorQuestionTextRequired = '@Resource.errorQuestionTextRequired';
+        const ErrorResponseTextRequired = '@Resource.errorResponseTexteRequired';
+        const ErrorReadingModeRequired = '@Resource.errorReadingModeRequired';
+        const ErrorTypeRequired = '@Resource.errorTypeRequired';
+        const ErrorDocumentPhaseRequired = '@Resource.errorDocumentPhaseRequired';
+        const UploadDefaultText = '@Resource.fileUploadPlaceholder';
+        const SelectCategoryText = '@Resource.selectCategory';
+        const SelectQuizzText = '@Resource.selectQcm';
+    </script>
+    @RenderSection("scripts", required: false)
+
+</body>
+
+</html>

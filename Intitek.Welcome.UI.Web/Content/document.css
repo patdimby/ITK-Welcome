@@ -1,0 +1,61 @@
+﻿span.groupcateg{
+    font-weight :bold ;
+    margin-left:-2px ;
+}
+span.nonesubcateg {
+    margin-left: -8px;
+}
+tr.subcategory td {
+    font-weight:bold ;
+}
+tr.subcategory td div{
+    margin-left : 2px;
+}
+.table tr.category td {
+    padding: 0px;
+}
+
+.table tr.category > td div {
+    padding: 8px;
+    color: #fff;
+    background: linear-gradient(120deg, rgb(0, 105, 118) 25%, #d4f4ff 100%);
+    font-size: 12pt;
+    font-weight: bold;
+    border-radius: 5px;
+    border-top: none;
+}
+
+.table tr.category > td div:hover {
+    color: var(--green-color);
+    background: transparent;
+}
+
+table.intitek td {
+    text-align:left ;
+}
+th.category {
+    min-width: 100px;
+}
+th.subcategory {
+    min-width: 100px;
+}
+th.docname {
+    min-width: 108px;
+}
+td.docname {
+    padding-left: 28px;
+    min-width: 108px;
+    max-width: 108px;
+}
+table.grid-table tr.coched td {
+    background: var(--green-color);
+    color: white;
+}
+td.video, th.video {
+    padding: 0px !important;
+}
+div.defaultName, span.defaultName {
+    color: grey !important;
+    font-style: italic;
+}
+

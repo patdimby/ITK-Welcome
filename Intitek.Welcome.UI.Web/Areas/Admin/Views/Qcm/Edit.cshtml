@@ -1,0 +1,951 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@using Intitek.Welcome.Infrastructure.Helpers
+@model Intitek.Welcome.UI.ViewModels.Admin.QcmViewModel
+@{
+    ViewBag.Title = Model.ID > 0 ? string.Format("Administration | {0}", HttpUtility.HtmlDecode(Model.Name)) : string.Format("Administration | {0}", Resource.newQCM);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles
+{
+    <style type="text/css">
+        label.fileContainer {
+            width:99%;
+        }
+        span.fileContainerDownload {
+            float: right;
+            width: 0px;
+            text-align: center;
+        }
+        span.fileContainerDownload a {
+            display: inline-block;
+            width: 25px;
+            height: 32px;
+            line-height: 32px;
+            vertical-align: bottom;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link"  onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Qcm")" class="breadcrumb-link"  onclick="openLoading();">@Resource.qcmLists</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@(Model.ID > 0 ? HttpUtility.HtmlDecode(Model.Name) : Resource.newQCM)</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@(Model.ID > 0 ? HttpUtility.HtmlDecode(Model.Name) : Resource.newQCM)</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="@Url.Action("Index", "Qcm")"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div class="row">
+                    <div class="col-11">
+                        <h2 class="center">@(Model.ID > 0 ? string.Format("Edition {0}", HttpUtility.HtmlDecode(Model.Name)) : Resource.qcmEdit)</h2>
+                    </div>
+                    <div class="col-1 pb-0">
+                        @*<div class="nav nav-group-right admin-lang">
+                            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                               class="nav-link nav-link-lan dropdown-toggle">
+                                @if (ViewBag.CulturName != null && ViewBag.CulturName.StartsWith("en"))
+                                {
+                                    <img id="adminlang-img" src="@Url.Content("../../Content/images/flags/en.png")" alt="en">
+                                }
+                                else if (ViewBag.CulturName != null && ViewBag.CulturName.StartsWith("fr"))
+                                {
+                                    <img id="adminlang-img" src="@Url.Content("../../Content/images/flags/fr.png")" alt="fr">
+                                }
+                                else
+                                {
+                                    <img id="adminlang-img" src="@Url.Content("../../Content/images/flags/fr.png")" alt="fr">
+                                }
+                            </a>
+                            <div class="dropdown-menu dropdown-sous-menu first-plan dropdown-menu-right nav-lan-dropdown"
+                                 aria-labelledby="navbarDropdownMenuLink3">
+                                @foreach (var lang in ViewBag.Langues)
+                                {
+                                    <a class="dropdown-item admin-lang" id="@string.Format("admin-{0}",lang.Code.Substring(0,2))" href="#" data-langId="@lang.ID" data-code="@lang.Code.Substring(0,2)">
+                                        <img src="@Url.Content(string.Format("../../Content/images/flags/{0}.png", lang.Code.Substring(0,2)))" alt="@lang.Code.Substring(0,2)">
+                                    </a>
+                                }
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+                <div class="card card-form p-0">
+                    <form id="editQcmForm" action="@Url.Action("Edit", "Qcm")" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="ID" name="ID" value="@Model.ID" />
+                        <input type="hidden" id="CodeLangue" name="CodeLangue" value="@Model.CodeLangue" />
+                        <input type="hidden" id="Inactif" name="Inactif" value="@Model.Inactif.ToString()" />
+                        <input type="hidden" id="IsUpdatable" name="IsUpdatable" value="@Model.IsUpdatable.ToString()" />
+                        <div class="card-body show row">
+                            <div class="col-6">
+                                <div class="form-group row">
+                                    <div class="col-8 offset-2">
+                                        <div class="form-group row item_vertical">
+                                            <label class="col-4 col-form-label label-align-right">@Resource.qcm_Name</label>
+                                            <div class="col-8">
+                                                <input type="text" required="" data-parsley-minlength="6"
+                                                       name="Name" placeholder="@(string.IsNullOrEmpty(Model.Name) ? HttpUtility.HtmlDecode(Model.DefaultTradName):Resource.qcm_Name)"
+                                                       value="@HttpUtility.HtmlDecode(Model.Name)"
+                                                       autofocus class="form-control form-control-required   input-trad" @(Model.IsUpdatable ? "" : "disabled")>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-8 offset-2">
+                                        <div class="form-group row item_vertical">
+                                            <label class="col-4 col-form-label label-align-right">@Resource.file</label>
+                                            <div class="col-8">
+                                                <label class="fileContainer" id="fileContainerPDF">
+                                                    <div class="fileContainerFileName" id="fileNamePDF"></div>
+                                                    @if (Html.TemplateFileExist(Model.ID, Model.CodeLangue))
+                                                    {
+                                                        <span id="uploadLabelPDF" class="uploadLabel">@Model.TemplateFilename</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span id="uploadLabelPDF" class="uploadLabel-holder">@Resource.fileUploadPlaceholder</span>
+                                                    }
+                                                    <span class="fileContainerButton"><i class="fas fa-upload"></i></span>
+                                                    <input name="FileUploadPDF" id="FileUploadPDF" type="file" accept="application/pdf" @(Model.IsUpdatable ? "" : "disabled") />
+                                                    <input type="hidden" id="uploadedFileSize" name="uploadedFileSize" value="" />
+                                                </label>
+                                                @if (Html.TemplateFileExist(Model.ID, Model.CodeLangue))
+                                                {
+                                                    <span class="fileContainerDownload">
+                                                        <a href="@Html.TemplateFile(Model.ID, Model.CodeLangue, false)" target="_blank" data-toggle="tooltip" class="icon-green" title="@Resource.actionTelecharger @Model.TemplateFilename">
+                                                            <i class="far fa-arrow-alt-circle-down"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-8 offset-2">
+                                        <div class="form-group row item_vertical">
+                                            <label class="col-4 col-form-label label-align-right">@Resource.Badge</label>
+                                            <div class="col-8">
+                                                <label class="fileContainer" id="fileContainer">
+                                                    <div class="fileContainerFileName" id="fileName"></div>
+                                                    @if (Html.BadgeExist(Model.ID, Model.CodeLangue))
+                                                    {
+                                                        <span id="uploadLabel" class="uploadLabel">@Model.Filename</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span id="uploadLabel" class="uploadLabel-holder">@Resource.fileUploadPlaceholder</span>
+                                                    }
+                                                    <span class="fileContainerButton"><i class="fas fa-upload"></i></span>
+                                                    <input name="FileUpload" id="FileUpload" type="file" accept="image/x-png" @(Model.IsUpdatable ? "" : "disabled") />
+                                                    <input type="hidden" id="uploadedFileSize" name="uploadedFileSize" value="" />
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row image-preview">
+                                    <div class="col-8 offset-2">
+                                        <div class="form-group row item_vertical">
+                                            <label class="col-3 col-form-label label-align-right"></label>
+                                            <div class="col-9">
+                                                <img class="NO-CACHE" src="@Html.Badge(Model.ID, Model.CodeLangue, Model.CodeLangue)" height="81" id="previewImg">
+                                                @if (Html.BadgeExist(Model.ID, Model.CodeLangue))
+                                                {
+                                                    <button type="button" class="btn btn-wme btn-green next-btn space-betwen-btn" onclick="deleteBadge();">
+                                                        @Resource.qcm_deleteBadge
+                                                    </button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-8 offset-2">
+                                        <div class="form-group row item_vertical">
+                                            <label class="col-4 col-form-label label-align-right">@Resource.qcm_NbQuestions</label>
+                                            <div class="col-8">
+                                                <input type="number" data-parsley-minlength="1"
+                                                       name="NbQuestions" placeholder="@Resource.qcm_NbQuestions" value="@Model.NbQuestions"
+                                                       autofocus class="form-control" @(Model.IsUpdatable ? "" : "disabled")>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8 offset-2">
+                                        <div class="form-group row item_vertical">
+                                            <label class="col-4 col-form-label label-align-right">@Resource.qcm_NoteMinimal</label>
+                                            <div class="col-8">
+                                                <input type="number" data-parsley-minlength="1"
+                                                       name="NoteMinimal" placeholder="@Resource.qcm_NoteMinimal" value="@Model.NoteMinimal"
+                                                       autofocus class="form-control" @(Model.IsUpdatable ? "" : "disabled")>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row qcm-inactif">
+                                    <div class="col-8 offset-2">
+                                        <div class="form-group row item_vertical">
+                                            <label class="col-4 col-form-label label-align-right" for="inlineRadio2" style="padding-left: 10px">@Resource.qcm_Inactif</label>
+
+                                            <div class="col-8">
+                                                <label class="switch">
+                                                    <input type="checkbox" id="chkInactif" name="chkInactif" value="@Model.Inactif" @(Model.Inactif ? "checked" : "") @(Model.IsUpdatable ? "" : "disabled")>
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            @if (Model.IsUpdatable)
+                            {
+                                <div class="row ml-0 mr-0 mb-3">
+                                    <a href="@Url.Action("GetQuestion", "Qcm", new { Id = 0})" role="button" data-target="#editQcmQuestionModal" class="btn btn-wme btn-green editQuestion"><i class="fas fa-plus-circle"></i>@Resource.qcmNewQuestion</a>
+                                </div>
+                            }
+                            <table class="table row-collapsible table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span>@Resource.Order</span><i class="fas fa-sort"></i>
+                                        </th>
+                                        <th class="question-answer-column">
+                                            <span>
+                                                <i id="expandAllTrigger" class="fa fa-plus-square"></i>
+                                                <span>@Resource.texteQuestion</span><i class="fas fa-sort"></i>
+                                            </span>
+                                            <span class="answer-column">
+                                                @Resource.rightAnswer
+                                            </span>
+                                        </th>
+                                        <th class="center"><span>@Resource.qcm_Inactif</span></th>
+                                        @if (Model.IsUpdatable)
+                                        {
+                                            <th class="action-column"><span>@Resource.actions</span></th>
+                                            <th class="action-column"></th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var question in Model.Questions)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @question.Question.OrdreQuestion
+                                            </td>
+                                            <td>
+                                                <span class="btn-question btn btn-link-collapse expand-plus-minus" data-toggle="collapse"
+                                                      data-target="@string.Format("#collapseQ_{0}", question.Question.Id)" aria-expanded="false" aria-controls="collapseSeven">
+                                                    <i class="fa fa-plus-square"></i>
+                                                </span>
+                                                <span class="title"
+                                                      title="@(question.QuestionTrad != null ? HttpUtility.HtmlDecode(question.QuestionTrad.TexteQuestion) : string.Empty)">
+                                                    <span class="title @(question.IsTrad ? "defaultName" : string.Empty)"
+                                                          title="@(question.QuestionTrad != null ? HttpUtility.HtmlDecode(question.QuestionTrad.TexteQuestion) : HttpUtility.HtmlDecode(question.DefaultTrad.TexteQuestion))">
+                                                        @(question.QuestionTrad != null ? Utils.StripText(HttpUtility.HtmlDecode(question.QuestionTrad.TexteQuestion), 192) : Utils.StripText(HttpUtility.HtmlDecode(question.DefaultTrad.TexteQuestion), 192))
+                                                    </span>
+                                                </span>
+                                                <div id="@string.Format("collapseQ_{0}", question.Question.Id)" class="collapse" aria-labelledby="Step">
+
+                                                    <ul class="list-unstyled list-response">
+                                                        @foreach (var reponse in question.Reponses)
+                                                        {
+                                                            <li class='@(reponse.Reponse.IsRight ? "right-response" : "") @(reponse.IsTrad ? "defaultName" : "")'>
+                                                                @(reponse.ReponseTrad != null ? HttpUtility.HtmlDecode(reponse.ReponseTrad.Texte) : HttpUtility.HtmlDecode(reponse.DefaultTrad.Texte))
+
+                                                            </li>
+                                                        }
+
+                                                    </ul>
+                                                    @*@if (question.QuestionTrad != null && !string.IsNullOrEmpty(question.QuestionTrad.TexteJustification))
+                                                    {*@
+
+                                                    <div class="justification-text @(question.QuestionTrad != null ? string.Empty : "defaultJustification")">
+                                                        @(question.QuestionTrad != null ? HttpUtility.HtmlDecode(question.QuestionTrad.TexteJustification) :
+                                                             HttpUtility.HtmlDecode(question.DefaultTrad.TexteJustification))
+                                                    </div>
+
+                                                    @*}*@
+                                                </div>
+                                            </td>
+                                            <td class="center" style="width:70px;">
+                                                @{
+                                                    var chkIn = "";
+                                                    if (question.Question.inactif == 1)
+                                                    {
+                                                        chkIn = "checked";
+                                                    }
+                                                }
+                                                <input type="checkbox" @chkIn style="display:inline" onclick="return false;" />
+                                            </td>
+                                            @if (Model.IsUpdatable)
+                                            {
+                                                <td class="action-column no-padding" style="width:70px;">
+                                                    <div class="row no-padding">
+                                                        <div style="width: 100%;">
+                                                            <a href="@Url.Action("GetQuestion", "Qcm", new { Id = question.Question.Id })" role="button" data-target="#editQcmQuestionModal"
+                                                               class="action-icon icon-primary editQuestion">
+                                                                <i data-toggle="tooltip" title="@Resource.update" class="fas fa-edit"></i>
+                                                            </a>
+                                                            &nbsp;
+                                                            @*<span onclick="showDeleteMessage('@Resource.modalContentDelete')">*@
+                                                            <a href="@Url.Action("ConfirmQuestionDelete", "Qcm", new { Id = question.Question.Id, IsDeleted = true })" role="button" data-target="deleteModal">
+                                                                <i class="fas fa-trash icon-danger" data-toggle="tooltip" title="@Resource.delete"></i>
+                                                            </a>
+                                                            @*</span>*@
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <i data-toggle="tooltip" title="@Resource.down" class="fas fa-arrow-down" onclick="moveDown(@question.Question.Id)"></i>
+                                                    &nbsp;
+                                                    <i data-toggle="tooltip" title="@Resource.up" class="fas fa-arrow-up" onclick="moveUp(@question.Question.Id)"></i>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col center p-t-25">
+                                <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                        onclick="_redirectTo('@Url.Action("Index", "Qcm")')">
+                                    @Resource.buttonCancel
+                                </button>
+                                <button type="submit" id="btnValidate"
+                                        class="btn btn-wme btn-green next-btn space-betwen-btn">
+                                    @Resource.buttonValidate
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteBadgeDial" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <span><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;&nbsp;<span>@Resource.removal</span></span>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="@Url.Action("DeleteBadge","Qcm")">
+                    <input type="hidden" id="ID" name="ID" value="@Model.ID" />
+                    <input type="hidden" id="CodeLangue" name="CodeLangue" value="@Model.CodeLangue" />
+                    <p>@Html.Raw(Resource.qcm_DeleteBadgeMessage)</p>
+                    <div class="modal-bouton-action">
+                        <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.buttonNo</a>
+                        <input type="submit" id="modalBtnDelete" class="btn btn-danger btn-wme btn-xs" value="@Resource.buttonYes" onclick="openLoading();" />
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        var questionExpanded = false;
+        var orders = [];
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            _placeArrowOrder();
+        });
+
+        $(document).ready(function () {
+            
+            $('.NO-CACHE').attr('src', function () {
+                if ($(this).attr('src') !== undefined && $(this).attr('src').length>0) {
+                    console.log("here", $(this).attr('src'));
+                    return $(this).attr('src') + "?a=" + Math.random();
+                }
+            });
+        });
+
+        if ($("input[name='Name']").val() != "") {
+            $("input[name='Name']").removeClass('form-control-required');
+        }
+
+        function moveUp(id) {
+            openLoading(true);
+            $.ajax({
+                url: host + "Admin/Qcm/OrderQuestion",
+                type: 'POST',
+                data: '{"Id":' + id + ', "Direction":"UP"}',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+
+                    if (result.success === true) {
+                        document.location = host + 'Admin/Qcm/Edit?Id=' + result.data;
+
+
+                    }
+                }
+            });
+
+            _placeArrowOrder();
+            // ToDo
+        }
+
+        function moveDown(id) {
+            openLoading(true);
+            $.ajax({
+                url: host + "Admin/Qcm/OrderQuestion",
+                type: 'POST',
+                data: '{"Id":' + id + ', "Direction":"DOWN"}',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+
+                    if (result.success === true) {
+                        document.location = host + 'Admin/Qcm/Edit?Id=' + result.data;
+                    }
+                }
+            });
+
+            _placeArrowOrder();
+            // ToDo
+        }
+
+        function addResponse() {
+            //openLoading(true);
+            $('.right-response-error').parent().hide();
+            var idQuestion = $("#ID_Question").val();
+            var idx = $("#repIndex").val();
+            if ($('input.reponse').last().val() !== "") {
+                $("div.row-response").append(
+                    '<div id="rowAnswer_' + idx + '" class="col-12 answer answer-' + idx + '">' +
+                    '<div class="form-group row item_vertical">' +
+                        '<label class="col-2 col-form-label align-right">@Resource.answer '+ idx + '</label>' +
+                        '<div class="col">' +
+                        '<input id="answer_' + idx + '" type="text" required="" data-parsley-minlength="6" data-id="0"' +
+                        ' name="Name" placeholder="@Resource.answer   ' + idx + '"' +
+                        ' autofocus class="form-control form-control-required reponse">' +
+                    '</div>' +
+
+                        '<div class="col-1">' +
+                        '<label class="custom-control custom-checkbox answer-checkbox">' +
+                        '<input id="ck2" name="ck2" type="checkbox" value="bar"' +
+                        '       class="custom-control-input is-positive">' +
+                        '<span class="custom-control-label custom-control-checkbox"></span>' +
+                        '</label>' +
+                    '</div>' +
+                     '<div class="col-1">' +
+                    '<input type="text" required="" data-parsley-minlength="6" data-order="' + idx + '"' +
+                                                           'name= "OrdreReponse" placeholder="@Resource.Order' + idx + '"' +
+                                                           'value="' + idx + '" ' +
+                                                            'class="form-control center ordreReponse" > ' +
+
+                                                '</div > ' +
+                    ' <div class="col-1 text-center">' +
+                    '<a href="#" role="button" classe="delete-reponse text-center" onclick="deleteReponse(' + idx + ',' + idQuestion + ')">' +
+                            '<i class="fas fa-trash icon-danger" data-toggle="tooltip" title="@Resource.delete"></i>' +
+                        '</a>' +
+                    '</div>' +
+                    '<div style="width:20px"></div>' +
+                '</div>');
+                // Scroll to
+                $(".answers_content").animate({
+                    scrollTop: $(".answers_content").scrollTop() + 54
+                });
+                $('#answer_' + idx).focus();
+                idx++;
+                $("#repIndex").val(idx);
+            }
+            //openLoading(false);
+            //_placeArrowOrder();
+            // ToDo
+        }
+
+        function deleteReponse(idx, id) {
+            if (id > 0) {
+                modalConfirm('@Resource.deleteAnswerConfirmation', function (yes) {
+                    if (yes) {
+                    openLoading();
+                    @*$(".answer-" + idx).remove();
+                    $("#repIndex").val($("#repIndex").val() - 1);
+                    $(".answer").each(function (index) {
+                        var answeroldIdx = $(this).data('idx');
+                        var answernewIdx = index + 1;
+                        $(this).removeClass('answer-' + answeroldIdx).addClass('answer-' + answernewIdx);
+                        $(this).find("input[name='Name']").attr('placeholder','@Resource.answer ' + answernewIdx);
+                        $(this).find('label.col-form-label').html('@Resource.answer ' + answernewIdx);
+                        $(this).find('a.delete-reponse').removeAttr('onclick').attr('onclick', 'deleteReponse(' + answernewIdx +')');
+                    });*@
+                    if (id > 0) {
+                        $.ajax({
+                            url: host + "Admin/Qcm/DeleteReponse",
+                            type: 'POST',
+                            data: '{"Id":' + id + '}',
+                            contentType: "application/json; charset=utf-8",
+                            async: false,
+                            success: function (result) {
+                                $(".answer-" + idx).remove();
+                                $("#repIndex").val($("#repIndex").val() - 1);
+                                $(".answer").each(function (index) {
+                                    var answeroldIdx = $(this).data('idx');
+                                    var answernewIdx = index + 1;
+                                    var id = $(this).find("input[name='Name']").data("id");
+                                    $(this).removeClass('answer-' + answeroldIdx).addClass('answer-' + answernewIdx);
+                                    $(this).find("input[name='Name']").attr('placeholder', '@Resource.answer ' + answernewIdx);
+                                    $(this).find('label.col-form-label').html('@Resource.answer ' + answernewIdx);
+                                    $(this).find('a.delete-reponse').removeAttr('onclick').attr('onclick', 'deleteReponse(' + answernewIdx + ',' + id + ')');
+                                });
+                            }
+                        });
+                    } else {
+                        $("#rowAnswer_" + idx).remove();
+                    }
+                    closeLoading();
+                    }
+                });
+            } else {
+                $("#rowAnswer_" + idx).remove();
+            }
+        }
+
+        function _placeArrowOrder() {
+            $(".row-response .fa-arrow-down").first().css({ visibility: 'hidden' });
+            $(".row-response .fa-arrow-up").last().css({ visibility: 'hidden' });
+        }
+
+
+        function containDuplicate(numbers) {
+            var uniq = numbers
+                .map((name) => {
+                    return {
+                        count: 1,
+                        name: name
+                    }
+                })
+                .reduce((a, b) => {
+                    a[b.name] = (a[b.name] || 0) + b.count
+                    return a
+                }, {});
+
+            var duplicates = Object.keys(uniq).filter((a) => uniq[a] > 1);
+            return duplicates;
+        }
+
+        function validateEditQuestionForm() {
+            orders = [];
+            var isValid = true;
+            var isTexteQuestionRequired = true;
+            var isAllTexteResponseRequired = true;
+            var isOneResponseRight = false;
+            var isOrderInRange = true;
+
+            if ($("#TexteQuestion").val() === "") {
+                isTexteQuestionRequired = false;
+                $("#TexteQuestion").parent().remove('.help-block').append('<small class="help-block" style=""><span class="error">' + ErrorQuestionTextRequired + '</span></small>');
+            }
+
+            $('.answer').each(function (index) {
+                if ($(this).find('input.reponse').val() === "") {
+                    isAllTexteResponseRequired = false;
+                    $(this).find('input.reponse').parent().remove('.help-block').append('<small class="help-block" style=""><span class="error">' + ErrorResponseTextRequired + '</span></small>');
+                }
+
+                if (isNaN(parseInt($(this).find('input.ordreReponse').val())) ||
+                    (parseInt($(this).find('input.ordreReponse').val()) > parseInt($(".ordreReponse").length)) ||
+                    (parseInt($(this).find('input.ordreReponse').val()) <= 0)) {
+                    isOrderInRange = false;
+                    //$(this).find('input.ordreReponse').parent().remove('.help-block').append('<small class="help-block" style=""><span class="error"> >' + $(".ordreReponse").length + '</span></small>');
+                }
+                else {
+                    orders.push(parseInt($(this).find('input.ordreReponse').val()));
+                }
+            });
+
+            //var duplicateOrdre = containDuplicate(orders);
+            //alert(duplicateOrdre);
+            $('.answer').each(function (index) {
+
+                if ($(this).find('input.is-positive').is(":checked")) {
+                    isOneResponseRight = true;
+                }
+
+            });
+
+            if (!isOneResponseRight) {
+                $('.right-response-error').parent().show();
+            }
+
+            if (containDuplicate(orders).length > 0) {
+                $('.duplicate-order-error').parent().show();
+                $('.answer').each(function (index) {
+                    //alert(containDuplicate(orders).indexOf($(this).find('input.ordreReponse').val()));
+
+                    if (containDuplicate(orders).indexOf($(this).find('input.ordreReponse').val()) >= 0) {
+                        $(this).find('input.ordreReponse').addClass('form-control-required');
+                    }
+
+                });
+            }
+
+            //alert(isValid && isTexteQuestionRequired && isAllTexteResponseRequired && isOneResponseRight);
+            return isValid && isTexteQuestionRequired && isAllTexteResponseRequired && isOneResponseRight && isOrderInRange && !(containDuplicate(orders).length > 0);
+        }
+
+        function saveQuestion() {
+            if (validateEditQuestionForm()) {
+                openLoading();
+                var reponses = [];
+                $('.answer').each(function (index) {
+                    var reponse =
+                    {
+                        Reponse: {
+                            Id: $(this).find('input.reponse').data('id'),
+                            Id_Question: $("#ID_Question").val(),
+                            IsRight: $(this).find('input.is-positive').is(":checked"),
+                            OrdreReponse: $(this).find('input.ordreReponse').val(), //index + 1
+                        },
+                        ReponseTrad: {
+                            Id_Reponse: $(this).find('input.reponse').data('id'),
+                            Id_Lang: $("#ID_Lang").val(),
+                            Texte: $(this).find('input.reponse').val(),
+                        }
+                    };
+                    reponses.push(reponse);
+                });
+
+                var questionVM = {
+                    Id: $("#ID_Question").val(),
+                    Id_Lang: $("#ID_Lang").val(),
+                    Id_Qcm: $("#ID").val(),
+                    TexteQuestion: $("#TexteQuestion").val(),
+                    TexteJustification: $("#TexteJustification").val(),
+                    OrdreQuestion: $("#OrdreQuestion").val(),
+                    inactif: $("#inactif").val(),
+                    Reponses: reponses
+                };
+
+                var label = '@Resource.fileUploadPlaceholder';
+                var questionData = new FormData();
+                var illusUpload = $("#IllusUpload").get(0);
+                var files = illusUpload.files;
+                for (var i = 0; i < files.length; i++) {
+                    questionData.append(files[i].name, files[i]);
+                }
+                questionData.append('model', JSON.stringify(questionVM));
+
+                $.ajax({
+                    url: host + "Admin/Qcm/SaveQuestion",
+                    type: 'POST',
+                    //data: '{"model":' + JSON.stringify(questionVM) + '}',
+                    data: questionData,
+                    //contentType: "application/json; charset=utf-8",
+                    contentType: false,
+                    processData: false,
+                    async: false,
+                    success: function (result) {
+                        //alert(result.success);
+                        if (result.success === true) {
+                            document.location = host + 'Admin/Qcm/Edit?Id=' + result.data.Id_Qcm;
+                            $("#editQcmQuestionModal").modal("hide");
+                        }
+                    },
+                    error: function (xhr, status, p3, p4) {
+                        var err = "Error " + " " + status + " " + p3 + " " + p4;
+                        if (xhr.responseText && xhr.responseText[0] == "{")
+                            err = JSON.parse(xhr.responseText).Message;
+                        $("#IllusUpload").val('');
+                        $("#illusLabel").text(label.replace(/&#233;/g, 'é')).html();
+                        $("#illusLabel").removeClass('uploadLabel').addClass('uploadLabel-holder');
+                        $("#errorIllus").css('display', 'block');
+                        $("#previewIllus").attr('src', null);
+                        $("#deleteLink").remove();
+                        closeLoading();
+                        showErrorMessage(err);
+                    }
+                });
+            }
+            else {
+                $("#btnValidate").attr("disabled", "disabled");
+            }
+        }
+
+        function deleteIllustration(qId, lanId) {
+            openLoading();
+            $.ajax({
+                url: host + "Admin/Qcm/DeleteIllustration",
+                type: 'POST',
+                data: JSON.stringify({"Id": qId, "LanId": lanId }),
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    if (result.success) {
+                        $("#previewIllus").attr('src', null);
+                        $("#deleteLink").remove();
+                    }
+                    closeLoading();
+                }
+            });
+        }
+
+        function deleteBadge() {
+            $("#deleteBadgeDial").modal({
+                "show": true,
+                backdrop: 'static',
+                keyboard: false
+            });
+            return false;
+        }
+
+        $("a.editQuestion").on('click', function (e) {
+            e.preventDefault();
+            var link = $(this);
+            var url = link.attr('href');
+            openLoading();
+            $.get(url, function (reponse) {
+                $("body").append(reponse);
+
+                $('#editQcmQuestionModal').on('show.bs.modal', function () {
+                    var contentHeight = $(window).height();
+                    var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+                    var maxHeight = contentHeight - footerHeight;
+                    $(this).find('.modal-body').css({
+                        //'max-height': maxHeight,
+                        'overflow': 'hidden',
+                    });
+                    $(this).before($('.modal-backdrop'));
+                    $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    $(this).find('.right-response-error').parent().hide();
+                    $(this).find('.duplicate-order-error').parent().hide();
+                    if ($(this).find("#TexteQuestion").val() !== '') {
+                        $(this).find("#TexteQuestion").removeClass('form-control-required');
+                        $(this).parent().find('.help-block').hide();
+                    }
+                    $.each($(this).find(".reponse"), function () {
+                        if ($(this).val() !== '') {
+                            $(this).removeClass('form-control-required');
+                            $(this).parent().find('.help-block').hide();
+                        }
+                    });
+                    $(this).find("#btnValidate").removeAttr("disabled");
+                });
+                $("#editQcmQuestionModal").on('hidden.bs.modal', function () {
+                    $(this).remove();
+                });
+                $("#editQcmQuestionModal").modal({
+                    "show": true,
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            }).done(function () {
+                console.log("second success");
+            }).fail(function () {
+                console.log("error");
+            }).always(function () {
+                closeLoading();
+            });
+            return false;
+        });
+
+        $(document).on('click', '[data-target="deleteModal"]', function (e) {
+            e.preventDefault();
+            var link = $(this);
+            var url = link.attr('href');
+            openLoading();
+            $.get(url, function (reponse) {
+                $("body").append(reponse);
+                $('#deleteDial').on('show.bs.modal', function () {
+                    var contentHeight = $(window).height();
+                    var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+                    var maxHeight = contentHeight - footerHeight;
+                    $(this).find('.modal-body').css({
+                        'max-height': maxHeight,
+                        'overflow-y': 'auto',
+                    });
+                    $(this).before($('.modal-backdrop'));
+                    $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                });
+                $("#deleteDial").on('hidden.bs.modal', function () {
+                    $(this).remove();
+                });
+                $("#deleteDial").modal({
+                    "show": true,
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            }).done(function () {
+                console.log("second success");
+            }).fail(function () {
+                console.log("error");
+            }).always(function () {
+                closeLoading();
+            });
+            return false;
+        });
+
+        $("body").on("change", "#TexteQuestion", function () {
+            if ($(this).val() !== "") {
+                $(this).removeClass('form-control-required');
+                $(this).parent().find('.help-block').remove();
+                $("#btnValidate").removeAttr("disabled");
+            }
+            else
+                $(this).addClass('form-control-required');
+        });
+
+        $("body").on("change", ".reponse", function () {
+            if ($(this).val() !== "") {
+                $(this).removeClass('form-control-required');
+                $(this).parent().find('.help-block').remove();
+                $("#btnValidate").removeAttr("disabled");
+            }
+            else
+                $(this).addClass('form-control-required');
+        });
+
+
+        $("body").on("click", ".is-positive", function () {
+            if ($(this).is(":checked")) {
+                $('.right-response-error').parent().hide();
+                $("#btnValidate").removeAttr("disabled");
+            }
+
+        });
+
+        $("body").on("click", ".inactif", function () {
+            $(this).val(0);
+
+            if ($(this).is(":checked")) {
+                $(this).val(1);
+            }
+
+        });
+
+        $("#chkInactif").on('click', function () {
+            //alert($(this).is(':checked'));
+            $(this).val($(this).is(':checked'));
+            $("#Inactif").val($(this).is(':checked'));
+        });
+
+        $("body").on("change", ".ordreReponse", function () {
+
+            var isValid = !isNaN(parseInt($(this).val())) && (parseInt($(this).val()) <= parseInt($(".ordreReponse").length)) && (parseInt($(this).val()) > 0);
+
+            $(this).removeClass('form-control-required');
+            $(this).parent().remove('.help-block');
+            $('.duplicate-order-error').parent().hide();
+            //$(this).parent().remove('.help-block');
+            if (!isValid) {
+                $(this).focus().addClass('form-control-required');
+
+            }
+
+        });
+
+        $(function () {
+            $('#expandAllTrigger').on('click', function () {
+                if (questionExpanded) {
+                    questionExpanded = false;
+
+                    toggleButtonPlusMinus($(this), true);
+                    toggleButtonPlusMinus($('.btn-link-collapse i'), true);
+
+                    $('.collapse').collapse('hide');
+                } else {
+                    questionExpanded = true;
+
+                    toggleButtonPlusMinus($(this), false);
+                    toggleButtonPlusMinus($('.btn-link-collapse i'), false);
+
+                    $('.collapse').collapse('show');
+                }
+            })
+
+            $('.collapse').on('show.bs.collapse', function () {
+                questionExpanded = true;
+                toggleButtonPlusMinus($('#expandAllTrigger'), false);
+            });
+
+            $('.collapse').on('hide.bs.collapse', function () {
+                questionExpanded = false;
+                toggleButtonPlusMinus($('#expandAllTrigger'), true);
+            });
+            var isUpdatable = $("#IsUpdatable").val();
+            if (isUpdatable == "False") {
+                $("#btnValidate").prop("disabled", true);
+            }
+            $("#FileUpload").on('change', function (e) {
+                //console.log("file",e.target.files[0]);
+                if (e.target.files[0]) {
+                    $("#uploadLabel").text(e.target.files[0].name);
+                    $("#btnValidate").prop("disabled", false);
+                    $("#uploadedFileSize").val(e.target.files[0].size);
+                    $("#uploadLabel").removeClass('uploadLabel-holder').addClass('uploadLabel');
+                    $("#fileContainer").css({ borderColor: 'var(--input-border-color)' });
+                    if (window.FileReader) {
+                        var reader = new FileReader();
+                        reader.onload = function (event) {
+                            $("#previewImg").attr('src', event.target.result);
+                        }
+                        reader.readAsDataURL(e.target.files[0]);
+                    } else {
+                        //the browser doesn't support the FileReader Object, so do this
+                    }
+                }
+            });
+
+            $("#FileUploadPDF").on('change', function (e) {
+                //console.log("file",e.target.files[0]);
+                if (e.target.files[0]) {
+                    $("#uploadLabelPDF").text(e.target.files[0].name);
+                    $("#btnValidate").prop("disabled", false);
+                    $("#uploadedFileSize").val(e.target.files[0].size);
+                    $("#uploadLabelPDF").removeClass('uploadLabel-holder').addClass('uploadLabel');
+                    $("#fileContainerPDF").css({ borderColor: 'var(--input-border-color)' });
+                }
+            });
+            $('#deleteBadgeDial').on('shown.bs.modal', function () {
+                $('.modal-backdrop').before($(this));
+                $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+            });
+            $("#editQcmForm").submit(function (event) {
+                openLoading();
+            });
+            $("a.admin-lang").on("click", function () {
+                var src = '../../Content/images/flags/';
+                $('#adminlang-img').attr('src', src + $(this).data("code") + '.png');
+            });
+        });
+    </script>
+}

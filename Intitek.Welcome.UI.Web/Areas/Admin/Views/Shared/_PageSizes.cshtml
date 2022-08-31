@@ -1,0 +1,13 @@
+﻿@model GridMvc.Pagination.GridPager
+@{
+    var grid = ViewData["grid"];
+    var pagesizes = new List<int>() { 10, 15, 20, 50, 100, 200 };
+    Model.PageSizes = pagesizes;
+}
+<span id="show-elements">
+    <label> @Resource.show</label>
+    @Html.DropDownListFor(x => x.PageSize,
+        new SelectList(Model.PageSizes.Select(s => new SelectListItem() { Value = s.ToString(), Text = s.ToString() }), "Value", "Text"),
+        new { @onchange = "changePageSize(this, this.value);return false;" , @class= "custom-form-control", @data_grid = grid })
+    <label>/ <span> @Resource.page</span></label>
+</span>

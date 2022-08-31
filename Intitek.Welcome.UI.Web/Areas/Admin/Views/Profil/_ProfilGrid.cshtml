@@ -1,0 +1,76 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<ProfilViewModel>
+@helper CustomRenderingOfAffecte(ProfilViewModel vm)
+{
+    if (!vm.Affecte)
+    {
+        <a href="@Url.Action("ConfirmDelete", "Profil", new { profilID = vm.ID})" role="button" data-toggle="tooltip" data-target="deleteModal" title="@Resource.delete">
+            <i class="fas fa-trash" style="color:red"></i>
+        </a>
+    }
+}
+@helper CustomRenderingOfActions(ProfilViewModel vm)
+{
+    <a href="@Url.Action("Edit", "Profil", new { Id= vm.ID})" role="button" data-toggle="tooltip" title="@Resource.prf_AssignDoc" onclick="openLoading();">
+        <i class="fas fa-edit" style="color:blue"></i>
+    </a>
+    <a href="@Url.Action("DocumentState", "Profil", new { profilID= vm.ID})" role="button" data-target="readFocusModal" data-toggle="tooltip" title="@Resource.prf_ProfilState">
+        <i class="fas fa-eye" style="color:green"></i>
+    </a>
+    if (vm.Affecte)
+    {
+        <a href="@Url.Action("Relance", "Profil", new { Id= vm.ID})" role="button" ProfilId="@vm.ID" data-target="relanceModal" data-toggle="tooltip" title="@Resource.prf_RelaunchByMail">
+            <i class="fas fa-envelope" style="color:darkorange"></i>
+        </a>
+    }
+    else
+    {
+        <span style="width:24px;display:inline-block;">&nbsp;</span>
+    }
+}
+
+@helper RenderNameWithTooltip(ProfilViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name">@vm.Name</span>
+}
+@helper ProgressBar(int value, int total)
+{
+    <div class="progress">
+        <div class="progress-bar @Html.ProgressBarClass(value, total, false)" role="progressbar" aria-valuenow="@value" aria-valuemin="0" aria-valuemax="100" style="width: @Html.ProgressBarWidth(value, total);">
+            <span class="value">@value / @total</span>
+        </div>
+    </div>
+}
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name)
+        .Css("col-name ellipsis col-profil")
+        .RenderValueAs(o => RenderNameWithTooltip(o))
+        .SortInitialDirection(GridSortDirection.Ascending).IsHtml(true)
+        .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.DocumentRead).RenderValueAs(o => ProgressBar(o.Statistiques.NotRead, o.Statistiques.ToRead)).IsHtml(true).Css("center")
+    .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.DocumentApproved).RenderValueAs(o => ProgressBar(o.Statistiques.NotApproved, o.Statistiques.ToApproved)).IsHtml(true).Css("center")
+    .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.DocumentTested).RenderValueAs(o => ProgressBar(o.Statistiques.NotTested, o.Statistiques.ToTested)).IsHtml(true).Css("center")
+    .Filterable(false).Sortable(true);
+
+    columns.Add().Titled(Resource.actions).RenderValueAs(o => CustomRenderingOfActions(o)).SetWidth(90).IsHtml(true).Css("actions center col-actions")
+           .Filterable(false).Sortable(false);
+
+    columns.Add().RenderValueAs(o => CustomRenderingOfAffecte(o)).IsHtml(true).Css("actions").SetWidth(10)
+           .Filterable(false).Sortable(false);
+
+//columns.Add(o=> o.Actions).Titled(@Resource.actions).RenderValueAs(o=> Actions(o)).SetWidth(60).Filterable(false).Sortable(false);
+
+
+
+}).WithPaging(Model.Pager.PageSize).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e => true ? "admclickable" : string.Empty)
+
+
+

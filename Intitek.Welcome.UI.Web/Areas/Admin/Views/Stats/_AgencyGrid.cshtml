@@ -1,0 +1,26 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Service.Back;
+@using Intitek.Welcome.Infrastructure.Helpers;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<Statistiques>
+
+
+@helper ProgressBar(int value, int total)
+{
+    <div class="progress">
+        <div class="progress-bar @Html.ProgressBarClass(value, total, false)" role="progressbar" aria-valuenow="@value" aria-valuemin="0" aria-valuemax="100" style="width: @Html.ProgressBarWidth(value, total);">
+            <span class="value">@value / @total</span>
+        </div>
+    </div>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name).Titled(Resource.agency_Name).SetWidth(250);
+    columns.Add(o => o.NotRead).Titled(Resource.prf_Reading).RenderValueAs(o => ProgressBar(o.NotRead, o.Total)).IsHtml(true).Css("nopadding");
+    columns.Add(o => o.NotApproved).Titled(Resource.prf_Approbation).RenderValueAs(o => ProgressBar(o.NotApproved, o.ToApproved)).IsHtml(true).Css("nopadding");
+    columns.Add(o => o.NotTested).Titled(Resource.prf_Test).RenderValueAs(o => ProgressBar(o.NotTested, o.ToTested)).IsHtml(true).Css("nopadding");
+
+}).EmptyText(@Resource.noDocumentResult).Filterable(false).Sortable(false).SetRowCssClasses(e => true ? "admclickable" : string.Empty)
+
+

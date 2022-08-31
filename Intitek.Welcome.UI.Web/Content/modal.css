@@ -1,0 +1,63 @@
+﻿body.modal-open {
+    padding-right:0px;
+}
+
+.modal-backdrop {
+    z-index: 14;
+}
+.modal {
+    max-width: none !important;
+    width: 100%;
+    position: absolute;
+    background: transparent;
+    z-index: 16;
+}
+.modal-header {
+    cursor: move;
+}
+.modal-dialog {
+    max-width: 50% !important;
+}
+/*Ecraser le top dans _custom.css */
+.label-default {
+background-color: #777;
+}
+.label-info {
+    background-color: #5bc0de;
+}
+.label-warning {
+    background-color: #f0ad4e;
+}
+
+.label-error {
+    background-color: red;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 100%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+.label-warning {
+    background-color: #f0ad4e;
+}
+.modal-lg {
+    max-width: 80% !important;
+}
+label.info {
+    font-weight: 700;
+}
+label.error {
+    font-weight: 700;
+    color: red;
+}
+label.error div {
+    font-weight: normal;
+    color: black;
+}

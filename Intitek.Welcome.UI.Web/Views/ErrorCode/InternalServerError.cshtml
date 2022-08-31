@@ -1,0 +1,37 @@
+﻿@model Intitek.Welcome.UI.ViewModels.ErrorCodeViewModel
+@{
+    ViewBag.Title = Resource.errorPageTitle ;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row main-wrapper" style="justify-content: center;">
+
+    <div class="row error-div">
+        <div>
+            <h1>@Resource.errorPageTitle</h1>
+
+            <h3>@Resource.errorPageMessageP1</h3>
+
+            <h3>@Resource.errorPageMessageP2</h3>
+
+            <h3>@Resource.errorPageMessageP3</h3>
+
+            <h3>@Html.Raw(string.Format(Resource.errorPageMessageP4, "<a HREF=\"mailto:madsi@groupeastek.fr\">madsi@groupeastek.fr</a>"))</h3>
+            @*<div class="error-bouton-action">
+                @if (Request.UrlReferrer.AbsoluteUri.Contains("Admin"))
+                {
+                    <a href="@string.Format("{0}{1}", Url.Action(Model.ActionName, Model.ControllerName, new { area = "Admin", Model.Id }), string.IsNullOrEmpty(Model.QueryString) ? string.Empty : string.Format("?{0}", Model.QueryString))" class="btn btn-danger btn-xs buttonNo">@Resource.errPageRetryButton</a>
+                }
+                else
+                {
+                    <a href="@string.Format("{0}{1}", Url.Action(Model.ActionName, Model.ControllerName, new { Model.Id }), string.IsNullOrEmpty(Model.QueryString) ? string.Empty : string.Format("?{0}", Model.QueryString))" class="btn btn-danger btn-xs buttonNo">@Resource.errPageRetryButton</a>
+                }
+            </div>*@
+        </div>
+
+        
+    </div>
+   
+
+</div>
+

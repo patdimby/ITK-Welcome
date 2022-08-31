@@ -1,0 +1,108 @@
+﻿@using GridMvc.Html;
+@using Intitek.Welcome.UI.ViewModels.Admin
+@using Intitek.Welcome.UI.Web.Admin.Models
+@using Intitek.Welcome.Infrastructure.Helpers
+@model Intitek.Welcome.UI.Web.Admin.EntiteResponseViewModel
+
+@helper ProgressBar(int value, int total)
+{
+    var progress_class = "";
+    if (total > 0)
+    {
+        progress_class = "progress-inverse";
+    }
+    <div class="progress @progress_class">
+        <div class="progress-bar @Html.ProgressBarClass(value, total, true)" role="progressbar" aria-valuenow="@value" aria-valuemin="0" aria-valuemax="100" style="width: @Html.ProgressBarWidth(value, total);">
+            <span class="value">@value / @total</span>
+        </div>
+    </div>
+}
+@helper RenderNameWithTooltip(DocumentViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name" class="@(vm.IsDefaultLangName ? "defaultName": string.Empty)">@vm.Name</span>
+}
+@helper GridDocument(GridBO<DocumentViewModel> vms, bool agence)
+{
+    @Html.Grid(vms, "_GridDocument").Columns(columns =>
+{
+    columns.Add(o => o.ID_Category).RenderValueAs(o => "")
+   .SetWidth(150).Filterable(false).Sortable(false);
+
+    columns.Add(o => o.ID_SubCategory).RenderValueAs(o => "").Css("subcategory")
+          .SetWidth(150).Filterable(false).Sortable(false);
+
+    columns.Add(o => o.Name)
+    .RenderValueAs(o => RenderNameWithTooltip(o))
+    .Css("docname").IsHtml(true).SetColspan(3)
+        .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.Version).Css("center")
+    .SetWidth(120).Filterable(false).Sortable(false);
+
+    columns.Add(o => o.Date).Format("{0:dd/MM/yyyy}").SetWidth(60).Filterable(false).Sortable(false).Css("center");
+
+    columns.Add(o => o.UserRead).Titled(Resource.doc_Readeds).RenderValueAs(o=> ProgressBar(o.UserRead, o.Statistiques.ToRead)).Filterable(false).Sortable(false).IsHtml(true).Css("center");
+    columns.Add(o => o.UserApproved).Titled(Resource.doc_Appoveds).RenderValueAs(o => ProgressBar(o.UserApproved, o.Statistiques.ToApproved)).Filterable(false).Sortable(false).IsHtml(true).Css("center");
+    columns.Add(o => o.UserTested).Titled(Resource.doc_Testeds).RenderValueAs(o => ProgressBar(o.UserTested, o.Statistiques.ToTested)).Filterable(false).Sortable(false).IsHtml(true).Css("center");
+    columns.Add(o => o.Commentaire).Filterable(false).Sortable(false);
+    if (agence)
+    {
+        columns.Add(o => o.AgencyName).Filterable(false).Sortable(false);
+    }
+}).WithGridItemsCount(Resource.labelNbEnreg).SetRowCssClasses(e => true ? "clickable" : string.Empty);
+}
+@{
+    var modal = "modal-dialog  modal-lg";
+    if (Model.ListDocuments.ItemsCount == 0 && Model.ListDocumentAgences.ItemsCount == 0)
+    {
+        modal = "modal-dialog";
+    }
+}
+
+<div class="modal fade" id="readFocusDial" role="dialog" tabindex="-1">
+    <div class="@modal" role="document">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@Resource.DocumentState</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="accordion-regular">
+                    <div class="card card-form mb-2">
+                        <div class="row ml-0 mr-0">
+                            <div class="col-6 pl-0">
+                                <b>@Resource.Entity</b>: &nbsp;<span class="label label-warning">@Model.EntityName</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>
+                        @if (Model.ListDocuments.ItemsCount == 0 && Model.ListDocumentAgences.ItemsCount == 0)
+                        {
+                            <div class="alert alert-danger" role="alert">Aucun document!</div>
+                        }
+                        else
+                        {
+                            if (Model.ListDocuments.ItemsCount > 0)
+                            {
+                                <div id="parent_stGrid">
+                                    @GridDocument(Model.ListDocuments, false)
+                                </div>
+                            }
+                            if (Model.ListDocumentAgences.ItemsCount > 0)
+                            {
+                                <br>
+                                <h4><b>@Resource.DocumentsByAgence</b></h4>
+                                <div id="parent_stAgGrid">
+                                    @GridDocument(Model.ListDocumentAgences, true)
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">@Resource.btnClose</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

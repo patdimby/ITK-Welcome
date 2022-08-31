@@ -1,0 +1,24 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Intitek.Welcome.UI.Web.Security;
+@{
+    ViewBag.Title = @Resource.noAccessDocument;
+}
+<div>
+    @Html.Partial("_header")
+</div>
+<div class="row main-wrapper" style="justify-content: center;">
+    <div class="row home-div">
+        <div style="color: #d50800; font-size: x-large; ">
+           @Resource.noAccessDocumentText
+           
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+    </script>
+}

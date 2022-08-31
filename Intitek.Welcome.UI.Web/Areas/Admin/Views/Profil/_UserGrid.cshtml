@@ -1,0 +1,20 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<UserViewModel>
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name).RenderValueAs(x => x.Name)
+       .Filterable(false).Sortable(false).SetWidth(150);
+    columns.Add(o => o.FullName)
+        .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.EntityName)
+    .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.AgencyName)
+    .Filterable(false).Sortable(false);
+
+
+}).WithPaging(Model.Pager.PageSize).SetRowCssClasses(e => true ? "admclickable" : string.Empty)
+
+

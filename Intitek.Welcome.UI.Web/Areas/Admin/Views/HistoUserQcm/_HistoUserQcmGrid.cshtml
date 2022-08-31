@@ -1,0 +1,43 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<HistoUserQcmViewModel>
+@helper RenderDocNameWithTooltip(HistoUserQcmViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.DocName">@vm.DocName</span>
+}
+@helper RenderQcmNameWithTooltip(HistoUserQcmViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.QcmName">@vm.QcmName</span>
+}
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.DateAction).Format("{0:dd/MM/yyyy H:mm:ss}").Css("min-width")
+    .Filterable(true).Sortable(true)
+    .SetWidth(150);
+
+    columns.Add(o => o.Username).Css("min-width")
+    .Filterable(true).Sortable(true)
+    .SetWidth(150);
+
+    columns.Add(o => o.QcmName)
+     .RenderValueAs(o => RenderQcmNameWithTooltip(o)).IsHtml(true)
+     .Css("col-name ellipsis col-qcmname")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.DocName).RenderValueAs(o => HttpUtility.HtmlDecode(o.DocName))
+     .RenderValueAs(o => RenderDocNameWithTooltip(o)).IsHtml(true)
+      .Css("col-name ellipsis col-docname")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.Version).Css("min-width center")
+    .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.Score).Css("min-width center")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.ScoreMinimal).Css("min-width center")
+    .Filterable(true).Sortable(true);
+
+}).WithPaging().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "admclickable fit-content-columns" : string.Empty)
+
+

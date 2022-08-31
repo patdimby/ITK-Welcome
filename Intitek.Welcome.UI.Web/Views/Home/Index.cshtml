@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Intitek.Welcome.UI.Web.Security;
+@using Intitek.Welcome.Service.Back;
+
+@{
+    ViewBag.Title = @Resource.homeTitlePage;
+    GetUserRequest allrequest = new GetUserRequest();
+}
+<div>
+    @Html.Partial("_header")
+</div>
+<div class="row main-wrapper" style="justify-content: center;">
+    <div class="row home-div">
+
+        <div>
+            @if (User.IsInRole(UserTypes.FRONTOFFICE) || User.IsInRole(UserTypes.BACKOFFICE))
+            {
+                <a href="@Url.Action("Index","UserDocument")" onclick="openLoading();">
+                    <button class="btn-outline icon-big icon-big-fill"><i class="fas fa-users"></i></button>
+                </a>
+                <br>
+                <a href="@Url.Action("Index","UserDocument")" onclick="openLoading();" class="btn btn-wme btn-green space-betwen-btn">@Resource.utilisateur</a>
+            }
+        </div>
+        <div class="sep"></div>
+        <div id="divAdmin">
+            @if (User.IsInRole(UserTypes.BACKOFFICE))
+            {
+                <a href="@Url.Action("Index","Home", new { area = "Admin" })" onclick="openLoading();">
+                    <button class="btn-outline icon-big icon-big-enter"><i class="fas fa-cogs"></i></button>
+                </a>
+                <br>
+                <a href="@Url.Action("Index","Home",  new { area = "Admin" })" onclick="openLoading();" class="btn btn-wme btn-green space-betwen-btn">@Resource.administrateur</a>
+            }
+        </div>
+        <div class="sep"></div>
+        @if (TempData["reader"] != null)
+        {
+            <div>
+                <a href="@Url.Action("ListUser","Home")" onclick="openLoading();">
+                    <button class="btn-outline icon-big icon-big-fill"><i class="fas fa-eye"></i></button>
+                </a>
+                <br>
+                <a href="@Url.Action("ListUser","Home")" onclick="openLoading();" class="btn btn-wme btn-green space-betwen-btn">Relecteur</a>
+
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+    </script>
+}

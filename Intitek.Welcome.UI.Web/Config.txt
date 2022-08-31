@@ -1,0 +1,1 @@
+DBServer=amgapp04.astekmtius.ltd;DBName=Welcome;DBUserID=sa;DBPassword=srv$2020;SMTPUser=apps.astekmada@gmail.com;SMTPPassword=Astek$2021

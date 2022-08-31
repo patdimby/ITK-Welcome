@@ -1,0 +1,24 @@
+﻿@{
+    Layout = null;
+}
+<style type="text/css">
+    .modal {
+        max-width: none !important;
+        width: 100%;
+        position: absolute;
+        background: transparent;
+    }
+</style>
+<div class="modal fade" tabindex="-1" role="dialog" id="ajaxErrorModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h2>@Resource.labelError500</h2>
+                <p>@Model.Exception</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">@Resource.btnClose</button>
+            </div>
+        </div>
+    </div>
+</div>

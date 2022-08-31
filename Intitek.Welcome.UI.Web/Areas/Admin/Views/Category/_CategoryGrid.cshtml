@@ -1,0 +1,35 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<CategoryViewModel>
+@helper CustomRenderingOfActions(CategoryViewModel vm)
+{
+    <a href="@Url.Action("Edit", "Category", new { Id= vm.ID})" role="button" data-toggle="tooltip" title="@Resource.update" onclick="openLoading();">
+        <i class="fas fa-edit" style="color:blue"></i>
+    </a>
+    if (vm.IsDeleted)
+    {
+        <a href="@Url.Action("ConfirmDelete", "Category", new { Id= vm.ID})" role="button" data-toggle="tooltip" title="@Resource.delete" data-target="deleteModal">
+            <i class="fas fa-trash" style="color:red"></i>
+        </a>
+    }
+
+
+}
+@helper RenderNameWithTooltip(CategoryViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name" class="@(vm.IsDefaultLangName ? "defaultName": string.Empty)">@vm.Name</span>
+}
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name)
+        .RenderValueAs(o => RenderNameWithTooltip(o))
+        .IsHtml(true)
+        .Filterable(true)
+        .Sortable(true);
+
+    columns.Add(o => o.OrdreCategory).SortInitialDirection(GridSortDirection.Ascending).Css("center")
+    .Filterable(false).Sortable(true).SetWidth(100);
+    columns.Add().Titled(@Resource.actions).RenderValueAs(o => CustomRenderingOfActions(o)).Css("actions col-actions")
+    .Filterable(false).Sortable(false).IsHtml(true).SetWidth(72) ;
+}).WithPaging(Model.Pager.PageSize).EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e => true ? "admclickable" : string.Empty)
+

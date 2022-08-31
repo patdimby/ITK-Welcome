@@ -1,0 +1,71 @@
+﻿<html>
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <style type="text/css">
+        .table {
+            font-family: 'Poppins';
+            font-size: 10pt;
+            border-collapse: collapse;
+        }
+
+            .table td, .table th {
+                font-weight: normal;
+                padding: 4px 8px;
+            }
+
+        .grid-header {
+            color: #333;
+            font-weight: bold !important;
+            padding-right: 0.5em;
+        }
+
+        tr.paire td {
+            background-color: #e3e3e3;
+        }
+
+        .progress {
+           height: 26px;
+            overflow: hidden;
+            font-size: 100 %;
+            background-color: #34bf34;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            height: 26px;
+            text-align: left;
+            background-color: #009c49;
+            justify-content: center;
+            color: #fff;
+            white-space: nowrap;
+            transition: width .6s ease;
+        }
+
+        .progress-bar-danger {
+            background-color: red !important;
+        }
+
+        .progress-bar-warning {
+            background-color: orange !important;
+        }
+
+        .progress-bar-success {
+            background-color: #006d33 !important;
+        }
+
+        .progress span.value {
+            display:inline-block ;
+            padding-left: 2px;
+            height: 26px;
+            line-height :26px;
+        }
+    </style>
+</head>
+<body>
+    <p>Relance manager Christophe ILLGEN</p>
+
+    <p><table class="table"><thead>    <tr>        <th class="grid-header"><span>Collaborateur</span></th>        <th class="grid-header"><span>Lect rest</span></th>        <th class="grid-header"><span>Appro rest</span></th>        <th class="grid-header"><span>Test rest</span></th>    </tr></thead><tbody>    <tr class="">    <td>CHRISTOPHE PEYROT</td>    <td><div class="progress"><div class="progress-bar progress-bar-success" style="width:0%"><span class="value">0 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-success" style="width:0%"><span class="value">0 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>   </tr>    <tr class="paire">    <td>FREDERIC SCHENONE</td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:67%"><span class="value">2 / 3</span></div></div></td>   </tr>    <tr class="">    <td>IDIR BRAHITI</td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-danger" style="width:100%"><span class="value">3 / 3</span></div></div></td>   </tr>    <tr class="paire">    <td>JEAN PIERRE LAGAYE</td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>   </tr>    <tr class="">    <td>PASCAL HENRY</td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-warning" style="width:33%"><span class="value">1 / 3</span></div></div></td>    <td><div class="progress"><div class="progress-bar progress-bar-danger" style="width:100%"><span class="value">3 / 3</span></div></div></td>   </tr></tbody></table></p>
+
+    <p>&nbsp;</p>
+</body>
+</html>

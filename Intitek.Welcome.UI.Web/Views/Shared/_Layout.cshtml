@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNet.Identity;
+@using Intitek.Welcome.UI.Web.Security;
+@using Intitek.Welcome.UI.Resources;
+@using System.Configuration;
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="private, no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="@Url.Content("~/Content/images/logo_astek.png")" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/custom-css")
+    @Styles.Render("~/Content/sidebar-css")
+    @Styles.Render("~/Content/frontcss")   
+    @RenderSection("Styles", required: false)
+</head>
+    <body>
+        @if (Request.IsAuthenticated)
+        {
+            <div class="main-container">
+                @RenderBody()
+            </div>
+            <div>
+                @Html.Partial("_footer")
+            </div>
+        }
+        else
+        {
+            <!-- ============================================================== -->
+            <!-- login page  -->
+            <!-- ============================================================== -->
+            <div style="width: 100%; text-align: -webkit-center;">
+                @RenderBody()
+            </div>
+            <!-- ============================================================== -->
+            <!-- end login page  -->
+            <!-- ============================================================== -->
+        }
+        <!-- Optional JavaScript -->
+        @Scripts.Render("~/bundles/jquery-bootstrap")
+        @Scripts.Render("~/bundles/custom.js")
+        <script src="@Url.Content("~/Scripts/js/popup-validator.js")" defer></script>
+
+        <script type="text/javascript" charset="utf-8">
+            var pdfPath = "@ConfigurationManager.AppSettings["TempPDFFolder"]";
+            //var host = "@ConfigurationManager.AppSettings["Host"]";
+            var host = "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))";
+
+        </script>
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

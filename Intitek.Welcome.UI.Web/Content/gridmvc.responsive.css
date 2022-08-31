@@ -1,0 +1,232 @@
+/*
+ Styles for the table columntoggle mode
+*/
+.ui-table-columntoggle-btn {
+    float: right;
+    margin-bottom: .8em;
+}
+/* Remove top/bottom margins around the fieldcontain on check list */
+.ui-table-columntoggle-popup fieldset {
+    margin: 0;
+}
+
+.ui-table-columntoggle {
+    clear: both;
+}
+/* Hide all prioritized columns by default */
+@media only all {
+    th.priority-8,
+    th.priority-7,
+    td.priority-7,
+    th.priority-6,
+    td.priority-6,
+    th.priority-5,
+    td.priority-5,
+    th.priority-4,
+    td.priority-4,
+    th.priority-3,
+    td.priority-3,
+    th.priority-2,
+    td.priority-2,
+    th.priority-1,
+    td.priority-1 {
+        display: table-cell;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+
+    th.priority-2,
+    td.priority-2 {
+        display: none;
+    }
+
+    th.priority-3,
+    td.priority-3 {
+        display: none;
+    }
+
+    th.priority-4,
+    td.priority-4 {
+        display: none;
+    }
+
+    th.priority-5,
+    td.priority-5 {
+        display: none;
+    }
+
+    th.priority-6,
+    td.priority-6 {
+        display: none;
+    }
+
+    th.priority-7,
+    td.priority-7 {
+        display: none;
+    }
+    th.priority-8,
+    td.priority-8 {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 980px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+
+    th.priority-2,
+    td.priority-2 {
+        display: none;
+    }
+
+    th.priority-3,
+    td.priority-3 {
+        display: none;
+    }
+
+    th.priority-4,
+    td.priority-4 {
+        display: none;
+    }
+
+    th.priority-5,
+    td.priority-5 {
+        display: none;
+    }
+
+    th.priority-6,
+    td.priority-6 {
+        display: none;
+    }
+
+    th.priority-7,
+    td.priority-7 {
+        display: none;
+    }
+}
+@media screen and (max-width: 1100px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+
+    th.priority-2,
+    td.priority-2 {
+        display: none;
+    }
+
+    th.priority-3,
+    td.priority-3 {
+        display: none;
+    }
+
+    th.priority-4,
+    td.priority-4 {
+        display: none;
+    }
+
+    th.priority-5,
+    td.priority-5 {
+        display: none;
+    }
+
+    th.priority-6,
+    td.priority-6 {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1360px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+
+    th.priority-2,
+    td.priority-2 {
+        display: none;
+    }
+
+    th.priority-3,
+    td.priority-3 {
+        display: none;
+    }
+
+    th.priority-4,
+    td.priority-4 {
+        display: none;
+    }
+
+    th.priority-5,
+    td.priority-5 {
+        display: none;
+    }
+}
+@media screen and (max-width: 1280px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+
+    th.priority-2,
+    td.priority-2 {
+        display: none;
+    }
+
+    th.priority-3,
+    td.priority-3 {
+        display: none;
+    }
+    th.priority-4,
+    td.priority-4 {
+        display: none;
+    }
+}
+@media screen and (max-width: 1440px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+    th.priority-2,
+    td.priority-2 {
+        display: none;
+    }
+    th.priority-3,
+    td.priority-3 {
+        display: none;
+    }
+}
+@media screen and (max-width: 1600px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+    th.priority-2,
+    td.priority-2 {
+        display: none;
+    }
+}
+@media screen and (max-width: 1750px) {
+    th.priority-1,
+    td.priority-1 {
+        display: none;
+    }
+}
+/* Unchecked manually: Always hide */
+th.table-cell-hidden,
+td.cell-hidden,
+th.ui-table-cell-hidden {
+   display: none;
+}
+/* Checked manually: Always show */
+th.table-cell-visible,
+td.table-cell-visible {
+    display: table-cell;
+}

@@ -1,0 +1,76 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@model Intitek.Welcome.UI.ViewModels.Admin.UserViewModel
+@{
+    ViewBag.Title = Model.ID > 0 ? string.Format("Administration | {0}", HttpUtility.HtmlDecode(Model.Name)) : string.Format("Administration | {0}", Resource.newUser);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "User")" class="breadcrumb-link" onclick="openLoading();">@Resource.userLists</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@(Model.ID > 0 ? Model.Name : Resource.newUser)</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@(Model.ID > 0 ? Model.Name : Resource.newUser)</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@(Model.ID > 0 ? string.Format("Edition {0}", HttpUtility.HtmlDecode(Model.Name)) : Resource.newUser)</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <form id="newDocumentForm" action="@Url.Action("Edit", "User")" method="post" enctype="multipart/form-data">
+                        <input type="hidden" id="ID" name="ID" value="@Model.ID" />
+                        <div class="card-body show">
+
+
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col center p-t-25">
+                                <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                        onclick="_redirectTo('@Url.Action("Index", "User")')">
+                                    @Resource.buttonCancel
+                                </button>
+
+                                <button type="submit"
+                                        class="btn btn-wme btn-green next-btn space-betwen-btn">
+                                    @Resource.buttonValidate
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $("#newDocumentForm").submit(function () {
+            openLoading();
+        });
+    </script>
+}

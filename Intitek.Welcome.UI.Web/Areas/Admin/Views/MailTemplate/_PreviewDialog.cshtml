@@ -1,0 +1,19 @@
+﻿<div id="previewModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span><i class="fas fa-align-left"></i>&nbsp;&nbsp;&nbsp;<span>@Resource.mailPreview</span></span>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <b>@Html.Raw(Resource.previewMailObject)</b><span id="objectContent"></span>
+                </div>
+                <br/>
+                <div id="mailContent"></div>
+                <div class="modal-bouton-action">
+                    <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.buttonBack</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

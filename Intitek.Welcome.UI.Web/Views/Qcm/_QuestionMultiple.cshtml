@@ -1,0 +1,68 @@
+﻿@using Intitek.Welcome.UI.ViewModels
+@model QuestionViewModel
+@{
+    byte[] illustration = Model.Question.QuestionTrad == null ? Model.Question.DefaultTrad.Illustration : Model.Question.QuestionTrad.Illustration;
+    string imgDataURL = illustration != null ? string.Format("data:image/png;base64,{0}", Convert.ToBase64String(illustration)) : null;
+}
+<div id="@String.Format("Q_{0}", Model.Question.Question.OrdreQuestion)" " class="list-group-item questionQcm">
+
+    <div class="row question-title @(Model.InternalOrder%2==0 ? "orange": "noir")">
+        <div class="question-badge_bis">
+            <span> @Resource.question</span>&nbsp;@Model.InternalOrder
+        </div>
+        <div class="col question">
+            @if (Model.Question.QuestionTrad == null)
+            {
+                @HttpUtility.HtmlDecode(Model.Question.DefaultTrad.TexteQuestion)
+            }
+            else
+            {
+                @HttpUtility.HtmlDecode(Model.Question.QuestionTrad.TexteQuestion);
+            }
+        </div>
+    </div>
+    <div class="row question-legend">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>
+            <span> @Resource.multipleAnswersPossible</span>
+        </span>
+    </div>
+    <div class="row m-l-0 m-r-0">
+        <div class="col-12 @(string.IsNullOrEmpty(imgDataURL)? "" : "col-md-6")">
+            <table class="table table-striped question-table">
+                <tbody>
+                    @foreach (var rep in Model.Question.Reponses)
+                    {
+                        <tr>
+                            <td>
+                                <div class="responseDiv multiple">
+                                    <label class="custom-control custom-checkbox" for="@String.Format("R_{0}", rep.Reponse.Id)">
+                                        <input id="@String.Format("R_{0}", rep.Reponse.Id)" name="reponse" type="checkbox"
+                                               class="custom-control-input is-positive" data-id="@rep.Reponse.Id">
+                                        <span class="custom-control-label custom-control-checkbox">
+                                            @if (rep.ReponseTrad == null)
+                                            {
+                                                @HttpUtility.HtmlDecode(rep.DefaultTrad.Texte)
+                                            }
+                                            else
+                                            {
+                                                @HttpUtility.HtmlDecode(rep.ReponseTrad.Texte)
+                                            }
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (!string.IsNullOrEmpty(imgDataURL))
+        {
+            <div class="col-md-6 col-12 p-md-0">
+                <img style="width:inherit; height: 100%;" src="@imgDataURL" alt="..." />
+            </div>
+        }
+    </div>
+</div>
+

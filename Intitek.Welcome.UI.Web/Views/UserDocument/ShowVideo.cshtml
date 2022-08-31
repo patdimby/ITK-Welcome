@@ -1,0 +1,296 @@
+﻿@using Intitek.Welcome.UI.ViewModels
+@using Intitek.Welcome.Infrastructure.Helpers;
+@model UserDocumentViewModel
+@{
+    ViewBag.Title = string.Format("Welcome | {0}", HttpUtility.HtmlDecode(Model.DocumentTitle));
+}
+
+@section styles{
+    @Styles.Render("~/Content/video.js")
+    <style type="text/css">
+        .modal-dialog {
+            min-width: 615px;
+        }
+
+        #approveModal .btn {
+            min-width: 275px;
+        }
+
+        #approveModal .fit {
+            min-width: unset;
+        }
+
+        .video-js {
+            width: 100% !important;
+            height: 100% !important;
+            /*background-color: #696969;*/
+            background-color: rgba(0, 0, 0, 0.92);
+        }
+        .video-js:hover > .vjs-big-play-button {
+            background: #d32322;
+            color: #d3d3d3;
+        }
+        .float-div{
+            padding-top:150px;
+        }
+            .float-div div {
+                padding: 8px 0px;
+            }        
+            .float-div button {
+                padding: 16px;
+            }
+        footer {
+            width: 150px;
+            float: right;
+            margin-top: -41px;
+            padding: 0px 10px 0px 10px;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-lg-1 col-md-1 col-sm-0">
+        <input type="hidden" id="DocumentID" value="@Model.DocumentID" />
+        <input type="hidden" id="DocumentVersion" value="@Model.DocumentVersion" />
+        <input type="hidden" id="UserID" value="@Model.UserID" />
+        <input type="hidden" id="IsRead" value="@(Model.IsRead ? "true": "false")" />
+        <input type="hidden" id="IsApproved" value="@(Model.IsApproved? "true": "false")" />
+        <input type="hidden" id="IsTested" value="@(Model.IsTested? "true": "false")" />
+        <input type="hidden" id="IsToRead" value="@(Model.IsDocumentToRead ? "true": "false")" />
+        <input type="hidden" id="IsToApproved" value="@(Model.IsDocumentToApprouve? "true": "false")" />
+        <input type="hidden" id="IsToTested" value="@(Model.IsDocumentToTest? "true": "false")" />
+    </div>
+    <div class="col-lg-10 col-md-10 col-sm-12 document-viewer p-r-0 p-l-0">
+        <div class="progress-bar">
+            <h3><span>@HttpUtility.HtmlDecode(Model.DocumentTitle)</span></h3>
+            <div id="progress-value"></div>
+        </div>
+        <div id="content" class="content">
+            <video id="docPlayer" class="video-js vjs-theme-fantasy" controls preload="none"  data-setup="{}" lang="@Html.Culture()">
+                <source src="@Model.Url" type="video/mp4">
+            </video>
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-0">
+        <div class="float-div" >
+
+            <div>
+                <button class="btn-outline icon icon-enter btnBack" onclick=''><i class="fas fa-arrow-left"></i></button>
+                <div> @Resource.buttonBack</div>
+            </div>
+            @if (!Model.IsNoActionRequired)
+            {
+                <div>
+                    <button class="btn-outline icon icon-fill btnValider" disabled><i class="fas fa-check"></i></button>
+                    <div> @Resource.buttonValidate</div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@Html.Partial("_ConfirmDialog")
+@Html.Partial("_ApproveDocumentDialog")
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="modal fade" tabindex="-1" role="dialog" id="videoErrorModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>@Model.Error</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@Resource.btnClose</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script src="@Url.Content("~/Scripts/libs/slimscroll/jquery.slimscroll.js")"></script>
+    <script src="@Url.Content("~/Scripts/libs/loading/modal-loading.js")"></script>
+    @Scripts.Render("~/bundles/video.js")
+    <script type="text/javascript">
+        function retourUserDocument() {
+            var hash = Cookies.get(COOOKIES_NAMES.UserDocumentHash);
+            Cookies.remove(COOOKIES_NAMES.UserDocumentHash);
+            _redirectToWithHash("@Url.Action("Index","UserDocument")", hash);
+            return false;
+        }
+        function enableActions() {
+            $(".btnValider").prop("disabled", false);
+            $("#accept").prop("disabled", false);
+            $("#ckeApprouved").prop("disabled", false);
+        }
+        $(function () {
+            @if (!string.IsNullOrEmpty(Model.Error))
+            {
+                 <text>$("#videoErrorModal").modal({
+                    keyboard: false,
+                    backdrop: 'static'
+                });</text>
+            }
+            var player = videojs('docPlayer');
+            player.on('ended', function () {
+                console.log("ended....");
+                if (this.isFullscreen()) {
+                    this.exitFullscreen();
+                }
+                enableActions();
+            });
+            $(".btnBack").on("click", function (e) {
+                e.preventDefault();
+                if (!player.paused()) {
+                    player.pause();
+                    player.currentTime(0);
+                }
+                else {
+                    retourUserDocument();
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        //openLoading();
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+
+        $("#ckeApprouved").change(function () {
+            $(this).is(":checked") ? $("#divApprouved").removeClass('hide') : $("#divApprouved").addClass('hide')
+        });
+
+        //var file = _getQueryParam(document.location, 'doc');
+        //var url = constants.url + pdfPath + "/@Model.PdfFile?" + new Date().getTime();
+        //console.log("url file....", url);
+
+
+
+
+        $("#doApproveAndDoQuizRightNow").on("click", function (e) {
+            e.preventDefault();
+            var userDocumentVM = {
+                UserID: $("#UserID").val(),
+                DocumentID: $("#DocumentID").val(),
+                DocumentVersion: $("#DocumentVersion").val(),
+                IsRead: true,
+                IsApproved: $("#IsToApproved").val(),
+                IsTested: $("#IsTested").val(),
+            };
+
+            $.ajax({
+                url: host + "UserDocument/ValidateAndTest",
+                type: 'POST',
+                data: '{"model":' + JSON.stringify(userDocumentVM) + '}',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    if (result.success === true) {
+                        $.ajax({
+                            url: host + "Qcm/CheckUserQcm",
+                            type: 'POST',
+                            data: '{"QcmId":' + @Model.QcmID + ', "UserId": ' + $("#UserID").val() + ', "DocumentID": ' + $("#DocumentID").val() + '}',
+                            contentType: "application/json; charset=utf-8",
+                            async: false,
+                            success: function (result) {
+
+                                if (result.success === true && result.data.IsPassed) {
+                                    showConfirmMessage("@Html.Raw(Resource.qcmTestAlreadyPassed)");
+                                }
+                                else {
+                                    openLoading();
+                                    document.location = host + 'Qcm/Index?Id=@Model.QcmID&DocumentID=@Model.DocumentID&DocumentVersion=@Model.DocumentVersion';
+                                }
+                            }
+                        });
+                    } else {
+
+                    }
+                }
+            });
+        });
+
+        $("#confirmModal .buttonYes").on("click", function () {
+            openLoading();
+            document.location = host + 'Qcm/Index?Id=@Model.QcmID&DocumentID=@Model.DocumentID&DocumentVersion=@Model.DocumentVersion';
+        });
+
+        //$("#confirmModal .buttonNo").on("click", function () {
+        //    document.location = host + 'UserDocument/Index';
+        //});
+
+
+
+        $(".btnValider").on("click", function (e) {
+            e.preventDefault();
+            if($("#IsToApproved").val() === "true" || $("#IsToTested").val()  === "true"){
+                showApproveMessage("@Html.Raw(string.Format(Resource.ckeApprouved, HttpUtility.HtmlDecode(Model.DocumentTitle)))");
+           }
+           else{
+                var userDocumentVM = {
+                    UserID: $("#UserID").val(),
+                    DocumentID: $("#DocumentID").val(),
+                    IsRead: true,
+                    IsApproved: false,
+                    IsTested: false
+               };
+
+                $.ajax({
+                    url: host + "UserDocument/ValidateAndTest",
+                   type: 'POST',
+                    data: '{"model":' + JSON.stringify(userDocumentVM) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (result) {
+                        if (result.success === true) {
+                            document.location = host + 'UserDocument/Index';
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#doApproveAndDoQuizLater").on("click", function () {
+            updApprobation(true);
+        });
+
+        $("#doNotApprove").on("click", function () {
+            updApprobation(false);
+        });
+
+        $("#doApprove").on("click", function () {
+            updApprobation(true);
+        });
+
+        function updApprobation(isApproved) {
+            var userDocumentVM = {
+                UserID: $("#UserID").val(),
+                DocumentID: $("#DocumentID").val(),
+                IsRead: true,
+                IsApproved: isApproved,
+                IsTested: $("#IsTested").val(),
+            };
+
+            $.ajax({
+                url: host + "UserDocument/ValidateAndTest",
+                type: 'POST',
+                data: '{"model":' + JSON.stringify(userDocumentVM) + '}',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    if (result.success === true) {
+                        //document.location = host + 'UserDocument/Index';
+                        retourUserDocument();
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        $("#approveModal .buttonNo").on("click", function () {
+            $("#approveModal").modal('hide');
+            //document.location = host + 'UserDocument/Index';
+        });
+
+    </script>
+}

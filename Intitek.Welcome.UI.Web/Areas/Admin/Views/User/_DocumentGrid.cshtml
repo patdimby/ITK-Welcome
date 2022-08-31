@@ -1,0 +1,104 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<DocumentViewModel>
+
+@helper CustomRenderingOfRead(DocumentViewModel vm)
+{
+    if (vm.IsRead.HasValue)
+    {
+        <span style="color:green">@string.Format("{0:dd/MM/yyyy}", vm.IsRead)</span>
+    }
+    else
+    {
+        <i class="fas fa-times-circle text-danger"></i>
+    }
+}
+
+@helper CustomRenderingOfApproved(DocumentViewModel vm)
+{
+    if (vm.IsApproved.HasValue)
+    {
+        <span style="color:green">@string.Format("{0:dd/MM/yyyy}", vm.IsApproved)</span>
+    }
+    else
+    {
+        if (vm.Approbation.HasValue && vm.Approbation == 1)
+        {
+            <i class="fas fa-times-circle text-danger"></i>
+        }
+        else
+        {
+            <i class="fas fa-minus-circle"></i>
+        }
+    }
+}
+
+
+@helper CustomRenderingOfTest(DocumentViewModel vm)
+{
+    if (vm.IsTested.HasValue)
+    {
+        <span style="color:green">@string.Format("{0:dd/MM/yyyy}", vm.IsTested)</span>
+    }
+    else
+    {
+        if (vm.Test.HasValue && vm.Test == 1)
+        {
+            <i class="fas fa-times-circle text-danger"></i>
+        }
+        else
+        {
+            <i class="fas fa-minus-circle"></i>
+        }
+    }
+}
+@helper CustomRenderingOfInformatif(DocumentViewModel vm)
+{
+    if (vm.IsNoActionRequired)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper RenderNameWithTooltip(DocumentViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name" class="@(vm.IsDefaultLangName ? "defaultName": string.Empty)">@vm.Name</span>
+}
+
+@Html.Grid(Model, "_GridDocument").Columns(columns =>
+{
+    columns.Add(o => o.ID_Category).RenderValueAs(o=> "").Css("category")
+    .SetFilterWidgetType("CategoryNameFilterWidget", "/Admin/Document/SearchCategories")
+    .Filterable(true).Sortable(false);
+
+    columns.Add(o => o.ID_SubCategory).RenderValueAs(o => "").Css("subcategory")
+   .SetFilterWidgetType("SubCategoryNameFilterWidget", "/Admin/Document/SearchSousCategories")
+   .Filterable(true).Sortable(false);
+
+    columns.Add(o => o.Name)
+        .RenderValueAs(o => RenderNameWithTooltip(o))
+        .SortInitialDirection(GridSortDirection.Ascending)
+        .Filterable(true).Sortable(true).Css("docname").IsHtml(true).SetColspan(3);
+
+    columns.Add(o => o.Version).Css("center")
+    .SetFilterWidgetType("CategoryNameFilterWidget", "/Admin/Document/SearchVersions")
+    .SetWidth(120).Filterable(true).Sortable(true);
+
+
+    columns.Add(o => o.Date).Format("{0:dd/MM/yyyy}").SetWidth(60).Filterable(false).Sortable(true).Css("center");
+    columns.Add(o => o.IsNoActionRequired).RenderValueAs(o => CustomRenderingOfInformatif(o)).SetWidth(130).Filterable(true).Sortable(true).IsHtml(true).Css("center");
+
+    columns.Add(o => o.IsRead).RenderValueAs(o => CustomRenderingOfRead(o)).SetWidth(145).Css("center")
+    .Filterable(false).Sortable(false).IsHtml(true);
+
+    columns.Add(o => o.IsApproved).RenderValueAs(o => CustomRenderingOfApproved(o)).SetWidth(145).Css("center")
+    .Filterable(false).Sortable(false).IsHtml(true);
+
+    columns.Add(o => o.IsTested).RenderValueAs(o => CustomRenderingOfTest(o)).SetWidth(95).Css("center")
+     .Filterable(false).Sortable(false).IsHtml(true);
+
+
+}).WithPaging().WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "clickable" : string.Empty)

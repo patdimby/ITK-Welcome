@@ -1,0 +1,90 @@
+﻿@using System.Security.Claims;
+@using Intitek.Welcome.UI.ViewModels;
+@using Newtonsoft.Json;
+@{
+    var claimIdentity = this.User.Identity as ClaimsIdentity;
+    var userDataConnected = JsonConvert.DeserializeObject<Intitek.Welcome.UI.ViewModels.UserViewModel>(claimIdentity.FindFirst(ClaimTypes.UserData).Value);
+}
+<style>
+    .navbar-brand #logo-white,
+    .navbar-brand #logo-black {
+        padding-top: 5px;
+    }
+</style>
+<div class="page-header header-inside">
+    <nav class="navbar nav-init-color navbar-expand-lg fixed-top">
+        <div class="navbar-container">
+            <div class="top-menu-content">
+                <nav>
+                    <div class="row">
+                        <div class="col-4">
+                            <ul id="nav" class="nav">
+                                <li class="menu-info">
+                                    <a href="@Url.Action("Index","Home", new { area = "" })" onclick="openLoading();">
+                                        <img src="@Url.Content("../../Content/images/IdCard.png")" width="60px" height="auto" alt="" />
+                                    </a>
+                                    <div class="nav-user-info" href="#" style="float: right;">
+                                        <div>@userDataConnected.NomPrenom</div>
+                                        <div>@userDataConnected.EntityName</div>
+                                        <div>@userDataConnected.AgencyName</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-5 row">
+                            <div class="col-4 app_logo text-right pr-0">
+                                <a href="@Url.Action("Index","Home", new { area = "" })" onclick="openLoading();">
+                                    <img id="logo-white" class="" src="@Url.Content(string.Format("../../Content/images/{0}-wh.png", @userDataConnected.CompanyLogo))"
+                                         alt="" />
+                                    <img id="logo-black" class="hide" src="@Url.Content(string.Format("../../Content/images/{0}.png", @userDataConnected.CompanyLogo))"
+                                         alt="" />
+                                </a>
+                            </div>
+                            <div class="col app_title text-left">@Resource.appTitle</div>
+                            
+                        </div>
+                        <div class="col-3 p-l-0 m-l-0 pr-0" align="right">
+                            <ul id="nav" class="nav nav-group-right">
+                                <li id="nav-lan" class="menu-item">
+                                    @*@Request.Cookies["_culture"].Value*@
+                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                       class="nav-link nav-link-lan dropdown-toggle">
+                                        @if (ViewBag.CulturName != null && ViewBag.CulturName.StartsWith("en"))
+                                        {
+                                            <img id="nav-img" src="@Url.Content("../../Content/images/flags/en.png")" alt="en">
+                                        }
+                                        else if (ViewBag.CulturName != null && ViewBag.CulturName.StartsWith("fr"))
+                                        {
+                                            <img id="nav-img" src="@Url.Content("../../Content/images/flags/fr.png")" alt="fr">
+                                        }
+                                        else
+                                        {
+                                            <img id="nav-img" src="@Url.Content("../../Content/images/flags/fr.png")" alt="fr">
+                                        }
+                                    </a>
+                                    <div class="dropdown-menu dropdown-sous-menu first-plan dropdown-menu-right nav-lan-dropdown"
+                                         aria-labelledby="navbarDropdownMenuLink3">
+                                        @foreach (var lang in ViewBag.Langues)
+                                        {
+                                        <a class="dropdown-item" id="@lang.Code.Substring(0,2)" href="@Url.Action("SetCulture", "Home", new { area = "", lang = lang.Code })" onclick="openLoading();">
+                                            <img src="@Url.Content(string.Format("../../Content/images/flags/{0}.png", lang.Code.Substring(0,2)))" alt="fr">
+                                        </a>
+                                        }
+                                        @*<a class="dropdown-item" id="en" href="@Url.Action("SetCulture","Home", new { area = "", lang = "en-US" })" onclick="openLoading();">
+                                            <img src="@Url.Content("../../Content/images/flags/en.png")" alt="en">
+                                        </a>*@
+                                    </div>
+                                </li>
+                                <li id="nav-list" class="menu-logout">
+                                    <a title="logout" href="@Url.Action("Logout","Login", new { area = "" })" onclick="openLoading();">
+                                        <img src="@Url.Content("../../Content/images/Exit.png")" width="60px" height="auto" alt="" />
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </nav>
+</div>

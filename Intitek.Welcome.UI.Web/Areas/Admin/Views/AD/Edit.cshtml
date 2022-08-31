@@ -1,0 +1,284 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@using Intitek.Welcome.Service.Back
+@model Intitek.Welcome.UI.ViewModels.Admin.ADViewModel
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+}
+@{
+    ViewBag.Title = Model.ID > 0 ? string.Format("Administration | {0}", HttpUtility.HtmlDecode(Model.Name)) : string.Format("Administration | {0}", Resource.newDomain);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link"  onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "AD")" class="breadcrumb-link"  onclick="openLoading();">@Resource.domainsList</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@(Model.ID > 0 ? HttpUtility.HtmlDecode(Model.Name) : Resource.newDomain)</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@(Model.ID > 0 ? HttpUtility.HtmlDecode(Model.Name) : Resource.newDomain)</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@(Model.ID > 0 ? string.Format("Edition {0}", HttpUtility.HtmlDecode(Model.Name)) : Resource.newDomain)</h2>
+                </div>
+                <form action="@Url.Action("Edit", "AD")" id="adForm" method="post">
+                    <div class="card card-form p-0">
+                        <input type="hidden" id="Id" name="Id" value="@Model.ID" />
+                        <div class="card-body show">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label label-align-right">@Resource.name</label>
+                                        <div id="name-autocomplete" class="col-8 form-group narrow-form-group">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Name" id="Name" placeholder="@Resource.name" value="@HttpUtility.HtmlDecode(Model.Name)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label label-align-right">@Resource.address</label>
+                                        <div id="name-autocomplete" class="col-8 form-group narrow-form-group">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Address" id="Address" placeholder="@Resource.address" value="@HttpUtility.HtmlDecode(Model.Address)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label label-align-right">@Resource.domain</label>
+                                        <div id="name-autocomplete" class="col-8 form-group narrow-form-group">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Domain" id="Domain" placeholder="@Resource.domain" value="@HttpUtility.HtmlDecode(Model.Domain)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label label-align-right">@Resource.user_login</label>
+                                        <div id="name-autocomplete" class="col-8 form-group narrow-form-group">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Username" id="Username" placeholder="@Resource.user_login" value="@HttpUtility.HtmlDecode(Model.Username)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label label-align-right">@Resource.login_Password</label>
+                                        <div id="name-autocomplete" class="col-8 form-group narrow-form-group">
+                                            <input type="password" required="" data-parsley-minlength="6"
+                                                   name="Password" id="Password" placeholder="@Resource.login_Password" value="@HttpUtility.HtmlDecode(Model.Password)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label label-align-right">@Resource.confirmation</label>
+                                        <div id="name-autocomplete" class="col-8 form-group narrow-form-group">
+                                            <input type="password" required="" data-parsley-minlength="6"
+                                                   name="ConfirmPassword" id="ConfirmPassword" placeholder="@Resource.confirmation" value="@HttpUtility.HtmlDecode(Model.ConfirmPassword)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label class="col-3 col-form-label label-align-right">@Html.Raw(Resource.toBeSynchronized)</label>
+                                        <div id="name-autocomplete" class="col-8 form-group">
+                                            <label id="synchronizeCheckbox"
+                                                   class="custom-control custom-checkbox custom-control-inline">
+                                                <input id="ToBeSynchronized" name="ToBeSynchronized"
+                                                       type="checkbox" value="@Model.ToBeSynchronized.ToString()" @(Model.ToBeSynchronized ? "checked" : "")
+                                                       class="custom-control-input is-positive">
+                                                <span class="custom-control-label pl-0">&nbsp;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.ID > 0)
+                            {
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <label class="col-3 col-form-label label-align-right">&nbsp;</label>
+                                            <div class="col-5 form-group label-align-right">
+                                                @if (Model.LastSynchronized.HasValue)
+                                                {
+                                                    @Html.Raw(string.Format("<b>{0}</b>&nbsp;:&nbsp;{1}", Resource.lastSynchronization, Model.LastSynchronized))
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw(string.Format("<b>{0}</b>&nbsp;:&nbsp;{1}", Resource.lastSynchronization, "__/__/____"))
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><br />
+                            }
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-3">
+                        <div class="col center p-t-25">
+                            <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                    onclick="_redirectTo('@Url.Action("Index", "AD")')">
+                                @Resource.buttonCancel
+                            </button>
+
+                            <button type="submit"
+                                    class="btn btn-wme btn-green next-btn space-betwen-btn"
+                                    id="submitButton" onclick="openLoading();">
+                                @Resource.buttonValidate
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ckeditor")
+    @Scripts.Render("~/bundles/ckeditor-adapter")
+    @Styles.Render("~/Content/modalcss")
+
+    <script type="text/javascript">
+
+        $('#sidebar-domains').addClass('active');
+        $('[data-toggle="tooltip"]').tooltip();
+
+        //Validators
+
+        const ErrorNameRequired = '@Resource.errorNameRequired';
+        const ErrorAddressRequired = '@Resource.errorAddressRequired';
+        const ErrorDomainRequired = '@Resource.errorDomainRequired';
+        const ErrorUsernameRequired = '@Resource.errorUsernameRequired';
+        const ErrorPasswordRequired = '@Resource.errorRequiredPassword';
+        const ErrorConfirmationNotIdentical = '@Resource.errorConfirmationNotIdentical';
+        const ErrorConfirmationRequired = '@Resource.errorConfirmationRequired';
+
+        function notEmptyCallback(value, validator, $field) {
+            if (value.length === 0) $field.addClass('form-control-required');
+            else $field.removeClass('form-control-required');
+            return true;
+        }
+
+        $(document).ready(function () {
+            $('#adForm').bootstrapValidator({
+                excluded: [':disabled'],
+                fields: {
+                    Name: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorNameRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    Address: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorAddressRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    Domain: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorDomainRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    Username: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorUsernameRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    Password: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorPasswordRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    ConfirmPassword: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorConfirmationRequired + "</span>"
+                            },
+                            identical: {
+                                field: 'Password',
+                                message: "<span>" + ErrorConfirmationNotIdentical + "</span>"
+                            }
+                        }
+                    }
+                }
+            }).on('error.form.bv', function (e) {
+                closeLoading();
+            });
+        });
+
+        $('#ToBeSynchronized').on('click', function () {
+            $(this).val($(this).prop("checked"));
+        });
+
+    </script>
+}

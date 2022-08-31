@@ -1,0 +1,219 @@
+﻿@model  Intitek.Welcome.UI.ViewModels.Admin.QuestionViewModel
+
+@{
+    string imgDataURL = Model.Illustration != null ? string.Format("data:image/png;base64,{0}", Convert.ToBase64String(Model.Illustration)) : null;
+}
+<div id="editQcmQuestionModal" class="modal fade" role="dialog" data-backdrop="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row m-r-0 m-l-0 p-l-0 center">
+                    <h3>@Resource.qcmQuestionEdit</h3>
+                </div>
+                <form id="editQcmQuestionForm" action="" method="post" enctype="multipart/form-data">
+                    <input type="hidden" id="ID_Question" name="ID" value="@Model.Id" />
+                    <input type="hidden" id="ID_Lang" name="ID" value="@Model.Id_Lang" />
+                    <input type="hidden" id="OrdreQuestion" name="ID" value="@Model.OrdreQuestion" />
+                    <div class="card-body show reponses pt-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label  label-align-left">@Resource.question</label>
+                                    <div class="col-10 pl-0">
+                                        <input type="text" required="" data-parsley-minlength="6" id="TexteQuestion"
+                                               name="TexteQuestion" placeholder="@(Model.Id == 0 ? Resource.question : (string.IsNullOrEmpty(Model.TexteQuestion) ? @HttpUtility.HtmlDecode(Model.DefaultTexteQuestion) : Resource.question ))"
+                                               value="@HttpUtility.HtmlDecode(Model.TexteQuestion)"
+                                               autofocus class="form-control form-control-required">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row" style="height: 40px;">
+                                    <label class="col-2 col-form-label label-align-left">@Resource.illustration</label>
+                                    <div class="col-10 row">
+                                        <label class="col-8 fileContainer" id="illusContainer">
+                                            <div class="fileContainerFileName" id="illusName"></div>
+                                            <span id="illusLabel" class="uploadLabel-holder">@Resource.fileUploadPlaceholder</span>
+                                            <span class="fileContainerButton"><i class="fas fa-upload"></i></span>
+                                            <input name="IllusUpload" id="IllusUpload" type="file" accept="image/x-png, image/gif, image/jpeg" />
+                                            <input type="hidden" id="uploadedIllusSize" name="uploadedIllusSize" value="" />
+                                        </label>
+                                        <div class="col-4">
+                                            <div class="row">
+                                                <label class="col-6 col-form-label label-align-right" for="inlineRadio2" style="padding-left: 10px">@Resource.qcm_Inactif</label>
+                                                <div class="col">
+                                                    <label class="switch">
+                                                        <input type="checkbox" id="inactif" name="inactif" class="inactif" value="@Model.inactif" @(Model.inactif == 0 ? "" : "checked")>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-2"></div>
+                            <div class="col-10 row">
+                                <div class="col-8">
+                                    <div class="row image-preview item_vertical">
+                                        <div class="col-8 p-0">
+                                            <div class="pt-2">
+                                                <small class="help-block" id="errorIllus"><span class="error">@Resource.errorIllustrationFormat</span></small>
+                                                <img src="@imgDataURL" id="previewIllus" style="max-height: 80px;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            @if (Model.Illustration != null)
+                                            {
+                                               <div id="deleteLink">
+                                                   <a href="javascript:void(0)" onclick="deleteIllustration(@Model.Id, @Model.Id_Lang)"><i class="fas fa-trash icon-danger" data-toggle="tooltip" title="@Resource.delete"></i></a>
+                                               </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4"></div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row m-0">
+                            <div class="col text-center pr-0">
+
+                            </div>
+                            <div class="col-1 text-center pl-0">
+                                <b>@Resource.rightAnswer</b>
+                            </div>
+                            <div class="col-1 text-center pl-0">
+                                <b>@Resource.Order</b>
+                            </div>
+                            <div class="col-1 text-center pl-0">
+                                <b>@Resource.action</b>
+                            </div>
+                            <div style="width: 20px"></div>
+                        </div>
+                        <div class="answers_content">
+                            <div class="row row-response">
+                                @{
+                                    var i = 1;
+                                    foreach (var reponse in Model.Reponses)
+                                    {
+                                        @*<div class="row row-response">*@
+
+                                        <div id="@string.Format("rowAnswer_{0}", i)" class="col-12 answer @string.Format("answer-{0}", i)" data-idx="@i">
+                                            <div class="form-group row item_vertical">
+                                                <label class="col-2 col-form-label align-right">@string.Format("{0} {1}", Resource.answer, i)</label>
+                                                <div class="col">
+                                                    <input type="text" required="" data-parsley-minlength="6" data-id="@reponse.Reponse.Id"
+                                                           name="Name" placeholder="@(reponse.DefaultTrad != null ? HttpUtility.HtmlDecode(reponse.DefaultTrad.Texte): string.Format("{0} {1}",  Resource.answer, i) )"
+                                                           value="@(reponse.ReponseTrad == null ? string.Empty :HttpUtility.HtmlDecode(reponse.ReponseTrad.Texte))"
+                                                           autofocus class="form-control form-control-required reponse">
+                                                </div>
+                                                <div class="col-1">
+                                                    <label class="custom-control custom-checkbox answer-checkbox">
+                                                        <input id="@string.Format("chk{0:0000}", reponse.Reponse.Id)" name="ckreponse" type="checkbox" value=""
+                                                               class="custom-control-input is-positive " @(reponse.Reponse.IsRight ? "checked" : "")>
+                                                        <span class="custom-control-label custom-control-checkbox"></span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-1">
+                                                    <input type="text" required="" data-parsley-max="@Model.Reponses.Count" data-order="@(reponse.Reponse.OrdreReponse > 0 ? reponse.Reponse.OrdreReponse : i)"
+                                                           name="OrdreReponse" placeholder="@i"
+                                                           value="@(reponse.Reponse.OrdreReponse > 0 ? reponse.Reponse.OrdreReponse : i)"
+                                                           class="form-control center ordreReponse">
+                                                </div>
+                                                <div class="col-1 text-center">
+                                                    <a href="#" class=" delete-reponse" role="button" onclick="deleteReponse(@i, @reponse.Reponse.Id)">
+                                                        @*<a href="@Url.Action("ConfirmReponseDelete","Qcm", new { reponse.Id })" class="delete-reponse" role="button"  data-target="deleteModal">*@
+                                                        <i class="fas fa-trash icon-danger" data-toggle="tooltip" title="@Resource.delete"></i>
+                                                    </a>
+                                                </div>
+                                                <div style="width: 20px"></div>
+                                                @*<div class="col-1">
+                                                        <i data-toggle="tooltip" title="@Resource.down" class="fas fa-arrow-down" onclick="moveDown()"></i>
+                                                        &nbsp;
+                                                        <i data-toggle="tooltip" title="@Resource.up" class="fas fa-arrow-up" onclick="moveUp()"></i>
+                                                    </div>*@
+                                            </div>
+                                        </div>
+                                        @*</div>*@
+                                        i++;
+
+                                    }
+                                    <input type="hidden" value="@i" id="repIndex" />
+                                }
+                            </div>
+                            <div class="row m-0">
+                                <div class="col-2 center">
+                                    <span data-toggle="tooltip" title="@Resource.addAnswer" onclick="addResponse()"><i class="fas fa-plus-circle btn-add"></i></span>
+                                </div>
+                                <div class="col center">
+                                    <small class="help-block" style=""><span class="error right-response-error">@Resource.errorRightResponseMandatory</span></small>
+                                </div>
+                                <div class="col center">
+                                    <small class="help-block" style=""><span class="error duplicate-order-error">@Resource.errorDuplicateReponseOrder</span></small>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row item_vertical">
+                                    <label class="col-2 col-form-label  label-align-right">@Resource.justification</label>
+                                    <div class="col">
+                                        <input type="text" data-parsley-minlength="6" id="TexteJustification"
+                                               name="TexteJustification" placeholder="@(Model.Id == 0 ? Resource.justification : (string.IsNullOrEmpty(Model.TexteJustification) ? @HttpUtility.HtmlDecode(Model.DefaultTexteJustification) : Resource.justification ))"
+                                               value="@HttpUtility.HtmlDecode(Model.TexteJustification)"
+                                               autofocus class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-0">
+                        <div class="col center">
+                            <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                    data-dismiss="modal">
+                                @Resource.buttonCancel
+                            </button>
+
+                            <button type="button" id="btnValidate" onclick="saveQuestion()"
+                                    class="btn btn-wme btn-green next-btn space-betwen-btn ">
+                                @Resource.buttonValidate
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_ConfirmDialog")
+
+<script>
+    $("#IllusUpload").on('change', function (e) {
+        //console.log("file",e.target.files[0]);
+        if (e.target.files[0]) {
+            $("#illusLabel").text(e.target.files[0].name);
+            $("#btnValidate").prop("disabled", false);
+            $("#uploadedIllusSize").val(e.target.files[0].size);
+            $("#illusLabel").removeClass('uploadLabel-holder').addClass('uploadLabel');
+            $("#errorIllus").css('display', 'none');
+            $("#illusContainer").css({ borderColor: 'var(--input-border-color)' });
+            if (window.FileReader) {
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    $("#previewIllus").attr('src', event.target.result);
+                }
+                reader.readAsDataURL(e.target.files[0]);
+            } else {
+                //the browser doesn't support the FileReader Object, so do this
+            }
+        }
+    });
+</script>

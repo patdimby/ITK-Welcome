@@ -1,0 +1,30 @@
+﻿<div id="documentViewer" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="main-container">
+                <div class="row">
+                    <div class="col-1">
+                    </div>
+                    <div class="col-10 document-viewer p-r-0 p-l-0">
+                        <div class="progress-bar">
+                            <h3>
+                                <span>@Resource.readDocument</span> - <span id="page_num"></span> / <span id="page_count"></span>
+                            </h3>
+                            <div id="progress-value"></div>
+                        </div>
+                        <div class="content">
+                            <button id="prev" class="btn viewer-pagination"><span class="fas fa-arrow-left"></span></button>
+                            <canvas id="the-canvas"></canvas>
+                            <button id="next" class="btn viewer-pagination"><span class="fas fa-arrow-left"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                    </div>
+                </div>
+            </div>
+            <a href="#" data-dismiss="modal" class="close-modal ">Close</a>
+        </div>
+    </div>
+</div>
+
+

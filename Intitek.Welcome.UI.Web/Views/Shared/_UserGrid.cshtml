@@ -1,0 +1,203 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.UI.ViewModels.Admin;
+
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<Intitek.Welcome.UI.ViewModels.Admin.UserViewModel>
+@{
+    var entite = "";
+    if (ViewData["EntityName"] != null)
+    {
+        entite = (string)ViewData["EntityName"];
+    }
+}
+
+
+
+@helper CustomRenderingOfActions(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    <a href="@Url.Action("Index", "UserDocument", new { id=vm.ID })" role="button" data-toggle="tooltip" title="Relecture"  target="_blank">
+        <i class="fas fa-user-secret" style="color:red"></i>
+    </a>
+
+}
+@helper CustomRenderingOfProfils(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    string tooltip = "";
+    string profil = "";
+    foreach (var item in vm.ProfilList)
+    {
+        tooltip += string.Format("<div>{0}</div>", item.Name);
+        if (!string.IsNullOrEmpty(profil))
+        {
+            profil += ", " + item.Name;
+        }
+        else
+        {
+            profil = item.Name;
+        }
+
+    }
+    <div data-toggle="tooltip" data-html="true" title="@tooltip" style="max-width:150px;">@profil</div>
+}
+@helper CustomRenderingOfStatus(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    if (vm.Status == (int)Statuts.BACKOFFICE)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfOnboarding(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    if (vm.IsOnBoarding)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+
+@helper RenderNameWithTooltip(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name">@vm.Name</span>
+}
+
+
+@helper RenderFullnameWithTooltip(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.FullName">@vm.FullName</span>
+}
+
+@helper RenderEmailWithTooltip(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    if (vm.IsOnBoarding)
+    {
+        <span data-toggle="tooltip" title="@vm.EmailOnBoarding">@vm.EmailOnBoarding</span>
+
+    }
+    else
+    {
+        <span data-toggle="tooltip" title="@vm.Email">@vm.Email</span>
+
+    }
+
+}
+@helper CustomRenderingOfActive(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    if (vm.Active)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfActivity(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    if (vm.Activity)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfType(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    if (vm.Type == Intitek.Welcome.Service.Back.Constante.UserType_METIER)
+    {
+        @Resource.typeMetier
+    }
+    else if (vm.Type == Intitek.Welcome.Service.Back.Constante.UserType_STRUCTURE)
+    {
+        @Resource.typeStructure
+    }
+}
+
+@helper RenderManagerWithTooltip(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    string manager = (vm.Manager != null && vm.Manager.FullName != null) ? vm.Manager.FullName : "";
+    <span data-toggle="tooltip" title="@manager">@manager</span>
+}
+
+@helper RenderDOPWithTooltip(Intitek.Welcome.UI.ViewModels.Admin.UserViewModel vm)
+{
+    string dop = vm.ImportManager != null ? vm.ImportManager.DOP : "";
+    <span data-toggle="tooltip" title="@dop">@dop</span>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+
+    columns.Add().Titled(Resource.actions).RenderValueAs(o => CustomRenderingOfActions(o)).IsHtml(true).Css("actions col-actions")
+          .Filterable(false).Sortable(false).SetWidth(120);
+
+    columns.Add(o => o.Name).RenderValueAs(x => x.Name)
+        .RenderValueAs(o => RenderNameWithTooltip(o)).IsHtml(true)
+        .Css("col-name ellipsis col-user-name")
+        .Filterable(true)
+        .Sortable(true);
+
+    columns.Add(o => o.FullName)
+        .RenderValueAs(o => RenderFullnameWithTooltip(o)).IsHtml(true)
+        .Css("col-name ellipsis col-user-fullname")
+        .Filterable(true)
+        .Sortable(false);
+
+    columns.Add(o => o.EntityName).SetDataPriority(7)
+    //.SetFilterWidgetType("AgenceNameFilterWidget", Url.Action("SearchAgenceByEntity", "User", new { entity= entite}))
+    .Css("col-name ellipsis col-user-entity")
+    //.SetWidth(500)
+    .Filterable(false)
+    .Sortable(true);
+
+    columns.Add(o => o.AgencyName).SetDataPriority(8)
+     //.SetFilterWidgetType("AgenceNameFilterWidget", Url.Action("SearchAgenceByEntity", "User", new { entity= entite}))
+     .Css("col-name ellipsis col-user-agency")
+     //.SetWidth(500)
+     .Filterable(false)
+     .Sortable(true);
+
+    columns.Add(o => o.Type).RenderValueAs(o => CustomRenderingOfType(o))
+     .Filterable(true)
+     .Sortable(true).SetFilterWidgetType("TypeUserFilterWidget").SetDataPriority(5);
+
+    columns.Add(o => o.IsRoot).Titled("Admin").RenderValueAs(o => CustomRenderingOfStatus(o)).SetWidth(20).Filterable(true).Sortable(true).Css("center").IsHtml(true).SetDataPriority(1);
+
+    columns.Add(o => o.EmailOnBoarding).RenderValueAs(o => RenderEmailWithTooltip(o)).IsHtml(true).Filterable(false).Sortable(false).Css("col-name ellipsis  col-user-email").SetDataPriority(4);
+
+
+    columns.Add(o => o.EntryDate).Format("{0:dd/MM/yyyy}").SetWidth(40).Filterable(false).Sortable(true).Css("center col-date").SetDataPriority(2).Sortable(true);
+    columns.Add(o => o.ExitDate).Format("{0:dd/MM/yyyy}").SetWidth(40).Filterable(false).Sortable(true).Css("center col-date").SetDataPriority(2).Sortable(true);
+    columns.Add(o => o.Active).RenderValueAs(o => CustomRenderingOfActive(o)).IsHtml(true).Css("center").SetDataPriority(3);
+    columns.Add(o => o.Activity).RenderValueAs(o => CustomRenderingOfActivity(o)).IsHtml(true).Css("center").SetDataPriority(3);
+
+    columns.Add(o => o.DocumentRead).Css("center wrap").SetWidth(100)
+   .Filterable(false).Sortable(false).SetDataPriority(6);
+
+    columns.Add(o => o.DocumentApproved).Css("center wrap").SetWidth(100)
+  .Filterable(false).Sortable(false).SetDataPriority(6);
+
+    columns.Add(o => o.DocumentTested).Css("center wrap").SetWidth(100)
+   .Filterable(false).Sortable(false).SetDataPriority(6);
+
+    columns.Add(o => o.Manager).RenderValueAs(x => x.Manager.FullName)
+       .RenderValueAs(o => RenderManagerWithTooltip(o)).IsHtml(true)
+       .Css("col-name ellipsis col-user-manager");
+
+
+    columns.Add(o => o.ImportManager).RenderValueAs(x => x.ImportManager.DOP)
+       .RenderValueAs(o => RenderDOPWithTooltip(o)).IsHtml(true)
+       .Css("col-name ellipsis col-user-dop");
+
+
+}).WithPaging().WithMultipleFilters().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).SetRowCssClasses(e => true ? "admclickable" : string.Empty)
+
+

@@ -1,0 +1,411 @@
+﻿
+@using Intitek.Welcome.UI.ViewModels.Admin
+@using Intitek.Welcome.Service.Back
+@model Intitek.Welcome.UI.ViewModels.Admin.MailTemplateViewModel
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    <style>
+        select optgroup {
+            background-color: black;
+            color: white;
+            font-style: normal
+        }
+
+        select optgroup option {
+            background-color: white;
+            color: black;
+            font-style: normal
+        }
+
+        select optgroup option:hover {
+            background-color: orange;
+            color: white;
+            font-style: normal
+        }
+    </style>
+}
+@{
+    ViewBag.Title = Model.Id > 0 ? string.Format("Administration | {0}", HttpUtility.HtmlDecode(Model.Name)) : string.Format("Administration | {0}", Resource.newTemplate);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var categories = Model.SubCategories.GroupBy(x => new { x.ID_DocumentCategory , x.NameCategory}).Select(x => new { x.Key.ID_DocumentCategory, x.Key.NameCategory}).ToList();
+}
+
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "MailTemplate")" class="breadcrumb-link" onclick="openLoading();">@Resource.emailTemplatesList</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@(Model.Id > 0 ? HttpUtility.HtmlDecode(Model.Name) : Resource.newTemplate)</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@(Model.Id > 0 ? HttpUtility.HtmlDecode(Model.Name) : Resource.newTemplate)</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@(Model.Id > 0 ? string.Format("Edition {0}", HttpUtility.HtmlDecode(Model.Name)) : Resource.newTemplate)</h2>
+                </div>
+                <form id="templateForm" method="post">
+                    <div class="card card-form p-0">
+                        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                        <div class="card-body show">
+                            <div class="row">
+                                <div class="col-xl-auto col-2 col-form-inputs-labels" style="min-width:184px;">
+                                    <div class="row row-label mt-3 mb-4">
+                                        <label for="Name" class="pl-0 col-form-label label-align-right">@Resource.name</label>
+                                    </div>
+                                    <div class="row row-label mb-4">
+                                        <label for="Comment" class="pl-0 col-form-label label-align-right">@Resource.comment</label>
+                                    </div>
+                                    <div class="row row-label mb-3">
+                                        <label for="Object" class="pl-0 col-form-label label-align-right">@Resource.mailObject</label>
+                                    </div>
+                                    <div class="row row-label mb-3">&nbsp;</div>
+                                    <div class="row row-label mb-3">
+                                        <label for="CategorySubCategories" id="categorySubCategoriesLabel" class="pl-0 col-form-label label-align-right">@Resource.categorySubcategory</label>
+                                    </div>
+                                </div>
+                                <div class="col-10 col-form-inputs">
+                                    <div class="row mt-3 mb-4">
+                                        <div id="nameInputSection" class="col-7 form-group">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Name" id="Name" placeholder="@Resource.name" value="@HttpUtility.HtmlDecode(Model.Name)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div id="commentInputSection" class="col-11 form-group">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Comment" id="Comment" placeholder="@Resource.comment" value="@HttpUtility.HtmlDecode(Model.Comment)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div id="objectInputSection" class="col-11 form-group">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Object" id="Object" placeholder="@Resource.mailObject" value="@HttpUtility.HtmlDecode(Model.Object)"
+                                                   autofocus class="form-control col-9">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div id="globalCheckboxSection" class="col-11 form-group">
+                                            <label for="Global" class="pl-0 col-form-label label-align-left">
+                                                <input type="checkbox" name="IsGlobal" id="IsGlobal" value="true" onclick="HideShowCategory();" @(Model.IsGlobal ? "checked" : "") />
+                                                &nbsp; @Resource.allCategoriesSub
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3" style="display:none;">
+                                        <div id="categorySubCategoriesInputSection" class="col-7 form-group">
+                                            <select multiple
+                                                    title="<span>@Resource.slcSelectCategSubCateg</span>"
+                                                    data-live-search="true"
+                                                    data-live-search-placeholder="@Resource.slcAttachSearch"
+                                                    data-focus-off="true"
+                                                    data-style="bg-white rounded-pill"
+                                                    class="selectpicker form-control"
+                                                    id="CategorySubCategories" name="CategorySubCategories">
+                                                <optgroup label="@Resource.slcGroupCategory">
+                                                    @foreach (var categ in Model.Categories)
+                                                    {
+                                                        <option class="@(categ.IsDefaultLangName ? "defaultName": "")" value="@categ.ID|categ" @(Model.SelectedCategories != null && Model.SelectedCategories.Contains(categ.ID) ? "selected" : "")>
+                                                            @categ.NameDisplay
+                                                        </option>
+                                                    }
+                                                </optgroup>
+                                                <optgroup label="@Resource.slcGroupSubcategory">
+                                                    @foreach (var categ in categories)
+                                                    {
+                                                        var subcategories = Model.SubCategories.Where(x => x.ID_DocumentCategory == categ.ID_DocumentCategory);
+                                                        foreach (var subcateg in subcategories)
+                                                        {
+                                                            <option class="@(subcateg.IsDefaultLangName ? "defaultName": "")" value="@subcateg.ID|subcateg" @(Model.SelectedSubCategories != null && Model.SelectedSubCategories.Contains(subcateg.ID) ? "selected" : "")>
+                                                                @subcateg.NameCategory > @subcateg.NameDisplay
+                                                            </option>
+                                                        }
+                                                    }
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3" style="display:none;">
+                                        <div id="isDocNoCategoryCheckboxSection" class="col-11 form-group">
+                                            <label for="IsDocNoCategory" class="pl-0 col-form-label label-align-left" style="display:inline-block;">
+                                                <input type="checkbox" name="IsDocNoCategory" id="IsDocNoCategory" value="true" @(Model.IsDocNoCategory ? "checked" : "") />&nbsp; @Resource.noCategoryInclus
+                                            </label>
+                                            <label for="IsDocNoSubCategory" class="pl-0 col-form-label label-align-left" style="display:inline-block;margin-left:60px;">
+                                                <input type="checkbox" name="IsDocNoSubCategory" id="IsDocNoSubCategory" value="true" @(Model.IsDocNoSubCategory ? "checked" : "") />&nbsp; @Resource.noSubcategoryInclus
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-1 form-group" style="min-width:184px;">
+                                    <label for="Content" class="pl-0 col-form-label label-align-left">@Resource.content</label>
+                                </div>
+                                <div class="col-10 form-group">
+                                    <div class="row">
+                                        <div class="col-9 form-group">
+                                            <span id="spanContent" class="cke_mef full-width">
+                                                <textarea required=""
+                                                          class="form-control editor"
+                                                          id="Content" name="Content" height="">@(Model.Content)</textarea>
+                                            </span>
+                                        </div>                                       
+                                        <div class="col-3" style="margin-top:-30px">
+                                            <div class="row">
+                                                <div class="col-12 center">
+                                                    <h6 class="mb-0 mt-0"><i class="fas fa-info-circle"></i><span class="pl-1">@Resource.keywordNotice</span></h6>
+                                                </div>
+                                                <div class="col-12 col-keywords">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                        <th class="center">
+                                                            @Resource.authorizedKeywords
+                                                        </th>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var keyword in Model.MailKeywords)
+                                                            {
+                                                                <tr>
+                                                                    <td class="center"><span class="keyword clickable" title="@keyword.Description" data-toggle="tooltip">@keyword.Code</span></td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 mb-3">
+                        <div class="col center p-t-25">
+                            <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                    onclick="_redirectTo('@Url.Action("Index", "MailTemplate")')">
+                                @Resource.buttonCancel
+                            </button>
+
+                            <button type="button" id="preview" class="btn btn-wme btn-dark space-betwen-btn">
+                                @Resource.buttonPreview
+                            </button>
+
+                            <button type="submit"
+                                    class="btn btn-wme btn-green next-btn space-betwen-btn"
+                                    id="submitButton">
+                                @Resource.buttonValidate
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_InvalidKeywordsDialog");
+@Html.Partial("_PreviewDialog");
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ckeditor")
+    @Scripts.Render("~/bundles/ckeditor-adapter")
+    @Styles.Render("~/Content/modalcss")
+    @Scripts.Render("~/bundles/bootstrap-select")
+
+    <script type="text/javascript">
+
+        $('#sidebar-email-template').addClass('active');
+        $("#Content").ckeditor();
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $("#invalidKeywordsModal").insertAfter(".main-container");
+        $("#previewModal").insertAfter(".main-container");
+
+        //Validators
+
+        const ErrorTemplateNameRequired = '@Resource.errorTemplateNameRequired';
+        const ErrorCommentRequired = '@Resource.errorCommentRequired';
+        const ErrorObjectRequired = '@Resource.errorObjectRequired';
+        const ErrorContentRequired = '@Resource.errorContentRequired';
+
+        function HideShowCategory() {
+            var checked = $("#IsGlobal").is(":checked") ;
+            console.log("checked", checked);
+            if (checked === false) {
+                $("#isDocNoCategoryCheckboxSection").parent("div").show();
+                $("#categorySubCategoriesInputSection").parent("div").show();
+                $("#categorySubCategoriesLabel").show();                
+            }
+            else {
+                $("#isDocNoCategoryCheckboxSection").parent("div").hide();
+                $("#categorySubCategoriesInputSection").parent("div").hide();
+                $("#categorySubCategoriesLabel").hide();              
+            }
+        }
+        function notEmptyCallback(value, validator, $field) {
+            if (value.length === 0) {
+                $field.addClass('form-control-required');
+                setInputLabelErrorRowHeight($field);
+            }
+            else $field.removeClass('form-control-required');
+            return true;
+        }
+
+        $(document).ready(function () {
+            HideShowCategory();
+            $('#templateForm').bootstrapValidator({
+                excluded: [':disabled'],
+                fields: {
+                    Name: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorTemplateNameRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    Comment: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorCommentRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    Object: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorObjectRequired + "</span>"
+                            },
+                            callback: {
+                                callback: notEmptyCallback
+                            }
+                        }
+                    },
+                    Content: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>" + ErrorContentRequired + "</span>"
+                            },
+                            callback: {
+                                callback: function (value, validator, $field) {
+                                    // Get the plain text without HTML
+                                    var div = $('<div/>').html(value).get(0),
+                                        text = div.textContent || div.innerText;
+                                    console.log("Content validate");
+
+                                    if (text.length > 0) {
+                                        $('#cke_Content').css("border-color", "var(--input-border-color)");
+                                        $("#Content").removeClass('form-control-required');
+                                        return true;
+                                    } else {
+                                        $('#cke_Content').css("border-color", "#dc3545");
+                                        $("#Content").addClass('form-control-required');
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }).find('.editor')
+                .ckeditor()
+                .editor
+                .on('change', function () {
+                    $('#templateForm').bootstrapValidator('revalidateField', 'Content');
+                });
+        });
+
+        $(".keyword").dblclick(function () {
+            CKEDITOR.instances.Content.focus();
+            CKEDITOR.instances.Content.insertText("[" + $(this).html() + "]");
+        });
+
+        $("#preview").on('click', function () {
+            $('#previewModal').on('show.bs.modal', function () {
+                $("#objectContent").html($("#Object").val());
+
+                $.get("@Url.Action("AjaxGetMailPreview", "MailTemplate")", { content: CKEDITOR.instances.Content.getData() }, function (data) {
+                    $("#mailContent").html(data.Preview);
+                });
+            });
+            $('#previewModal').on('hidden.bs.modal', function () {
+                $("#preview").blur();
+            });
+            $("#previewModal").modal('show');
+        });
+
+        function formIsValid() {
+            $('#templateForm').bootstrapValidator('validate');
+            if ($('#templateForm').has('.form-control-required').length === 0) {
+                return true;
+            }
+            return false;
+        }
+
+        $("#submitButton").on('click', function (e) {
+            console.log("click");
+            e.preventDefault();
+
+            if (!formIsValid()) return;
+
+            openLoading();
+            $.post(
+                "@Url.Action("Edit", "MailTemplate")",
+                {
+                    Name: $("#Name").val(),
+                    Comment: $("#Comment").val(),
+                    Object: $("#Object").val(),
+                    Content: $("#Content").val(),
+                    CategorySubCategories: $("#CategorySubCategories").val(),
+                    IsGlobal: $("#IsGlobal").is(":checked") ? true : false,
+                    IsDocNoCategory: $("#IsDocNoCategory").is(":checked") ? true : false,
+                    IsDocNoSubCategory: $("#IsDocNoSubCategory").is(":checked") ? true : false
+                },
+                function (data) {
+                    console.log("J'entre 0");
+                    console.log(data);
+                    window.location.href = "@Url.Action("Index", "MailTemplate")";
+                }
+            ).fail(function (data) {
+                if (data.status === 500 && data.responseJSON.InvalidKeywords) {
+                    $('#invalidKeywordsModal').on('show.bs.modal', function () {
+                        $("#keywords").html(data.responseJSON.InvalidKeywords);
+                    });
+                    $("#invalidKeywordsModal").modal('show');
+                } else {
+                    console.log(data);
+                }
+                closeLoading();
+            });
+            return false;
+        });
+
+    </script>
+}

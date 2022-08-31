@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5c307c8ba60b40e583beb4a8dad98e91" Name="Diagram1">
+        <EntityTypeShape EntityType="Welcome.AD" Width="1.5" PointX="1.5" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Batchs" Width="1.5" PointX="5.75" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.BlackList" Width="1.5" PointX="10.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.CityEntityBlackListed" Width="1.5" PointX="10.75" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Config" Width="1.5" PointX="12.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Document" Width="1.5" PointX="3" PointY="15.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.DocumentCategory" Width="1.5" PointX="1.5" PointY="25.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.DocumentCategoryLang" Width="1.5" PointX="10.25" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.DocumentLang" Width="1.5" PointX="5.25" PointY="16" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.DocumentVersion" Width="1.5" PointX="5.25" PointY="22.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.DocumentVersionLang" Width="1.5" PointX="7.5" PointY="22.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.EntityDocument" Width="1.5" PointX="5.25" PointY="26" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.HistoActions" Width="1.5" PointX="3" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.HistoBatchs" Width="1.5" PointX="8" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.HistoEmails" Width="1.5" PointX="8" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.HistoUserQcmDocVersion" Width="1.5" PointX="8.25" PointY="18.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.IntitekUser" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Lang" Width="1.5" PointX="3" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Logos" Width="1.5" PointX="12.75" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.MailKeywords" Width="1.5" PointX="12.75" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.MailTemplate" Width="1.5" PointX="5.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Profile" Width="1.5" PointX="6" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.ProfileDocument" Width="1.5" PointX="8.25" PointY="15.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.ProfileUser" Width="1.5" PointX="11.25" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Qcm" Width="1.5" PointX="0.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.QcmLang" Width="1.5" PointX="6" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Question" Width="1.5" PointX="3" PointY="31.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.QuestionLang" Width="1.5" PointX="5.25" PointY="30.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.Reponse" Width="1.5" PointX="5.25" PointY="34" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.ReponseLang" Width="1.5" PointX="7.5" PointY="34.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.StatusDefinition" Width="1.5" PointX="1.5" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.SubCategory" Width="1.5" PointX="0.75" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.SubCategoryLang" Width="1.5" PointX="10.25" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.UserDocument" Width="1.5" PointX="10.25" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.UserQcm" Width="1.5" PointX="11.25" PointY="18.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.UserQcmReponse" Width="1.5" PointX="13.5" PointY="26.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Welcome.WelcomeMessage" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="Welcome.FK_AD_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_BATCH_HISTO" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_MAIL_BATCH" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK__EntityDoc__ID_Do__16644E42" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK__ProfileDo__ID_Do__1758727B" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DOC_LAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DOC_SCAT" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DOCUMENT_CATEGORY" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DOCUMENT_QCM" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DOCUMENT_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DOCUMENT_VERSION" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DOCV_USER_QCM" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_QCM_UDOC" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_CRE" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_DEL" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_UPD" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_CAT_LAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_SUB_CAT" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_LAN_CAT" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_LAN_DOC" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_DVER_LAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_LAN_DVER" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_HISTO_ACTION" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_MAIL_TEMPLATE" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_MAIL" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_QCM_USER_DOCV" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_QCM_DOCV" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK__IntitekUs__Statu__236943A5" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_DOCUMENT" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_PROFILE" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_QCM" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_LAN_QCM" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_LAN_QUE" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_LAN_REP" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_LAN_SCAT" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_MESSAGE_LANG" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK__ProfileDo__ID_Pr__25518C17" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK__ProfileUs__ID_Pr__2739D489" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_QCM_LAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_QCM_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_QUESTION_QCM" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_QUE_LAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_REPONSE_QUESTION" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_REP_LAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_REPONSE_QCM_USER" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_SCAT_LAN" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_QCM_USER_REPONSE" ManuallyRouted="false" />
+        <AssociationConnector Association="Welcome.FK_USER_MANAGER" />
+        <AssociationConnector Association="Welcome.MailTemplateCategory" />
+        <AssociationConnector Association="Welcome.MailTemplateSubCategory" />
+        <EntityTypeShape EntityType="Welcome.Histo_AD" Width="1.5" PointX="12.375" PointY="10.75" />
+        <EntityTypeShape EntityType="Welcome.ImportManager" Width="1.5" PointX="13.875" PointY="10.375" />
+        <EntityTypeShape EntityType="Welcome.Histo_IntitekUser" Width="1.5" PointX="14.625" PointY="16.125" />
+        <AssociationConnector Association="Welcome.FK_HISTO_AD_USER" />
+        <EntityTypeShape EntityType="Welcome.Histo_Document" Width="1.5" PointX="16.875" PointY="18.625" />
+        <EntityTypeShape EntityType="Welcome.Histo_DocumentLang" Width="1.5" PointX="19.125" PointY="21.5" />
+        <EntityTypeShape EntityType="Welcome.Histo_DocumentVersion" Width="1.5" PointX="19.125" PointY="32" />
+        <EntityTypeShape EntityType="Welcome.Histo_DocumentVersionLang" Width="1.5" PointX="21.375" PointY="32.375" />
+        <EntityTypeShape EntityType="Welcome.Histo_EntityDocument" Width="1.5" PointX="19.125" PointY="35.875" />
+        <EntityTypeShape EntityType="Welcome.Histo_Profile" Width="1.5" PointX="14.625" PointY="29.625" />
+        <EntityTypeShape EntityType="Welcome.Histo_ProfileDocument" Width="1.5" PointX="22.125" PointY="24.375" />
+        <EntityTypeShape EntityType="Welcome.Histo_ProfileUser" Width="1.5" PointX="16.875" PointY="15.5" />
+        <EntityTypeShape EntityType="Welcome.Histo_UserDocument" Width="1.5" PointX="19.125" PointY="17.75" />
+        <EntityTypeShape EntityType="Welcome.Histo_UserQcm" Width="1.5" PointX="22.125" PointY="19.5" />
+        <EntityTypeShape EntityType="Welcome.BackUpIntitek" Width="1.5" PointX="15.375" PointY="0.75" />
+        <AssociationConnector Association="Welcome.FK_HISTO_DOC_LAN" />
+        <AssociationConnector Association="Welcome.FK_HISTO_DOCUMENT_USER" />
+        <AssociationConnector Association="Welcome.FK_HISTO_DOCUMENT_VERSION" />
+        <AssociationConnector Association="Welcome.FK_HISTO_EntityDoc_Document" />
+        <AssociationConnector Association="Welcome.FK_HISTO_Profile_Doc" />
+        <AssociationConnector Association="Welcome.FK_HISTO_QCM_UDOC" />
+        <AssociationConnector Association="Welcome.FK_HISTO_USER_CRE" />
+        <AssociationConnector Association="Welcome.FK_HISTO_DVER_LAN" />
+        <AssociationConnector Association="Welcome.FK_HISTO_USER_DOCUMENT" />
+        <AssociationConnector Association="Welcome.FK_HISTO_USER_PROFILE" />
+        <AssociationConnector Association="Welcome.FK_HISTO_USER_QCM" />
+        <AssociationConnector Association="Welcome.FK__Histo_ProfileDoc__58520D30" />
+        <AssociationConnector Association="Welcome.FK__Histo_ProfileUse__59463169" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

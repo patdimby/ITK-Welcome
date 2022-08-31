@@ -1,0 +1,26 @@
+.card{
+  padding: 20px;
+}
+.card-header{
+  border: none;
+}
+
+.my-content{
+  padding: 0 100px;
+}
+
+table td,
+table th{
+  height: 37px;
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+.fa-check-circle{
+  color: green;
+}
+.fa-times-circle{
+  color: red;
+}

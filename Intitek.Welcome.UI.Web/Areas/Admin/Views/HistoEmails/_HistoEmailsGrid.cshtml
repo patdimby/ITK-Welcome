@@ -1,0 +1,35 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers
+
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<HistoEmailsViewModel>
+
+@helper RenderColWithTooltip(string str)
+{
+    <span data-toggle="tooltip" title="@str">@str</span>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Message).Css("hidden")
+    .RenderValueAs(o => o.Message).IsHtml(true)
+    .Filterable(false).Sortable(false);
+
+    columns.Add(o => o.DateAction).Format("{0:dd/MM/yyyy H:mm:ss}").Css("col-date")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.TemplateName).Css("center col-template ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(o.TemplateName)).IsHtml(true)
+    .Filterable(true).Sortable(true).SetWidth(150, true);
+
+    columns.Add(o => o.BatchProgName).Css("col-batch ellipsis")
+    .SetFilterWidgetType("CheckboxFilterWidget", "/Admin/HistoEmails/SearchBatchProgNames")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.Username).Css("col-username ellipsis")
+    .RenderValueAs(o => RenderColWithTooltip(o.Username)).IsHtml(true)
+    .Filterable(true).Sortable(true);
+
+}).WithPaging().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "admclickable dblclickable fit-content-columns" : string.Empty).SetOnClick("showInformationOfColumn(this, 'Message');")
+
+

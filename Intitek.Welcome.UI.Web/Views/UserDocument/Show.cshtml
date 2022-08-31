@@ -1,0 +1,661 @@
+﻿@using Intitek.Welcome.UI.ViewModels
+@model UserDocumentViewModel
+@{
+    ViewBag.Title = string.Format("Welcome | {0}", HttpUtility.HtmlDecode(Model.DocumentTitle));
+}
+
+@section styles{
+    <style type="text/css">
+        .modal-dialog {
+            min-width: 615px;
+        }
+
+        #approveModal .btn {
+            min-width: 275px;
+        }
+
+        #approveModal .fit {
+            min-width: unset;
+        }
+
+        footer {
+            width: 150px;
+            float: right;
+            margin-top: -41px;
+            padding: 0px 10px 0px 10px;
+        }
+
+        .not-visible {
+            visibility: hidden;
+        }
+
+        canvas {
+
+        }
+    </style>
+}
+
+<input type="hidden" id="DocumentID" value="@Model.DocumentID" />
+<input type="hidden" id="DocumentVersion" value="@Model.DocumentVersion" />
+<input type="hidden" id="UserID" value="@Model.UserID" />
+<input type="hidden" id="IsRead" value="@(Model.IsRead ? "true": "false")" />
+<input type="hidden" id="IsApproved" value="@(Model.IsApproved? "true": "false")" />
+<input type="hidden" id="IsTested" value="@(Model.IsTested? "true": "false")" />
+<input type="hidden" id="IsToRead" value="@(Model.IsDocumentToRead ? "true": "false")" />
+<input type="hidden" id="IsToApproved" value="@(Model.IsDocumentToApprouve? "true": "false")" />
+<input type="hidden" id="IsToTested" value="@(Model.IsDocumentToTest? "true": "false")" />
+<div class="row">
+
+    <div class="col-lg-1 col-md-1 col-sm-0">
+        @*<div class="float-div">
+                <div>
+                    <button id="zoominbutton" type="button" class="btn-outline zoom-icon"> <i class="fas fa-search-plus"></i><div><span>@Resource.zoomIn</span></div></button>
+                </div>
+                <div style="margin-top: -15px;">
+                    <button id="zoomoutbutton" type="button" class="btn-outline zoom-icon"><i class="fas fa-search-minus"></i><div><span>@Resource.zoomOut</span></div></button>
+                </div>
+            </div>*@
+    </div>
+
+    <div class="col-lg-10 col-md-10 col-sm-12 document-viewer p-r-0 p-l-0">
+        <div class="progress-bar">
+            <h3><span>@HttpUtility.HtmlDecode(Model.DocumentTitle)</span> : <span id="page_num"></span> / <span id="page_count"></span></h3>
+            <div id="progress-value"></div>
+        </div>
+        <div id="content" class="content">
+            <button id="prev" class="btn viewer-pagination hide"><span class="fas fa-arrow-left"></span></button>
+
+            <canvas id="the-canvas" class="@(Model.IsMagazine? "hide" : null)"></canvas>
+
+            <div class="magazine-viewport @(!Model.IsMagazine? "hide" : null)">
+                <div class="container p-0">
+                    <div class="magazine"></div>
+                </div>
+            </div>
+
+            <button id="next" class="btn viewer-pagination hide"><span class="fas fa-arrow-left"></span></button>
+
+            </div>
+
+
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-0">
+        <div class="float-div">
+            <div>
+                <button id="zoominbutton" type="button" class="btn-outline zoom-icon"> <i class="fas fa-search-plus"></i><div><span>@Resource.zoomIn</span></div></button>
+            </div>
+            <div>
+                <button id="zoomoutbutton" type="button" class="btn-outline zoom-icon"><i class="fas fa-search-minus"></i><div><span>@Resource.zoomOut</span></div></button>
+            </div>
+            <div>
+                <button class="btn-outline icon icon-enter btnBack" onclick=''><i class="fas fa-arrow-left"></i></button>
+                <div> @Resource.buttonBack</div>
+            </div>
+            @if (!Model.IsNoActionRequired)
+            {
+                var b = TempData["readOnly"];
+                bool x = false;
+                if (b != null)
+                {
+                    x = (bool)b;
+                }
+                if (x)
+                {
+                    //
+                }
+                else
+                {
+                    <div>
+                        <button class="btn-outline icon icon-fill btnValider" disabled><i class="fas fa-check"></i></button>
+                        <div> @Resource.buttonValidate</div>
+                    </div>
+                }
+                @*<div>
+                <button class="btn-outline icon icon-expand" onclick='retourUserDocument();'> <i class="fas fa-times"></i></button>
+                <div> @Resource.buttonCancel</div>
+            </div>*@
+            }
+        </div>
+    </div>
+</div>
+
+@*<div class="row m-0">
+        <div class="col-lg-1 col-md-1 col-0">
+        </div>
+        @if (Model.IsDocumentToApprouve)
+        {
+            <div class="col-12 col-lg-10 row documentApprobation">
+                <div class="col-lg-12 form-group row item_vertical p-0">
+                    <div style="width: 25px;">
+                        <div class="custom-controls-stacked p-l-15">
+                            <label for="ckeApprouved" class="custom-control custom-checkbox">
+                                <input id="ckeApprouved" disabled name="ckeApprouved" type="checkbox" value="true" class="custom-control-input"><span class="custom-control-label"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <label for="ckeApprouved" class="col-lg-11 col-11 col-form-label label-align-left .label-w-b"> @string.Format(Resource.ckeApprouved, HttpUtility.HtmlDecode(Model.DocumentTitle))</label>
+                </div>
+                @if (Model.IsDocumentToTest)
+                {
+                    <div id="divApprouved" class="hide">
+                        <a href="#" class="btn btn-wme btn-green"> @Resource.validateAndTest</a>
+                    </div>
+                }
+            </div>
+        }
+        <div class="col-lg-1 col-md-1 col-0">
+        </div>
+    </div>*@
+
+@Html.Partial("_ConfirmDialog")
+@Html.Partial("_ApproveDocumentDialog")
+@section Scripts{
+    <script src="@Url.Content("~/Scripts/libs/slimscroll/jquery.slimscroll.js")">
+                </script>
+                <script src="@Url.Content("~/Scripts/libs/loading/modal-loading.js")"></script>
+                <script src="@Url.Content("~/Scripts/js/pdf.js")"></script>
+
+                <script src="@Url.Content("~/Scripts/libs/magazine/turn.js")"></script>
+                <script src="@Url.Content("~/Scripts/libs/magazine/magazine.js")"></script>
+
+                <script type="text/javascript">
+        function retourUserDocument() {
+            var hash = Cookies.get(COOOKIES_NAMES.UserDocumentHash);
+            Cookies.remove(COOOKIES_NAMES.UserDocumentHash);
+            _redirectToWithHash("@Url.Action("Index","UserDocument")", hash);
+            return false;
+        }
+                </script>
+                <script type="text/javascript">
+        var modeMagazine = "@Model.IsMagazine" === "True"? true : false;
+
+        var pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '@Url.Content("~/Scripts/js/pdf.worker.js")';
+
+        openLoading();
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+
+        $("#ckeApprouved").change(function () {
+            $(this).is(":checked") ? $("#divApprouved").removeClass('hide') : $("#divApprouved").addClass('hide')
+        });
+
+        //var file = _getQueryParam(document.location, 'doc');
+        var url = host + pdfPath + "/@Model.PdfFile?" + new Date().getTime();
+        console.log("url file....", url);
+
+        var pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = null,
+            initScale = null,
+            canvas = document.getElementById('the-canvas'),
+            ctx = canvas.getContext('2d'),
+            isScrollDownComplete = false,
+            container = document.getElementById("content"),
+            magWidth = null,
+            magHeight = null,
+            zoom = 1,
+            mLeft = null,
+            mTop = null;
+
+
+        function renderPage(num) {
+            pageRendering = true;
+            // Using promise to fetch the
+            pdfDoc.getPage(num).then(function (page) {
+                if (scale == null) {
+                    console.log(page.getViewport(1.0));
+                    if (page.getViewport(1.0).width / page.getViewport(1.0).height < 16/9) {
+                        scale = (container.offsetHeight - 5) / page.getViewport(1.0).height;
+                    } else {
+                        scale = (container.offsetWidth - 100) / page.getViewport(1.0).width;
+                    }
+                    initScale = scale;
+                }
+                var viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                var renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                var renderTask = page.render(renderContext);
+                renderTask.promise.then(function () {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                    renderProgress(num, pdfDoc.numPages);
+                });
+            });
+        }
+
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+            document.getElementById('content').scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'smooth'
+            });
+        }
+        /**
+        * Displays previous page.
+        */
+        function onPrevPage() {
+            $("#next").removeClass('hide');
+            if (pageNum <= 1) {
+                return;
+            } else if ((modeMagazine && pageNum == 3) || (!modeMagazine && pageNum == 2)) {
+                $("#prev").addClass('hide');
+            }
+            modeMagazine? pageNum -= 2 : pageNum--;
+            if(!modeMagazine) queueRenderPage(pageNum);
+        }
+        if(!modeMagazine) document.getElementById('prev').addEventListener('click', onPrevPage);
+
+        /**
+        * Displays next page.
+        */
+        function onNextPage() {
+            $("#prev").removeClass('hide');
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            } else if ((modeMagazine && pageNum == pdfDoc.numPages - 2) || (!modeMagazine && pageNum == pdfDoc.numPages - 1)) {
+                checkLastPageDocument();
+            }
+            modeMagazine ? pageNum += 2 : pageNum++;
+            if(!modeMagazine) queueRenderPage(pageNum);
+        }
+        if(!modeMagazine) document.getElementById('next').addEventListener('click', onNextPage);
+
+        //
+        loadPdf(url)
+            .then(pdfObject => {
+                if(modeMagazine) convertToArrayImg(pdfObject);
+            });
+
+        /**
+        * Asynchronously downloads PDF.
+        */
+        async function loadPdf(pdfUrl) {
+            return await pdfjsLib.getDocument(pdfUrl).promise
+                .then(function (pdfDoc_) {
+                    pdfDoc = pdfDoc_;
+                    //$("#prev").addClass('hide');
+                    document.getElementById('page_count').textContent = pdfDoc.numPages;
+                    if (!modeMagazine) {
+                        renderPage(pageNum);
+                        if (pdfDoc.numPages > 1) $("#next").removeClass('hide');
+                        if (pdfDoc.numPages == 1) checkLastPageDocument();
+                        closeLoading();
+                    }
+                    return pdfDoc;
+                });
+        }
+
+        async function convertToArrayImg(oPdf) {
+            const promises = [];
+
+            for (var pageN = 1; pageN <= pdfDoc.numPages; pageN++) {
+                promises.push(getPageX(oPdf, pageN));
+            }
+
+            Promise.all(promises)
+                .then((results) => {
+                    console.log("All done", results);
+                    loadApp(results);
+                })
+        }
+
+        function getPageX(oPdf, pageN) {
+            return new Promise((resolve) => {
+                oPdf.getPage(pageN).then(function (page) {
+
+                    if (magWidth == null || magHeight == null) {
+                        magWidth = page.getViewport(1).width;
+                        magHeight = page.getViewport(1).height;
+                    }
+
+                    var viewport = page.getViewport({ scale: 1.15 });
+                    var canvas = document.createElement('canvas');
+                    canvas.id = "my-canvas-" + page.pageIndex;
+                    canvas.className = "hide";
+                    document.body.appendChild(canvas);
+                    var ctx = canvas.getContext('2d');
+                    ctx.imageSmoothingEnabled = false;
+                    ctx.webkitImageSmoothingEnabled = false;
+                    ctx.mozImageSmoothingEnabled = false;
+
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    var renderContext = {
+                        canvasContext: ctx,
+                        viewport: viewport
+                    };
+
+                    var renderTask = page.render(renderContext);
+                    renderTask.promise.then(function () {
+                        resolve(canvas.toDataURL('image/jpeg'));
+                    });
+                });
+            });
+        }
+
+        function enableActions() {
+            $(".btnValider").prop("disabled", false);
+            $("#accept").prop("disabled", false);
+            $("#ckeApprouved").prop("disabled", false);
+        }
+
+        function checkLastPageDocument() {
+            //
+            //$('#content').on('scroll', function () {
+            //    if (!isScrollDownComplete) isScrollDownComplete = Math.floor(($(this).scrollTop() + $("#content").height()) / canvas.height) >= 1;
+            //    if(isScrollDownComplete) enableActions();
+            //})
+            //
+            enableActions();
+            $("#next").addClass('hide');
+        }
+
+        function renderProgress(num, numPages, view = []) {
+            var _progress = (100 * num / numPages) + "%";
+            $("#progress-value").css({ width: _progress });
+            (num == numPages) ? $("#progress-value").addClass('radius-corner') : $("#progress-value").removeClass('radius-corner');
+
+            if (modeMagazine) {
+                if (view[0] == 0) {
+                    document.getElementById('page_num').textContent = view[1];
+                } else if (view[1] == 0) {
+                    document.getElementById('page_num').textContent = view[0];
+                } else {
+                    document.getElementById('page_num').textContent = view[0] + " - " + view[1];
+                }
+            } else {
+                document.getElementById('page_num').textContent = num;
+            }
+        }
+
+        $("#doApproveAndDoQuizRightNow").on("click", function (e) {
+            e.preventDefault();
+            var userDocumentVM = {
+                UserID: $("#UserID").val(),
+                DocumentID: $("#DocumentID").val(),
+                DocumentVersion: $("#DocumentVersion").val(),
+                IsRead: true,
+                IsApproved: $("#IsToApproved").val(),
+                IsTested: $("#IsTested").val(),
+            };
+
+            $.ajax({
+                url: host + "UserDocument/ValidateAndTest",
+                type: 'POST',
+                data: '{"model":' + JSON.stringify(userDocumentVM) + '}',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    if (result.success === true) {
+                        $.ajax({
+                            url: host + "Qcm/CheckUserQcm",
+                            type: 'POST',
+                            data: '{"QcmId":' + @Model.QcmID + ', "UserId": ' + $("#UserID").val() + ', "DocumentID": ' + $("#DocumentID").val() + '}',
+                            contentType: "application/json; charset=utf-8",
+                            async: false,
+                            success: function (result) {
+
+                                if (result.success === true && result.data.IsPassed) {
+                                    showConfirmMessage("@Html.Raw(Resource.qcmTestAlreadyPassed)");
+                                }
+                                else {
+                                    openLoading();
+                                    document.location = host + 'Qcm/Index?Id=@Model.QcmID&DocumentID=@Model.DocumentID&DocumentVersion=@Model.DocumentVersion';
+                                }
+                            }
+                        });
+                    } else {
+
+                    }
+                }
+            });
+        });
+
+        $("#confirmModal .buttonYes").on("click", function () {
+            openLoading();
+            document.location = host + 'Qcm/Index?Id=@Model.QcmID&DocumentID=@Model.DocumentID&DocumentVersion=@Model.DocumentVersion';
+        });
+
+        //$("#confirmModal .buttonNo").on("click", function () {
+        //    document.location = host + 'UserDocument/Index';
+        //});
+
+        $(".btnBack").on("click", function (e) {
+            e.preventDefault();
+            if (pageNum == 1) {
+                retourUserDocument();
+            }
+            else {
+                pageNum = 1;
+                $("#prev").addClass('hide');
+                $("#next").removeClass('hide');
+                renderPage(pageNum);
+            }
+        });
+
+        $(".btnValider").on("click", function (e) {
+            e.preventDefault();
+            if($("#IsToApproved").val() === "true" || $("#IsToTested").val()  === "true"){
+                showApproveMessage("@Html.Raw(string.Format(Resource.ckeApprouved, HttpUtility.HtmlDecode(Model.DocumentTitle)))");
+           }
+           else{
+                var userDocumentVM = {
+                    UserID: $("#UserID").val(),
+                    DocumentID: $("#DocumentID").val(),
+                    IsRead: true,
+                    IsApproved: false,
+                    IsTested: false
+               };
+
+                $.ajax({
+                    url: host + "UserDocument/ValidateAndTest",
+                   type: 'POST',
+                    data: '{"model":' + JSON.stringify(userDocumentVM) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    success: function (result) {
+                        if (result.success === true) {
+                            document.location = host + 'UserDocument/Index';
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#doApproveAndDoQuizLater").on("click", function () {
+            updApprobation(true);
+        });
+
+        $("#doNotApprove").on("click", function () {
+            updApprobation(false);
+        });
+
+        $("#doApprove").on("click", function () {
+            updApprobation(true);
+        });
+
+        function updApprobation(isApproved) {
+            var userDocumentVM = {
+                UserID: $("#UserID").val(),
+                DocumentID: $("#DocumentID").val(),
+                IsRead: true,
+                IsApproved: isApproved,
+                IsTested: $("#IsTested").val(),
+            };
+
+            $.ajax({
+                url: host + "UserDocument/ValidateAndTest",
+                type: 'POST',
+                data: '{"model":' + JSON.stringify(userDocumentVM) + '}',
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    if (result.success === true) {
+                        //document.location = host + 'UserDocument/Index';
+                        retourUserDocument();
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        $("#approveModal .buttonNo").on("click", function () {
+            $("#approveModal").modal('hide');
+            //document.location = host + 'UserDocument/Index';
+        });
+
+        $("#zoominbutton").click(function () {
+            if (!mLeft) mLeft = parseInt($(".magazine").css("left"));
+            if (!mTop) mTop = parseInt($(".magazine").css("top"));
+            if (!modeMagazine) {
+                scale = scale + 0.25;
+                renderPage(pageNum);
+            } else {
+                zoom = zoom + 0.25;
+                $('.magazine').turn('zoom', zoom);
+
+                var l = mLeft * zoom;
+                var t = mTop * zoom;
+                $('.magazine').css('left', l);
+                $('.magazine').css('top', t);
+            }
+        });
+
+        $("#zoomoutbutton").click(function () {
+            if (!mLeft) mLeft = parseInt($(".magazine").css("left"));
+            if (!mTop) mTop = parseInt($(".magazine").css("top"));
+
+            console.log("top : ", mTop);
+            if (!modeMagazine) {
+                if (scale >= 0.50) scale = scale - 0.25;
+                renderPage(pageNum);
+            } else {
+                if (zoom >= 0.50) {
+                    zoom = zoom - 0.25;
+                    $('.magazine').turn('zoom', zoom);
+                    var l = mLeft * zoom;
+                    var t = mTop * zoom;
+                    $('.magazine').css('left', l);
+                    $('.magazine').css('top', t);
+                }
+
+            }
+        });
+
+        function loadApp(images) {
+            $('#canvas').fadeIn(1000);
+            closeLoading();
+            var flipbook = $('.magazine');
+
+            if (flipbook.width() == 0 || flipbook.height() == 0) {
+                setTimeout(loadApp, 10);
+                return;
+            }
+
+            var viewerWidth = ($(".document-viewer").width()) / 2 ;
+            var viewerHeight = magHeight * viewerWidth / magWidth;
+
+            if (magHeight / magWidth > 1) {
+                var tmp = $(".content").height();
+                viewerHeight = tmp;
+                viewerWidth = tmp * magWidth / magHeight;
+            }
+
+            flipbook.turn({
+                //width: 922,
+                //height: 600,
+                width: viewerWidth * 2,
+                height: viewerHeight,
+                duration: 1000,
+                acceleration: !isChrome(),
+                gradients: true,
+                autoCenter: true,
+                elevation: 50,
+                pages: images.length,
+                images: images,
+                when: {
+                    turning: function (event, page, view) {
+                        var book = $(this),
+                            currentPage = book.turn('page'),
+                            pages = book.turn('pages');
+                    },
+                    turned: function (event, page, view) {
+                        var book = $(this);
+                        renderProgress(getViewNumber(book, page), numberOfViews(book), view);
+                        getViewNumber(book, page) == 1 ? $("#prev").addClass('hide') : $("#prev").removeClass('hide');
+                        if (getViewNumber(book, page) == numberOfViews(book)) {
+                            $("#next").addClass('hide');
+                            checkLastPageDocument();
+                        } else {
+                            $("#next").removeClass('hide');
+                        }
+
+                        $(this).turn('center');
+                        if (page == 1) {
+                            $(this).turn('peel', 'br');
+                        }
+                    },
+                    missing: function (event, pages) {
+                        for (var i = 0; i < pages.length; i++)
+                            addPage(pages[i], $(this));
+                    }
+                }
+            });
+
+            // Using arrow keys to turn the page
+            $(document).keydown(function (e) {
+                var previous = 37, next = 39, esc = 27;
+                switch (e.keyCode) {
+                    case previous:
+                        $('.magazine').turn('previous');
+                        e.preventDefault();
+
+                        break;
+                    case next:
+                        $('.magazine').turn('next');
+                        e.preventDefault();
+
+                        break;
+                }
+            });
+
+            $(window).resize(function () {
+                resizeViewport();
+            }).bind('orientationchange', function () {
+                resizeViewport();
+            });
+
+            resizeViewport();
+            $('.magazine').addClass('animated');
+        }
+
+        // Events for the next button
+        $('#next').click(function () {
+            $('.magazine').turn('next');
+        });
+
+        // Events for the next button
+        $('#prev').click(function () {
+            $('.magazine').turn('previous');
+        });
+
+        $('#canvas').hide();
+        </script>
+    }

@@ -1,0 +1,163 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Columns;
+@using Intitek.Welcome.UI.Web.Admin.Models;
+@model GridMvc.IGrid
+@if (Model == null) { return; }
+
+@if (Model.RenderOptions.RenderRowsOnly)
+{
+    @RenderGridBody();
+}
+else
+{
+    <div class="grid-mvc" id="@Model.RenderOptions.GridName" data-lang="@Model.Language" data-gridname="@Model.RenderOptions.GridName" data-selectable="@Model.RenderOptions.Selectable.ToString().ToLower()" data-multiplefilters="@Model.RenderOptions.AllowMultipleFilters.ToString().ToLower()">
+        <div class="grid-wrap table-responsive">
+            <table class="table intitek grid-table">
+                @* Draw grid header *@
+                <thead>
+                    @RenderGridHeader()
+                </thead>
+                <tbody>
+                    @RenderGridBody()
+                </tbody>
+            </table>
+        </div>
+        @RenderGridFooter()
+    </div>
+}
+@helper RenderGridBody()
+{
+    if (!Model.ItemsToDisplay.Any())
+    {
+        <tr class="grid-empty-text">
+            <td colspan="@Model.Columns.Count()">
+                @Resource.noDocumentResult
+            </td>
+        </tr>
+}
+else
+{
+    var nbColumn = Model.Columns.Count() ;
+    var source = ((HtmlGrid<DocumentViewModel>)Model).Source;
+    var categoriesCollapsed = ((GridBO<DocumentViewModel>)source).CategorieCollapseds;
+    List<CategoryViewModel> categories = ((IEnumerable<DocumentViewModel>)Model.ItemsToDisplay).Where(x => x.ID_Category > 0).GroupBy(o => new { categoryId = o.ID_Category, categoryName = o.NameCategory, defaultCategory=o.DefaultNameCategory, ordreCategory = o.OrdreCategory }).Select(m => new CategoryViewModel() { ID = m.Key.categoryId.Value, Name = m.Key.categoryName, DefaultName=m.Key.defaultCategory, OrdreCategory = m.Key.ordreCategory }).ToList();
+    categories.Add(new CategoryViewModel() { ID = 0, Name = Resource.NoCategory });
+    foreach (CategoryViewModel category in categories)
+    {
+        List<DocumentViewModel> items;
+        bool hasItemsCategory;
+        if (category.ID == 0)
+        {
+            items = ((IEnumerable<DocumentViewModel>)Model.ItemsToDisplay).Where(x => x.ID_Category == 0 || x.ID_Category == null).ToList();
+            if (items.Any())
+            {
+                if (categoriesCollapsed != null && categoriesCollapsed.Contains(category.ID))
+                {
+                        <tr class="category collapsed" data-expanded="false" id="@string.Format("categ_{0}_{1}", category.ID, Model.RenderOptions.GridName)">
+                            <td colspan="@nbColumn"><div class="@category.ClassDefautName"><i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;&nbsp;@category.NameDisplay</div></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="category expand" data-expanded="true" id="@string.Format("categ_{0}_{1}", category.ID, Model.RenderOptions.GridName)">
+                            <td colspan="@nbColumn"><div class="@category.ClassDefautName"><i class="fa fa-minus-square" aria-hidden="true"></i>&nbsp;&nbsp;@category.NameDisplay</div></td>
+                        </tr>
+                    }
+                    @RenderGridItems(items, "categ_", @category.ID, Model.RenderOptions.GridName) ;
+                }
+            }
+            else
+            {
+                hasItemsCategory = ((IEnumerable<DocumentViewModel>)Model.ItemsToDisplay).Where(x => x.ID_Category == category.ID).Any();
+                if (hasItemsCategory)
+                {
+                    if (categoriesCollapsed != null && categoriesCollapsed.Contains(category.ID))
+                    {
+                        <tr class="category collapsed" data-expanded="false" id="@string.Format("categ_{0}_{1}", category.ID, Model.RenderOptions.GridName)">
+                            <td colspan="@nbColumn"><div class="@category.ClassDefautName"><i class="fa fa-plus-square" aria-hidden="true"></i>&nbsp;&nbsp;@category.NameDisplay</div></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="category expand" data-expanded="true" id="@string.Format("categ_{0}_{1}", category.ID, Model.RenderOptions.GridName)">
+                            <td colspan="@nbColumn"><div class="@category.ClassDefautName"><i class="fa fa-minus-square" aria-hidden="true"></i>&nbsp;&nbsp;@category.NameDisplay</div></td>
+                        </tr>
+                    }
+                    List<SubCategoryViewModel> subcategories = ((IEnumerable<DocumentViewModel>)Model.ItemsToDisplay).Where(x => x.ID_SubCategory > 0 && x.ID_Category == category.ID).GroupBy(o => new { subcategoryId = o.ID_SubCategory.Value, subCategoryName = o.NameSubCategory, defaultSubCategory=o.DefaultNameSubCategory, ordreSubCategory = o.OrdreSubCategory }).Select(m => new SubCategoryViewModel() { ID = m.Key.subcategoryId, Name = m.Key.subCategoryName, DefaultName=m.Key.defaultSubCategory, Ordre = m.Key.ordreSubCategory }).ToList();
+                    subcategories.Add(new SubCategoryViewModel() { ID = 0, Name = Resource.NoSubCategory });
+                    foreach (SubCategoryViewModel subcategory in subcategories)
+                    {
+                        if (subcategory.ID == 0)
+                        {
+                            items = ((IEnumerable<DocumentViewModel>)Model.ItemsToDisplay).Where(x => (x.ID_SubCategory == 0 || x.ID_SubCategory == null) && x.ID_Category == category.ID).ToList();
+                        }
+                        else
+                        {
+                            items = ((IEnumerable<DocumentViewModel>)Model.ItemsToDisplay).Where(x => x.ID_SubCategory == subcategory.ID).ToList();
+                        }
+                        if (items.Any())
+                        {
+                            if (!(subcategories.Count == 1 && subcategory.ID == 0))
+                            {
+                                <tr class="subcategory expand" data-expanded="true" id="@string.Format("subcateg_{0}_{1}", subcategory.ID, Model.RenderOptions.GridName)" data-parent="@string.Format("categ_{0}_{1}", category.ID, Model.RenderOptions.GridName)">
+                                    <td colspan="@nbColumn"><div class="@subcategory.ClassDefautName"><i class="fa fa-minus-square" aria-hidden="true"></i>&nbsp;&nbsp;@subcategory.NameDisplay</div></td>
+                                </tr>
+                                @RenderGridItems(items, "subcateg_", @subcategory.ID, Model.RenderOptions.GridName);
+                            }
+                            else
+                            {
+                                @RenderGridItems(items, "categ_", @category.ID, Model.RenderOptions.GridName);
+                            }
+
+                        }
+                    }
+                }//hasItemsCategory
+            }
+        }
+    }
+}
+@helper RenderGridItems(IEnumerable<DocumentViewModel> items, string type, int parent_id, string gridName)
+{
+    foreach (DocumentViewModel item in items)
+    {
+        <tr class="grid-row @Model.GetRowCssClasses(item)" data-parent="@string.Format("{0}{1}_{2}", type, parent_id, gridName)">
+            @foreach (IGridColumn<DocumentViewModel> column in Model.Columns)
+            {
+                var onclick = "";
+                if (!"Actions".Equals(column.Name) && !"IsSessionChecked".Equals(column.Name))
+                {
+                    onclick = "_showDocument(" + @item.ID + ");";
+                }
+                if (!"ID_Category".Equals(column.Name) && !"ID_SubCategory".Equals(column.Name))
+                {
+                    @column.SetOnclick(onclick).CellRenderer.Render(column, column.GetCell(item))
+                }
+            }
+        </tr>
+    }
+}
+@helper RenderGridHeader()
+{
+    <tr>
+        @foreach (IGridColumn column in Model.Columns)
+        {
+            @column.HeaderRenderer.Render(column)
+        }
+    </tr>
+}
+@helper RenderGridFooter()
+{
+    <div class="grid-footer">
+        @if (Model.RenderOptions.ShowGridItemsCount)
+        {
+            <div class="grid-itemscount">
+                <span class="grid-itemscount-label">@Model.RenderOptions.GridCountDisplayName</span>
+                <span class="grid-itemscount-caption">@Model.ItemsCount</span>
+            </div>
+        }
+        @if (Model.EnablePaging && Model.Pager != null)
+        {
+            @Html.Partial(Model.Pager.TemplateName, Model.Pager)
+        }
+    </div>
+}

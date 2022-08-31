@@ -1,0 +1,120 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@using Intitek.Welcome.Service.Back
+@model Intitek.Welcome.UI.ViewModels.Admin.BlackListViewModel
+@{
+    ViewBag.Title = !string.IsNullOrEmpty(Model.Path) ? string.Format("Administration | {0}", HttpUtility.HtmlDecode(Model.ID)) : string.Format("Administration | {0}", Resource.NewPath);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Blacklist")" class="breadcrumb-link">@Resource.BlackList</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@(!string.IsNullOrEmpty(Model.ID) ? HttpUtility.HtmlDecode(Model.ID) : Resource.NewPath)</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@(!string.IsNullOrEmpty(Model.ID) ? HttpUtility.HtmlDecode(Model.ID) : Resource.NewPath)</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@(string.IsNullOrEmpty(Model.ID) ? string.Format("Edition {0}", HttpUtility.HtmlDecode(Model.ID)) : Resource.NewPath)</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <form id="blackListForm" action="@Url.Action("Edit", "Blacklist")" method="post">
+                        <input type="hidden" id="ID" name="ID" value="@Model.ID" />
+                        <div class="card-body show">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group row">
+                                        <label class="col-3 col-form-label label-align-right">@Resource.Path</label>
+                                        <div id="name-autocomplete" class="col-9">
+                                            <input type="text" required="" data-parsley-minlength="6"
+                                                   name="Path" id="Path"
+                                                   placeholder="@(string.IsNullOrEmpty(Model.ID) ? Resource.Path : HttpUtility.HtmlDecode(Model.Path))"
+                                                   value="@HttpUtility.HtmlDecode(Model.Path)"
+                                                   autofocus class="form-control form-control-required col-9">
+                                          </div>
+                                    </div>
+                                </div>
+                             </div>
+                            <div class="row mb-3">
+                                <div class="col center p-t-25">
+                                    <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                            onclick="_redirectTo('@Url.Action("Index", "Blacklist")')">
+                                        @Resource.buttonCancel
+                                    </button>
+
+                                    <button type="submit"
+                                            class="btn btn-wme btn-green next-btn space-betwen-btn">
+                                        @Resource.buttonValidate
+                                    </button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        // highlights the sidebar
+        $(document).ready(function () {
+            $('#blackListForm').bootstrapValidator({
+                excluded: [':disabled'],
+                fields: {
+                    Path: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>@Resource.PathRequired</span>"
+                            },
+                            remote: {
+                                type: 'POST',
+                                delay: 300,
+                                message: "@Resource.BlackList_msg_UniqueName",
+                                url: '@Url.Action("BlackListExist", "Blacklist")',
+                                data: {
+                                    ID: $("#ID").val()
+                                }
+                            },
+                            callback: {
+                                callback: function (value, validator, $field) {
+                                    // Determine the numbers which are generated in captchaOperation
+                                    $field.removeClass('form-control-required');
+                                    return true;
+                                }
+                            }
+                        }
+                    },
+                }
+            }).on('success.form.bv', function (e) {
+                openLoading();
+            });
+
+            if ($("input[name='Path']").val() != "") {
+                $("input[name='Path']").removeClass('form-control-required');
+            }
+        })
+    </script>
+}

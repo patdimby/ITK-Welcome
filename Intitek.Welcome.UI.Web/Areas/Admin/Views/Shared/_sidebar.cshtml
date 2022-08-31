@@ -1,0 +1,271 @@
+﻿
+<style>
+    .dropdown-menu.stats {
+        min-width: 230px;
+    }
+</style>
+<nav id="sidebar">
+    <ul class="list-unstyled components m-0 p-0">
+        <li>
+            @*<a href="@Url.Action("Index","Home")">*@
+            <a href="~/">
+                <div class="sideicon"><i class="fas fa-home"></i></div>
+                <span>@Resource.menuHome</span>
+            </a>
+        </li>
+        <li id="sidebar-document">
+            <div class="btn-group dropright">
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="sideicon"><i class="fas fa-file-pdf"></i></div>
+                    <span>@Resource.documents</span>
+                </a>
+                <div class="dropdown-menu" style="width:244px;">
+                    <!-- Dropdown menu links -->
+                    <ul class="list-unstyled">
+                        <li id="sidebar-category">
+                            <a href="@Url.Action("Index","Category")">
+                                <div class="sideicon"><i class="fas fa-archive"></i></div>
+                                <span>@Resource.categorySubcategory</span>
+                            </a>
+
+                        </li>
+                        <li id="sidebar-document">
+                            <a href="@Url.Action("Index","Document")">
+                                <div class="sideicon"><i class="fas fa-file-pdf"></i></div>
+                                <span> @Resource.documents</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li id="sidebar-entity-profil">
+            <div class="btn-group dropright">
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="sideicon"><i class="fas fa-user"></i></div>
+                    <span> @Resource.entitiesProfiles</span>
+                </a>
+                <div class="dropdown-menu">
+                    <!-- Dropdown menu links -->
+                    <ul class="list-unstyled">
+                        <li id="sidebar-entity">
+                            <a href="@Url.Action("Index","Entite")">
+                                <div class="sideicon"><i class="fas fa-user"></i></div>
+                                <span> @Resource.entities</span>
+                            </a>
+                        </li>
+                        <li id="sidebar-profil">
+                            <a href="@Url.Action("Index","Profil")">
+                                <div class="sideicon"><i class="fas fa-users"></i></div>
+                                <span>@Resource.profiles</span>
+                            </a>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <!-- <li id="sidebar-entity">
+      <a href="#entitySubmenu" data-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+        <i class="fas fa-user"></i>
+        <span >@Resource.entitiesProfiles</span>
+      </a>
+      <ul class="collapse list-unstyled" id="entitySubmenu">
+        <li>
+          <a href="entities.html">
+            <i class="fas fa-user"></i>
+            <span> @Resource.entities</span>
+          </a>
+        </li>
+        <li>
+          <a href="profiles.html">
+            <i class="fas fa-users"></i>
+            <span> @Resource.profiles</span>
+          </a>
+
+        </li>
+      </ul>
+    </li> -->
+        <li id="sidebar-collaborator">
+            <a href="@Url.Action("Index","User")">
+                <div class="sideicon"><i class="fas fa-users"></i></div>
+                <span> @Resource.collaborators</span>
+            </a>
+        </li>        
+            <li id="sidebar-mcq">
+                <a href="@Url.Action("Index","Qcm")">
+                    <div class="sideicon"><i class="fas fa-calculator"></i></div>
+                    <span>@Resource.mcq</span>
+                </a>
+            </li>
+            <li id="sidebar-awareness-approvals">
+                <a href="@Url.Action("Index","AwarenessApprovals")">
+                    <div class="sideicon" style="position: absolute; margin-top: 11px; "><i class="fas fa-file"></i></div>
+                    <span style="white-space: unset; width: 80%; padding-left: 18%;">@Resource.awarenessapprovals</span>
+                </a>
+            </li>
+            <li id="sidebar-change-emails">
+                <a href="@Url.Action("Index","ChangeEmails")">
+                    <div class="sideicon" style="position: absolute; margin-top: 11px; "><i class="fas fa-envelope"></i></div>
+                    <span style="white-space: unset; width: 80%; padding-left: 18%;">@Resource.changeemails</span>
+                </a>
+            </li>
+            <li id="sidebar-analysis">
+                <div class="btn-group dropright">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="sideicon"><i class="fas fa-chart-line"></i></div>
+                        <span>@Resource.analysis</span>
+                    </a>
+                    <div class="dropdown-menu stats">
+                        <!-- Dropdown menu links -->
+                        <ul class="list-unstyled">
+                            <li id="sidebar-analysis-agency">
+                                <a href="@Url.Action("Index", "Stats")">
+                                    <div class="sideicon"><i class="fas fa-chart-line"></i></div>
+                                    <span>@Resource.stat_Entities</span>
+                                </a>
+                            </li>
+                            <li id="sidebar-analysis-departement">
+                                <a href="@Url.Action("Departement", "Stats")">
+                                    <div class="sideicon"><i class="fas fa-chart-line"></i></div>
+                                    <span>@Resource.stat_Departement</span>
+                                </a>
+                            </li>
+                            <li id="sidebar-analysis-manager">
+                                <a href="@Url.Action("Manager", "Stats")">
+                                    <div class="sideicon"><i class="fas fa-chart-line"></i></div>
+                                    <span>@Resource.stat_Manager</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li id="sidebar-welcome-message">
+                <a href="@Url.Action("Index", "WelcomeMessage")">
+                    <div class="sideicon"><i class="fas fa-handshake"></i></div>
+                    <span> @Resource.welcomeMessage</span>
+                </a>
+            </li>
+            <li id="sidebar-email-template">
+                <a href="@Url.Action("Index", "MailTemplate")">
+                    <div class="sideicon"><i class="fas fa-paper-plane"></i></div>
+                    <span> @Resource.emailTemplates</span>
+                </a>
+            </li>
+            <li id="sidebar-history">
+                <div class="btn-group dropright">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="sideicon"><i class="fas fa-history"></i></div>
+                        <span>@Resource.history</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <!-- Dropdown menu links -->
+                        <ul class="list-unstyled">
+                            <li id="sidebar-histoAction">
+                                <a href="@Url.Action("Index", "HistoActions")">
+                                    <div class="sideicon"><i class="fas fa-edit"></i></div>
+                                    <span>@Resource.changes</span>
+                                </a>
+                            </li>
+                            <li id="sidebar-performedMCQ">
+                                <a href="@Url.Action("Index", "HistoUserQcm")">
+                                    <div class="sideicon"><i class="fas fa-clipboard"></i></div>
+                                    <span> @Resource.mcqPerformed</span>
+                                </a>
+                            </li>
+                            <li id="sidebar-email-send">
+                                <a href="@Url.Action("Index", "HistoEmails")">
+                                    <div class="sideicon"><i class="fas fa-envelope"></i></div>
+                                    <span> @Resource.emailSend</span>
+                                </a>
+                            </li>
+                            <li id="sidebar-histoBatchs">
+                                <a href="@Url.Action("Index", "HistoBatchs")">
+                                    <div class="sideicon"><i class="fas fa-terminal"></i></div>
+                                    <span> @Resource.batchs</span>
+                                </a>
+                            </li>
+                            <li id="sidebar-histoPurge">
+                                <a href="@Url.Action("Index", "Purge")">
+                                    <div class="sideicon"><i class="fas fa-trash-alt"></i></div>
+                                    <span> @Resource.purge</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <!--<li id="sidebar-domains">
+            <a href="@Url.Action("Index", "AD")">
+                <div class="sideicon"><i class="fas fa-id-badge"></i></div>
+                <span> @Resource.domains</span>
+            </a>
+        </li>-->
+            <li id="sidebar-domaines-blacklist">
+                <div class="btn-group dropright">
+                    <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <div class="sideicon"><i class="fas fa-user"></i></div>
+                        <span> @Resource.domains</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <!-- Dropdown menu links -->
+                        <ul class="list-unstyled">
+                            <li id="sidebar-domains">
+                                <a href="@Url.Action("Index","AD")">
+                                    <div class="sideicon"><i class="fas fa-id-badge"></i></div>
+                                    <span> @Resource.domains</span>
+                                </a>
+                            </li>
+                            <li id="sidebar-blacklist">
+                                <a href="@Url.Action("Index","Blacklist")">
+                                    <div class="sideicon"><i class="fas fa-users"></i></div>
+                                    <span>@Resource.BlackList</span>
+                                </a>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li id="sidebar-maintenance">
+                <a href="@Url.Action("Index", "Config")">
+                    <div class="sideicon"><i class="fas fa-power-off"></i></div>
+                    <span> @Resource.submenuToggleList</span>
+                </a>
+            </li>
+            <!-- <li>
+          <a href="#settingsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <i class="fas fa-cog"></i>
+            <span @Resource.menuSettings"></span>
+          </a>
+          <ul class="collapse list-unstyled" id="settingsSubmenu">
+            <li>
+              <a href="SettingsAdminList.html">
+                <i class="fas fa-user"></i>
+                <span @Resource.submenuAdminList"></span>
+              </a>
+            </li>
+            <li>
+              <a href="SettingsEmailList.html">
+                <i class="fas fa-cog"></i>
+                <span @Resource.submenuEmailList"></span>
+              </a>
+
+            </li>
+            <li>
+              <a href="Settings.html">
+                <i class="fas fa-power-off"></i>
+                <span @Resource.submenuToggleList"></span>
+              </a>
+            </li>
+          </ul>
+        </li> -->
+            <li class="text-left no-backgroundhover">
+                <button type="button" id="sidebarCollapse" class="btn btn-transparent" onclick="_collapseSidebar()">
+                    <i id="iconCollapse" class="fas fa-angle-double-left"></i>
+                </button>
+            </li>
+        </ul>
+</nav>

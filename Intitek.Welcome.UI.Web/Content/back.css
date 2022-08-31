@@ -1,0 +1,56 @@
+﻿.progress {
+    display: -ms-flexbox;
+    display: flex;
+    height: 26px;
+    overflow: auto;
+    font-size: 100%;
+    background-color: var(--green-light-color);
+    border-radius: 5px;
+}
+.progress-inverse {
+    background-color: red !important;
+}
+.progress-bar {
+    text-align: left;
+    background-color: var(--green-color);
+}
+
+.progress-bar-danger {
+    background-color: red;
+}
+.progress-bar-danger-inverse {
+    background-color: #b22222;
+}
+
+.progress-bar-warning {
+    background-color: orange;
+}
+
+.progress-bar-success {
+    background-color: var(--green-color);
+}
+td.nopadding{
+    padding:0px 8px;
+}
+td.center {
+    text-align:center !important ;
+}
+td.left {
+    text-align: left !important;
+}
+td.truncate div{
+    text-align:left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+td span.noaction {
+    margin-right: 10px;
+    width:18px;
+}
+table.grid-table .grid-header.wrap > .grid-header-title span {
+    white-space: normal;
+}
+table.grid-table .grid-header.wrap > .grid-header-title a {
+    /*white-space: normal;*/
+}

@@ -1,0 +1,47 @@
+:root {
+    --background-color: #efeff6;
+    --text-color: #000;
+    --icon-color: #6a6b6b;
+    --green-color: rgb(0,156, 73);
+    --green-light-background-color: rgba(46, 255, 53, 0.3);
+    --green-badge-color: #15952F;
+    --green-dark-color: #15952F;
+    --success-color: #02A35B;
+    --blue-color: #157FFB;
+    --blue-background-color: rgba(21, 127, 251, 0.3);
+    --primary-color: #5969ff;
+    --red-color: #D13135;
+    --red-background-color: rgba(209, 49, 53, 0.3);
+    --grey-color: #6C757D;
+    --grey-background-color: rgba(108, 117, 125, 0.3);
+    --profil-header: 40px;
+    --navbar-height-start: 80px;
+    --navbar-height: 80px;
+    --wrapper-top-padding: 80px;
+    --input-border-color-error: #dc3545;
+    --input-border-color: #8d9398;
+    --input-box-shadow-color-error: rgba(220, 53, 69, 0.25);
+    --input-box-shadow-color: rgba(12, 12, 13, 0.20);
+    --white-color: #fff;
+    --background-nav-color: rgb(49, 41, 39);
+    --warning-color: #ffc108;
+    --normal-size: 10pt;
+    --x-size: 12pt;
+    --xx-size: 14pt;
+    --small-radius: 15px;
+    --card-radius: 40px;
+    --input-value-color: #333;
+    --black-color: #333;
+    --placeholder-color: lightgrey;
+    --orange-color: rgb(0,156, 73);
+    --input-disable-bg: lightgrey;
+    --green-light-color: rgba(52, 191, 53, 0.8);
+}
+
+@media screen and (max-width: 991px) {
+    :root {
+        --normal-size: 12px;
+        --x-size: 13px;
+        --xx-size: 14px;
+    }
+}

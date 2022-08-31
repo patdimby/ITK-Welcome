@@ -1,0 +1,178 @@
+﻿@using Intitek.Welcome.UI.ViewModels
+@model UserQcmResultViewModel
+@{
+    ViewBag.Title = string.Format("{0}: {1} ", @Resource.mcqTitlePage, HttpUtility.HtmlDecode(Model.QcmName));
+}
+
+<input type="hidden" id="QcmId"/>
+<input type="hidden" id="DocId"/>
+<input type="hidden" id="DocVr"/>
+
+<div>
+    @Html.Partial("_header")
+</div>
+<!-- ============================================================== -->
+<!-- wrapper  -->
+<!-- ============================================================== -->
+<div class="main-wrapper">
+
+    <div class="page-header">
+        <div class="row page-breadcrumb">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index","UserDocument")" class="breadcrumb-link"> @Resource.menuHome</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"> @Resource.mcqResults</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="row m-r-0 p-r-15 p-l-0">
+                <div class="pageheader-title">
+                    <span> @Resource.mcqResults</span>
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <a data-i18n-title="menu.go-back" href="@Url.Action("Index","UserDocument")"
+                       class="btn action-icon btn-ariane-back btn-xs">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-form mb-2">
+        <div class="card-header text-center m-0 p-t-10">
+            <h3 class="m-t-0 m-b-0"> @Resource.testResult</h3>
+        </div>
+        <div class="card-body">
+            <div class="row test-result">
+                @if (!Model.IsQcmPassed)
+                {
+                    <div class="col-lg-5 col-12 description">
+                        <span> @Resource.lowResultsMsg.Replace("#noteMinimum#", string.Format("{0}/{1}", Model.QcmMinScore, @Model.QcmNombreQuestions))</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-lg-5 col-12 description">
+                        <span> @Resource.passedResultMessage</span>
+                    </div>
+                }
+                <div class="col-lg-4 col-6 pr-0 center">
+                    <h5 class=" @(Model.IsQcmPassed ? "text-success" : "text-danger") font-bold mb-0">@string.Format(Resource.qcm_Infobulle_score_obtenu, Model.QcmUserScore, Model.QcmNombreQuestions)</h5>
+                    <h5 class="text-dark font-bold mb-0">@string.Format(Resource.qcm_Infobulle_score_minimum, Model.QcmMinScore, Model.QcmNombreQuestions)</h5>
+                    <div class="p-0">
+                        <span>
+                            @*@(Model.IsQcmPassed ? HttpUtility.HtmlDecode("&#128578;") : @HttpUtility.HtmlDecode("&#128577;"))*@
+                            @if (Model.IsQcmPassed)
+                            {
+                                <img src="@Url.Content("../../Content/images/giphy_happy.gif")" width="120" height="120" alt="" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("../../Content/images/giphy_unhappy.gif")" width="120" height="120" alt="" />
+                            }
+                        </span>
+                    </div>
+                </div>
+                @*<div class="col-3 p-0">
+                        <span style='font-size:109px;'>
+                            @if (Model.IsQcmPassed)
+                            {
+                                <img src="@Url.Content("../../Content/images/giphy_happy.gif")" width="120" height="120" alt="" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("../../Content/images/giphy_unhappy.gif")" width="120" height="120" alt="" />
+                            }
+                        </span>
+                    </div>*@
+                <div class="col-lg-3 col-6 p-0 div-chart">
+                    <canvas id="statChart" width="45" height="45"></canvas>
+                </div>
+            </div>
+            <div class="response-form list-group">
+                @foreach (var result in Model.UserReponses)
+                {
+                    if (result.IsCorrect)
+                    {
+                        @Html.Partial("_RightResult", result)
+                    }
+                    else
+                    {
+                        @Html.Partial("_WrongResult", result)
+                    }
+                }
+            </div>
+        </div>
+        <div class="row m-b-20">
+            <div class="col center p-t-25">
+                <a href="#" onclick="gotoHome();" class="btn btn-wme btn-primary next-btn space-betwen-btn">@Resource.backToHome</a>
+                <button type="button" class="btn btn-wme btn-info next-btn space-betwen-btn" onclick="reopenDocument()">@Resource.backToDocument</button>
+                <button type="button" class="btn btn-wme btn-light next-btn space-betwen-btn" onclick="repeatTest(); return false;">@Resource.backToTest</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- end wrapper  -->
+
+@section Scripts{
+    <script src="@Url.Content("~/Scripts/libs/chartjs/js/Chart.min.js")"></script>
+    <script>
+
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+
+        $(document).ready(function () {
+            $("#QcmId").val(_getQueryParam(window.location.search, "qcmId"));
+            $("#DocId").val(_getQueryParam(window.location.search, "docId"));
+            $("#DocVr").val(_getQueryParam(window.location.search, "docV"));
+        });
+
+        var ctx = document.getElementById('statChart').getContext('2d');
+        var data = {
+            datasets: [{
+                data: [@Model.QcmRightPercent * 100, @Model.QcmWrongPercent * 100],
+                backgroundColor: [
+                    "#00964e",
+                    "#dc3545"
+                ]
+            }],
+            labels: [
+                '@Resource.rightAnswerJs',
+                '@Resource.wrongAnswerJs'
+            ]
+        };
+        var options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'top',
+                align: 'start'
+            }
+        };
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: options
+        });
+
+        //
+        function repeatTest() {
+            openLoading();
+            document.location = host + 'Qcm/Index?Id=' + $("#QcmId").val() + '&DocumentID=' + $("#DocId").val() + '&DocumentVersion=' + $("#DocVr").val();
+        }
+
+        //
+        function reopenDocument() {
+            document.location = host + 'UserDocument/Show?doc=' + $("#DocId").val() + "&" + new Date().getTime();
+        }
+
+        function gotoHome(){
+            openLoading();
+            _redirectTo('@Url.Action("Index", "UserDocument")');
+        }
+    </script>
+}

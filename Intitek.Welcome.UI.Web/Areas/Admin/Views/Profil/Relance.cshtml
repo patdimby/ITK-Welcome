@@ -1,0 +1,46 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@using Intitek.Welcome.Service.Back
+@model Intitek.Welcome.UI.ViewModels.Admin.RelanceViewModel
+@{
+    var checkd = "";
+}
+<div id="relanceModal" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@Resource.Send_mail</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="frmRelance" action="@Url.Action("Relance", "Profil")" method="post">
+                    <input type="hidden" id="ProfilID" name="ProfilID" value="@Model.Profile.ID" />
+                    <b>@Resource.profile</b>: &nbsp;<span class="label label-warning">@Model.Profile.Name</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div style="margin-left:5%;">
+                        <br />
+                        @foreach (var tmplate in Model.ListTemplate)
+                        {
+                            checkd = "";
+                            if (tmplate.Name.Equals(MailTemplateDTO.TemplateRemindEmployees))
+                            {
+                                checkd = "checked";
+                            }
+                            <label><input type="radio" name="MailTemplateID" value="@tmplate.Id" @checkd>&nbsp;@tmplate.Object - @tmplate.Comment</label><br />
+                        }
+                    </div>
+                    <div class="modal-bouton-action">
+                        <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.buttonNo</a>
+                        <input type="submit" class="btn btn-danger btn-wme btn-xs" value="@Resource.buttonYes" onclick="openLoading() ;" />
+                    </div>
+                </form>
+                <div id="result" style="display:none;">
+                    <label></label>
+                    <div class="modal-bouton-action">
+                        <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.btnClose</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

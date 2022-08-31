@@ -1,0 +1,71 @@
+﻿@using Intitek.Welcome.UI.ViewModels
+@model UserDocumentViewModel
+
+<div id="approveModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <span id="modalError">
+                    <i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;&nbsp;
+                    <span>@Resource.confirmDialogTitle</span>
+                </span>
+            </div>
+            <div class="modal-body">
+                <p id="approveMessage"></p>
+                <div>
+
+                    @if (Model.IsDocumentToApprouve && Model.IsDocumentToTest)
+                    {
+                        <div class="row">
+
+                            <div class="col-12 col-md-6 col-lg-6 xs-center">
+                                <a href="#" id="doApproveAndDoQuizRightNow" class="btn btn-primary btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.doApproveAndDoQuizRightNow</a>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-6 modal-bouton-action">
+                                <a href="#" id="doApproveAndDoQuizLater" class="btn btn-green btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.doApproveAndDoQuizLater</a>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-12 modal-bouton-action">
+                                <a href="#" id="doNotApprove" class="btn btn-danger btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.doNotApprove</a>
+                            </div>
+
+                        </div>
+                    }
+                    else if (Model.IsDocumentToApprouve)
+                    {
+                        <div class="row" style="margin-top: 10px;">
+                            @*<div class="col-6">
+                                    <a href="#" class="btn btn-dark btn-wme btn-xs buttonNo" data-dismiss="modal" rel="modal:close">@Resource.buttonCancel</a>
+                                </div>*@
+
+
+                            <div class="col-6">
+                                <a href="#" id="doNotApprove" class="btn btn-danger btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.doNotApprove</a>
+                            </div>
+                            
+                                <div class="col-6 modal-bouton-action">
+                                    <a href="#" id="doApprove" class="btn btn-success btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.doApprove</a>
+                                </div>
+                            
+                        </div>
+                    }
+
+                    else if (Model.IsDocumentToTest)
+                    {
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-6">
+                                <a href="#" id="doNotTest" class="btn btn-danger btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.doTestLater</a>
+                            </div>
+                            <div class="col-6 modal-bouton-action">
+                                <a href="#" id="doApproveAndDoQuizRightNow" class="btn btn-success btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.doTest</a>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

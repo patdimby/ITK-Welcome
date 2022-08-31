@@ -1,0 +1,62 @@
+﻿@using System.Configuration;
+
+@{
+    ViewBag.Title = Resource.titleNotSupportedBrowser;
+    var edgeUrl = ConfigurationManager.AppSettings["Edge.Download.Url"];
+}
+
+<style>
+    .error-container {
+        width: 100%;
+        justify-content: space-between;
+        text-align: -webkit-center;
+        margin: 0 auto;
+    }
+
+    .warning-page {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 15% 15% 0px 15%;
+    }
+
+    .warning-page .warning-title {
+        color: white;
+        font-size: 1.8em;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .warning-page .error-description {
+        font-size: 22px;
+        padding: 15px;
+    }
+
+    .warning-page a {
+        color: #157FFB;
+    }
+</style>
+
+<div class="error-container">
+    <div class="warning-page">
+        <div class="row">
+            <div class="col-2">
+                <img src="@Url.Content("../../Content/images/ie.png")" width="130" alt="" />
+            </div>
+            <div class="col-10">
+                <div class="col-12 warning-title">
+                    @Resource.errorBrowserTitle
+                </div>
+                <div class="row error-description">
+                    <span>
+                        @Html.Raw(String.Format(Resource.browserNotSupported, edgeUrl))
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

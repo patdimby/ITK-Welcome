@@ -1,0 +1,34 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers
+
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<MailTemplateViewModel>
+@helper Actions(MailTemplateViewModel vm)
+{
+    <a href="@Url.Action("Edit", "MailTemplate", new { Id= vm.Id})" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionModifier" onclick="openLoading();">
+        <i class="fas fa-edit"></i>
+    </a>
+
+    <a href="@Url.Action("ConfirmDelete", "MailTemplate", new { Id= vm.Id})" role="button" class="action-icon icon-primary" data-toggle="tooltip" title="@Resource.actionSupprimer" data-target="deleteModal">
+        <i class="fas fa-trash text-danger"></i>
+    </a>
+
+}
+
+@helper RenderNameWithTooltip(MailTemplateViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name">@vm.Name</span>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.Name).Css("col-name ellipsis col-template-name")
+    .RenderValueAs(o => RenderNameWithTooltip(o)).IsHtml(true)
+    .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.Comment)
+    .Filterable(false).Sortable(true);
+
+    columns.Add().Titled(@Resource.actions).RenderValueAs(o => Actions(o)).Filterable(false).Sortable(false).IsHtml(true).SetWidth(50).Css("center col-actions");
+
+}).WithPaging().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "admclickable fit-content-columns" : string.Empty)

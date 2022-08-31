@@ -1,0 +1,134 @@
+﻿@model Intitek.Welcome.UI.Web.Areas.Admin.Models.BlackListViewModels
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = $"Administration | {Resource.BlackList}";
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    <style>
+        #parent_blackListGrid .table-responsive, #parent_cityEntityBLGrid .table-responsive {
+            min-height: auto;
+        }
+        #parent_blackListGrid table.grid-table, #parent_cityEntityBLGrid table.grid-table {
+            min-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
+        }
+        .table-separator {
+            margin-top: 20px;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link">@Resource.BlackList_Title</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.BlackList_Title</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show card-table-min-width">
+                        <div class="row ml-0 mr-0 mb-3">
+                            <a href="@Url.Action("Edit","Blacklist",  new { area = "Admin" })" class="btn btn-wme btn-green" onclick="openLoading();">@Resource.NewPath</a>
+                        </div>
+                        <div id="parent_blackListGrid">
+                            @if (@Model.GridBlackList.ItemsCount > 0)
+                            {
+                                @Html.Partial("_BlackListGrid", @Model.GridBlackList)
+                            }
+                            else
+                            {
+                                <span class="grid-empty-text">@Resource.noDocumentResult</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="table-separator">
+                        <div>
+                            <h3 class="center">@Resource.ListCityEntitiesBlacklisted</h3>
+                        </div>
+                        <div class="card card-form p-0">
+                            <div class="card-body show card-table-min-width">
+                                <div id="parent_cityEntityBLGrid">
+                                    @if (@Model.GridCityEntityBlacklist.ItemsCount > 0)
+                                    {
+                                        @Html.Partial("_CityEntityBlackListed", @Model.GridCityEntityBlacklist)
+                                    }
+                                    else
+                                    {
+                                        <span class="grid-empty-text">@Resource.noDocumentResult</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    <script>
+
+        $(function () {
+            $('#sidebar-domaines-blacklist').addClass('active');
+            $('#sidebar-blacklist').addClass('active');
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(document).on('click', '[data-target="deleteModal"]', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                openLoading();
+                $.get(url, function (reponse) {
+                    $("body").append(reponse);
+                    $('#deleteDial').on('show.bs.modal', function () {
+                        var contentHeight = $(window).height();
+                        var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+                        var maxHeight = contentHeight - footerHeight;
+                        $(this).find('.modal-body').css({
+                            'max-height': maxHeight,
+                            'overflow-y': 'auto',
+                        });
+                        $(this).before($('.modal-backdrop'));
+                        $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    });
+                    $("#deleteDial").on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    });
+                    $("#deleteDial").modal({
+                        "show": true,
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                }).done(function () {
+                    console.log("second success");
+                }).fail(function () {
+                    console.log("error");
+                }).always(function () {
+                    closeLoading();
+                });
+                return false;
+            });
+        });
+    </script>
+}

@@ -1,0 +1,218 @@
+﻿@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<QcmViewModel>
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.qcmLists);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    <style type="text/css">
+        td.actions a {
+            margin-right: 10px;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.qcmLists</li>
+                @*<li class="breadcrumb-item active" aria-current="page">@Resource.newDocument</li>*@
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.qcmLists</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <div class="row ml-0 mr-0">
+                            <div class="col-6 pl-0">
+                                <a href="#" data-toggle="modal" data-target="#newQcmModal" class="btn btn-wme btn-green" onclick="openLoading();"><i class="fas fa-plus-circle"></i>@Resource.newQCM</a>
+                                <a href="#" class="btn btn-wme btn-green" onclick="LoadQCM();"><i class="fas fa-arrow-alt-circle-up"></i>@Resource.importQuizz</a>
+                                <input type="file" id="loadQCM" name="loadQCM" accept=".xls,.xlsx" style="display:none" />
+                            </div>
+                            <div class="col-6">
+                                <div class="text-right">
+                                    @Html.Partial("_PageSizes", Model.Pager, new ViewDataDictionary { { "grid", "qcmGrid" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div id="parent_qcmGrid">
+                            @Html.Partial("_QcmGrid", @Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script>
+        // Import QCM
+        function LoadQCM() {
+            $("#loadQCM").click();
+            $('#loadQCM').on('change', function (e) {
+                openLoading();
+                var files = e.target.files;
+                if (files.length > 0) {
+                    if (window.FormData !== undefined) {
+                        var data = new FormData();
+                        for (var x = 0; x < files.length; x++) {
+                            if (files[x].size < (50 * 1024 * 1024))
+                                data.append("file" + x, files[x]);
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: '/Admin/Qcm/UploadExcel',
+                            contentType: false,
+                            processData: false,
+                            data: data,
+                            success: function (result) {
+                                if (result.Response.Data.fileName) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: '/Admin/Qcm/LoadQCMDirect',
+                                        data: { fileName: result.Response.Data.fileName },
+                                        dataType: 'json',
+                                        success: function (result) {
+                                            console.log('tonga ato');
+                                            $('#loadQCM').val('');
+                                            closeLoading();
+                                            document.location.reload();
+                                        },
+                                        error: function (xhr, status, p3, p4) {
+                                            $('#loadQCM').val('');
+                                            closeLoading();
+                                            showErrorMessage("L'import du QCM a échoué. Veuillez revérifier le contenu");
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, p3, p4) {
+                                var err = "Error " + " " + status + " " + p3 + " " + p4;
+                                if (xhr.responseText && xhr.responseText[0] == "{")
+                                    err = JSON.parse(xhr.responseText).Message;
+                                $('#loadQCM').val('');
+                                closeLoading();
+                                showErrorMessage(err);
+                            }
+                        });
+                    } else {
+                        closeLoading();
+                        showErrorMessage("This browser doesn't support HTML5 file import!");
+                    }
+                }
+            });
+        }
+
+        var gridName = "qcmGrid";
+        $(function () {
+            $('#sidebar-mcq').addClass('active');
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+            if (window.pageGrids[gridName] != null) {
+                window.pageGrids[gridName].ajaxify({
+                    getData: '@Url.Action("AjaxQcmGrid", "Qcm")',
+                });
+            }
+            $('#newQcmModal').on('shown.bs.modal', function () {
+                closeLoading();
+            });
+            $('#newQcmForm').bootstrapValidator({
+                excluded: [':disabled'],
+                fields: {
+                    Name: {
+                        validators: {
+                            notEmpty: {
+                                message: "<span>Nom du QCM requis</span>"
+                            },
+                            callback: {
+                               
+                                callback: function (value, validator, $field) {                                   
+                                    $field.removeClass('form-control-required');
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function (e) {
+                openLoading();
+            });
+
+            $(document).on('click', '[data-target="deleteModal"]', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                openLoading();
+                $.get(url, function (reponse) {
+                    $("body").append(reponse);
+                    $('#deleteDial').on('show.bs.modal', function () {
+                        var contentHeight = $(window).height();
+                        var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+                        var maxHeight = contentHeight - footerHeight;
+                        $(this).find('.modal-body').css({
+                            'max-height': maxHeight,
+                            'overflow-y': 'auto',
+                        });
+                        $(this).before($('.modal-backdrop'));
+                        $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    });
+                    $("#deleteDial").on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    });
+                    $("#deleteDial").modal({
+                        "show": true,
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+
+                    $("#modalBtnDelete").on('click', function () {
+                        openLoading();
+                    });
+
+                }).done(function () {
+                    console.log("second success");
+                }).fail(function () {
+                    console.log("error");
+                }).always(function () {
+                    closeLoading();
+                });
+                return false;
+            });
+
+            $("#chkInactif").on('click', function () {
+                $(this).val($(this).is(':checked'));
+            });
+
+        });
+
+
+
+
+    </script>
+}

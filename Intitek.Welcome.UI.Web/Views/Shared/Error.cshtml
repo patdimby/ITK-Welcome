@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Resource.Error</title>
+</head>
+<body>
+    @*<hgroup>
+            <h1>@Resource.Error</h1>
+            <h2>@Resource.labelError500</h2>
+            <p>@Model.Exception</p>
+        </hgroup>*@
+    <div class="row main-wrapper" style="justify-content: center;">
+
+        <div class="row error-div">
+            <div>
+                <h1>Server Error</h1>
+
+                <h3>An error occurs, please retry your action.</h3>
+
+                <h3>If the error occurs again, close your browser and retry.</h3>
+
+                <h3>Try eventually in Private Navigation mode.</h3>
+
+                <h3>If the error persists. Please contact <A HREF="mailto:madsi@groupeastek.fr">madsi@groupeastek.fr</A></h3>
+                <hr />
+                <h1>Erreur Serveur</h1>
+
+                <h3>Une erreur s'est produite, veuillez réessayer votre manipulation.</h3>
+
+                <h3>Si l'erreur se reproduit, veuillez quitter votre navigateur et recommencer.</h3>
+
+                <h3>Essayer éventuellement en mode Navigation privée.</h3>
+
+                <h3>Si l'erreur persiste, veuillez contacter <A HREF="mailto:madsi@groupeastek.fr">madsi@groupeastek.fr</A></h3>
+
+                <div class="error-bouton-action">
+                    @if (Request.UrlReferrer != null)
+                    {
+                        <a href="@(Request.UrlReferrer.AbsoluteUri.Contains("error") ? Url.Action("Login","Login"): Request.UrlReferrer.AbsoluteUri)" class="btn btn-danger btn-xs buttonNo">Réessayer / Retry</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Login","Login")" class="btn btn-danger btn-xs buttonNo">Réessayer / Retry</a>
+                    }
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+</body>
+</html>

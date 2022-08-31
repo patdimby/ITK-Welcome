@@ -1,0 +1,1976 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="actionTypeTitle" xml:space="preserve">
+    <value>You will therefore find three types of actions to take on the documents presented to you:</value>
+  </data>
+  <data name="administrateur" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="adminListTitle" xml:space="preserve">
+    <value>Admins list</value>
+  </data>
+  <data name="adminTitle" xml:space="preserve">
+    <value>Welcome | Administration</value>
+  </data>
+  <data name="appName" xml:space="preserve">
+    <value>Intitek | Welcome</value>
+  </data>
+  <data name="approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="appVersion" xml:space="preserve">
+    <value>v3.0.4</value>
+  </data>
+  <data name="backToHome" xml:space="preserve">
+    <value>Back to home</value>
+  </data>
+  <data name="btnLogin" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="buttonBack" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="buttonCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="buttonValidate" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="ckeApprouved" xml:space="preserve">
+    <value>I have read, understood and agree with the document {0}</value>
+  </data>
+  <data name="confirmPasswordAd" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="dear" xml:space="preserve">
+    <value>Dear;</value>
+  </data>
+  <data name="delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="documentLegend0" xml:space="preserve">
+    <value>No action required</value>
+  </data>
+  <data name="documentLegend1" xml:space="preserve">
+    <value>Action to perform</value>
+  </data>
+  <data name="documentLegend2" xml:space="preserve">
+    <value>Action performed</value>
+  </data>
+  <data name="documentLegend3" xml:space="preserve">
+    <value>No action to perform</value>
+  </data>
+  <data name="documentLegendIntro" xml:space="preserve">
+    <value>You will easily find the status of the documents you have to read; approve and validate according to the following legend:</value>
+  </data>
+  <data name="documentsAlreadyReadReviewed" xml:space="preserve">
+    <value>Documents already read and reviewed</value>
+  </data>
+  <data name="documentsRequiringAction" xml:space="preserve">
+    <value>Documents requiring action on your part</value>
+  </data>
+  <data name="download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="emailAd" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="emailListTitle" xml:space="preserve">
+    <value>Emails list</value>
+  </data>
+  <data name="employeeSavingsBooklet" xml:space="preserve">
+    <value>Wage savings booklet - INTITEK</value>
+  </data>
+  <data name="footerContent" xml:space="preserve">
+    <value>Welcome by Groupe&amp;nbsp;Astek</value>
+  </data>
+  <data name="forgotPassword" xml:space="preserve">
+    <value>Forgot password?</value>
+  </data>
+  <data name="groupedAction" xml:space="preserve">
+    <value>GroupAction</value>
+  </data>
+  <data name="happyReadWelcome" xml:space="preserve">
+    <value>Happy reading and welcome to Intitek!</value>
+  </data>
+  <data name="homeIntro1" xml:space="preserve">
+    <value>The home platform will allow you to learn a lot of information about your company; its organization and the rules to apply internally but also in our relations with our customers and suppliers.</value>
+  </data>
+  <data name="homeIntro2" xml:space="preserve">
+    <value>Under this page; you will find documents related to your entity of belonging (mutual insurance; participation; IT charter; etc.) as well as specific awareness-raising materials (IT security; good practices; etc.).</value>
+  </data>
+  <data name="homeIntro3" xml:space="preserve">
+    <value>You will be able to consult all these documents now and will be able to return to consult the updates of these documents throughout your evolution. If you no longer remember your conditions for mutual insurance or for unlocking your participation; you can easily return to the platform.</value>
+  </data>
+  <data name="homeIntro4" xml:space="preserve">
+    <value>You must read these documents carefully to understand what is required of each of us in the company and in our customers and suppliers.</value>
+  </data>
+  <data name="homeIntro5" xml:space="preserve">
+    <value>Depending on your role in the company; we have also selected documents specific to your activity and which you must read but also approve. To be sure that you have assimilated the content of certain strategic documents; we will also ask you to answer a multiple choice test which will test your knowledge; and to rework your knowledge if your answers to the multiple choice questions are not satisfactory.</value>
+  </data>
+  <data name="homeIntro6" xml:space="preserve">
+    <value>This will allow you to properly apply what is asked of you in the context of your interventions with certain customers and will allow us to prove to them that we have informed you of what it is important for you to know before your start of intervention. If this may seem restricting at first; some content will be useful for you in a professional capacity; so try to make the best of it and give us suggestions for improvement if you think that certain content or multiple choice questions are to be improved.</value>
+  </data>
+  <data name="homeTitlePage" xml:space="preserve">
+    <value>Welcome | Home</value>
+  </data>
+  <data name="informative" xml:space="preserve">
+    <value>Informative</value>
+  </data>
+  <data name="internalRegulations" xml:space="preserve">
+    <value>INTITEK internal regulations</value>
+  </data>
+  <data name="link" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="loginDescH3" xml:space="preserve">
+    <value>Welcome to the home and sensitization platform of Astek and its subsidiaries!</value>
+  </data>
+  <data name="loginTitle" xml:space="preserve">
+    <value>Welcome | Authentication</value>
+  </data>
+  <data name="logout" xml:space="preserve">
+    <value>Log out</value>
+  </data>
+  <data name="lowResultsMsg" xml:space="preserve">
+    <value>Sorry but you did not get the required minimum score with a score of #noteMinimum#. Please read the proposed document again and retake this test. Below; in green; the questions where you answered correctly; in red the questions for which your answer was incorrect.</value>
+  </data>
+  <data name="mandatoryDisplayIntitekLyon" xml:space="preserve">
+    <value>Mandatory display INTITEK LYON</value>
+  </data>
+  <data name="mandatoryDisplayLegalTexts" xml:space="preserve">
+    <value>Display mandatory legal texts</value>
+  </data>
+  <data name="mcq" xml:space="preserve">
+    <value>Quizz</value>
+  </data>
+  <data name="mcqResults" xml:space="preserve">
+    <value>Quizz results</value>
+  </data>
+  <data name="mcqTitle" xml:space="preserve">
+    <value>Quizz:</value>
+  </data>
+  <data name="menuHome" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="menuSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="multipleAnswersPossible" xml:space="preserve">
+    <value>Many answers are possible. Please select at least one answer</value>
+  </data>
+  <data name="name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="necessaryAction1" xml:space="preserve">
+    <value>Read it</value>
+  </data>
+  <data name="necessaryAction2" xml:space="preserve">
+    <value>Read and approve it</value>
+  </data>
+  <data name="necessaryAction3" xml:space="preserve">
+    <value>Read and approve it then validate your understanding with a test (MCQ)</value>
+  </data>
+  <data name="necessaryActionIntro" xml:space="preserve">
+    <value>Depending on the document; you will need to:</value>
+  </data>
+  <data name="onboarding" xml:space="preserve">
+    <value>Onboarding</value>
+  </data>
+  <data name="page" xml:space="preserve">
+    <value>page</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="passwordAd" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="question" xml:space="preserve">
+    <value>Question</value>
+  </data>
+  <data name="questionPolicyPassword" xml:space="preserve">
+    <value>What is the INTITEK password policy?</value>
+  </data>
+  <data name="read" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="readDocument" xml:space="preserve">
+    <value>Read document</value>
+  </data>
+  <data name="recyclingGoodPractices" xml:space="preserve">
+    <value>Recycling to good practices</value>
+  </data>
+  <data name="rememberMe" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
+  <data name="responsePolicyPassword1" xml:space="preserve">
+    <value>What is the one and only website for updating your INTITEK password?</value>
+  </data>
+  <data name="rightAnswer" xml:space="preserve">
+    <value>Right answer</value>
+  </data>
+  <data name="search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="selectaction" xml:space="preserve">
+    <value>Select an action</value>
+  </data>
+  <data name="selectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="settingsTitle" xml:space="preserve">
+    <value>Welcome | Settings</value>
+  </data>
+  <data name="show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="signIn" xml:space="preserve">
+    <value>Please identify yourself</value>
+  </data>
+  <data name="signUp" xml:space="preserve">
+    <value>Onboarding</value>
+  </data>
+  <data name="submenuAdminList" xml:space="preserve">
+    <value>Admins list</value>
+  </data>
+  <data name="submenuEmailList" xml:space="preserve">
+    <value>Emails list</value>
+  </data>
+  <data name="submenuToggleList" xml:space="preserve">
+    <value>Maintenance</value>
+  </data>
+  <data name="tempoTutorial" xml:space="preserve">
+    <value>TEMPO tutorial</value>
+  </data>
+  <data name="test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="testResult" xml:space="preserve">
+    <value>Your test's result</value>
+  </data>
+  <data name="userDocument" xml:space="preserve">
+    <value>User home</value>
+  </data>
+  <data name="UserDocumentTitle" xml:space="preserve">
+    <value>Welcome | Document</value>
+  </data>
+  <data name="username" xml:space="preserve">
+    <value>Login or email address</value>
+  </data>
+  <data name="utilisateur" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="validateAndTest" xml:space="preserve">
+    <value>Validate and do test</value>
+  </data>
+  <data name="verifyAdEmail" xml:space="preserve">
+    <value>Verify</value>
+  </data>
+  <data name="version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="version01A" xml:space="preserve">
+    <value>01A</value>
+  </data>
+  <data name="wrongAnswer" xml:space="preserve">
+    <value>Wrong answer</value>
+  </data>
+  <data name="validerLeDocument" xml:space="preserve">
+    <value>Validate document</value>
+  </data>
+  <data name="doc_Link" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="rightAnswerJs" xml:space="preserve">
+    <value>Right answers</value>
+  </data>
+  <data name="wrongAnswerJs" xml:space="preserve">
+    <value>Wrong answers</value>
+  </data>
+  <data name="buttonNo" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="buttonYes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="passedResultMessage" xml:space="preserve">
+    <value>Congratulations! You pass the test.</value>
+  </data>
+  <data name="noDocumentResult" xml:space="preserve">
+    <value>No document found for this search.</value>
+  </data>
+  <data name="login_ForgotPassword" xml:space="preserve">
+    <value>Forgotten Password</value>
+  </data>
+  <data name="login_msg_AutentificationFailed" xml:space="preserve">
+    <value>Access denied. Please contact your administrator</value>
+  </data>
+  <data name="login_Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="login_RememberMe" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
+  <data name="login_Title" xml:space="preserve">
+    <value>Identification</value>
+  </data>
+  <data name="login_Username" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="documentTitlePage" xml:space="preserve">
+    <value>Welcome | User Home</value>
+  </data>
+  <data name="mcqResultTitlePage" xml:space="preserve">
+    <value>Welcome | Quiz Result</value>
+  </data>
+  <data name="mcqTitlePage" xml:space="preserve">
+    <value>Welcome | Quizz</value>
+  </data>
+  <data name="actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="agency" xml:space="preserve">
+    <value>Agency/Entity</value>
+  </data>
+  <data name="analysis" xml:space="preserve">
+    <value>Analysis</value>
+  </data>
+  <data name="approval" xml:space="preserve">
+    <value>Approval</value>
+  </data>
+  <data name="assigned" xml:space="preserve">
+    <value>Assigned</value>
+  </data>
+  <data name="assignmentType" xml:space="preserve">
+    <value>Assign type</value>
+  </data>
+  <data name="collaborators" xml:space="preserve">
+    <value>Collaborators</value>
+  </data>
+  <data name="comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="documents" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="documentsList" xml:space="preserve">
+    <value>Documents list</value>
+  </data>
+  <data name="entities" xml:space="preserve">
+    <value>Entities</value>
+  </data>
+  <data name="entitiesProfiles" xml:space="preserve">
+    <value>Entities/profiles</value>
+  </data>
+  <data name="entity_agency" xml:space="preserve">
+    <value>Entity/Agency</value>
+  </data>
+  <data name="errorDocumentNameRequired" xml:space="preserve">
+    <value>Document name required</value>
+  </data>
+  <data name="errorFileRequired" xml:space="preserve">
+    <value>File required</value>
+  </data>
+  <data name="errorVersionRequired" xml:space="preserve">
+    <value>Version required</value>
+  </data>
+  <data name="fieldType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="fieldValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="file" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="humanResource" xml:space="preserve">
+    <value>Human resource</value>
+  </data>
+  <data name="major" xml:space="preserve">
+    <value>Major</value>
+  </data>
+  <data name="minor" xml:space="preserve">
+    <value>Minor</value>
+  </data>
+  <data name="modalContentDelete" xml:space="preserve">
+    <value>Warning! This action is irreversible</value>
+  </data>
+  <data name="modalTitleDeleteItem" xml:space="preserve">
+    <value>Record deletion</value>
+  </data>
+  <data name="newDocument" xml:space="preserve">
+    <value>New document</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="optionContains" xml:space="preserve">
+    <value>Contains</value>
+  </data>
+  <data name="optionEndswith" xml:space="preserve">
+    <value>EndsWith</value>
+  </data>
+  <data name="optionEquals" xml:space="preserve">
+    <value>Equal</value>
+  </data>
+  <data name="optionStartswith" xml:space="preserve">
+    <value>StartsWith</value>
+  </data>
+  <data name="profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="profiles" xml:space="preserve">
+    <value>Profiles</value>
+  </data>
+  <data name="quality" xml:space="preserve">
+    <value>Quality</value>
+  </data>
+  <data name="security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="selectCategory" xml:space="preserve">
+    <value>Select a category</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="qcm_Infobulle_score_minimum" xml:space="preserve">
+    <value>Minimum score : {0}/{1}</value>
+  </data>
+  <data name="qcm_Infobulle_score_obtenu" xml:space="preserve">
+    <value>Score obtained : {0}/{1}</value>
+  </data>
+  <data name="doc_Approbation" xml:space="preserve">
+    <value>Approuved</value>
+  </data>
+  <data name="doc_Categorie" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="doc_Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="doc_Lu" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="doc_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="doc_Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="doc_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="labelNbEnreg" xml:space="preserve">
+    <value>Total :</value>
+  </data>
+  <data name="doc_Informatif" xml:space="preserve">
+    <value>Informative</value>
+  </data>
+  <data name="qcm_Infobulle_DateQuizz" xml:space="preserve">
+    <value>Quizz on {0}</value>
+  </data>
+  <data name="btnClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="labelError500" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="qcmTestAlreadyPassed" xml:space="preserve">
+    <value>You already passed this test. Do you want to perform it again?&lt;br/&gt;If Yes: your result will be overwritten at Quizz validation.</value>
+  </data>
+  <data name="confirmDialogTitle" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="NoCategory" xml:space="preserve">
+    <value>No category</value>
+  </data>
+  <data name="entiteLists" xml:space="preserve">
+    <value>Entity/Agency list</value>
+  </data>
+  <data name="newEntite" xml:space="preserve">
+    <value>New Entity/Agency</value>
+  </data>
+  <data name="newProfile" xml:space="preserve">
+    <value>New Profile</value>
+  </data>
+  <data name="newQCM" xml:space="preserve">
+    <value>New quizz</value>
+  </data>
+  <data name="newUser" xml:space="preserve">
+    <value>New user</value>
+  </data>
+  <data name="profilLists" xml:space="preserve">
+    <value>List of profiles</value>
+  </data>
+  <data name="qcmLists" xml:space="preserve">
+    <value>Quizz List</value>
+  </data>
+  <data name="userLists" xml:space="preserve">
+    <value>List of users</value>
+  </data>
+  <data name="prf_Approbation" xml:space="preserve">
+    <value>Approbation : No. of collaborators. to throw back</value>
+  </data>
+  <data name="prf_Name" xml:space="preserve">
+    <value>Profile name</value>
+  </data>
+  <data name="prf_NbCollaborater" xml:space="preserve">
+    <value>No. of collaborators. to throw back</value>
+  </data>
+  <data name="prf_Reading" xml:space="preserve">
+    <value>Reading : No. of collaborators. to throw back</value>
+  </data>
+  <data name="prf_Supp" xml:space="preserve">
+    <value>Supp</value>
+  </data>
+  <data name="prf_Test" xml:space="preserve">
+    <value>Test : No. of collaborators. to throw back</value>
+  </data>
+  <data name="selectQcm" xml:space="preserve">
+    <value>Select a quizz</value>
+  </data>
+  <data name="prf_AssignDoc" xml:space="preserve">
+    <value>Assign documents</value>
+  </data>
+  <data name="prf_DeleteDoc" xml:space="preserve">
+    <value>Delete document</value>
+  </data>
+  <data name="prf_ProfilState" xml:space="preserve">
+    <value>Profile status</value>
+  </data>
+  <data name="prf_RelaunchByMail" xml:space="preserve">
+    <value>Relaunch by email</value>
+  </data>
+  <data name="qcm_Inactif" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="qcm_DateCreate" xml:space="preserve">
+    <value>Creation date</value>
+  </data>
+  <data name="qcm_Name" xml:space="preserve">
+    <value>Name of QCM</value>
+  </data>
+  <data name="qcm_NoteMinimal" xml:space="preserve">
+    <value>Minimum score</value>
+  </data>
+  <data name="update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="qcm_NbQuestions" xml:space="preserve">
+    <value>Nb questions</value>
+  </data>
+  <data name="errorQcmRequired" xml:space="preserve">
+    <value>Quizz required</value>
+  </data>
+  <data name="Entity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="Firstname" xml:space="preserve">
+    <value>Firstname</value>
+  </data>
+  <data name="prf_userProfil" xml:space="preserve">
+    <value>List of users linked to the profile</value>
+  </data>
+  <data name="user_agency" xml:space="preserve">
+    <value>Agency</value>
+  </data>
+  <data name="user_name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="categoryList" xml:space="preserve">
+    <value>List of categories</value>
+  </data>
+  <data name="newCategory" xml:space="preserve">
+    <value>New category</value>
+  </data>
+  <data name="DocumentState" xml:space="preserve">
+    <value>Etats des documents</value>
+  </data>
+  <data name="EntityDoc" xml:space="preserve">
+    <value>Documents de l'entité</value>
+  </data>
+  <data name="docAttachToEntity" xml:space="preserve">
+    <value>This document is attached to entity(s)/agency(s): {0}</value>
+  </data>
+  <data name="docAttachToProfile" xml:space="preserve">
+    <value>This document is attached to profile(s): {0}</value>
+  </data>
+  <data name="cannotDeleteProfil" xml:space="preserve">
+    <value>You cannot delete the profile {0}.</value>
+  </data>
+  <data name="confirmDeleteProfil" xml:space="preserve">
+    <value>Confirm deletion of the profile</value>
+  </data>
+  <data name="noDocument" xml:space="preserve">
+    <value>No document !</value>
+  </data>
+  <data name="Suppression" xml:space="preserve">
+    <value>Suppression</value>
+  </data>
+  <data name="docTabInfoGeneral" xml:space="preserve">
+    <value>General Information</value>
+  </data>
+  <data name="gridHdAuthor" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="gridHdDateHeure" xml:space="preserve">
+    <value>Date/Hour</value>
+  </data>
+  <data name="gridHdFileName" xml:space="preserve">
+    <value>Original file</value>
+  </data>
+  <data name="gridHdVersion" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="MessageRequiredField" xml:space="preserve">
+    <value>{0} is required</value>
+  </data>
+  <data name="prf_msg_UniqueName" xml:space="preserve">
+    <value>The profile name already exists !</value>
+  </data>
+  <data name="errorDocumentNameDuplicated" xml:space="preserve">
+    <value>Document name duplicated</value>
+  </data>
+  <data name="errorFileTooBig" xml:space="preserve">
+    <value>File too big (&gt;20MB)</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="errorCategoryNameRequired" xml:space="preserve">
+    <value>Category name required</value>
+  </data>
+  <data name="cannotDeleteCategorie" xml:space="preserve">
+    <value>You cannot delete the category {0}.</value>
+  </data>
+  <data name="confirmDeleteCategorie" xml:space="preserve">
+    <value>Confirm deletion of the category</value>
+  </data>
+  <data name="qcmEdit" xml:space="preserve">
+    <value>Edit MCQ</value>
+  </data>
+  <data name="addAnswer" xml:space="preserve">
+    <value>Add answer</value>
+  </data>
+  <data name="answer" xml:space="preserve">
+    <value>Answer</value>
+  </data>
+  <data name="justification" xml:space="preserve">
+    <value>Justification</value>
+  </data>
+  <data name="qcmQuestionEdit" xml:space="preserve">
+    <value>Edit question</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="RemainingApproval" xml:space="preserve">
+    <value>Rem appro</value>
+  </data>
+  <data name="RemainingReading" xml:space="preserve">
+    <value>Rem read</value>
+  </data>
+  <data name="RemainingTest" xml:space="preserve">
+    <value>Rem test</value>
+  </data>
+  <data name="user_AssignProfil" xml:space="preserve">
+    <value>Assign profiles to the user</value>
+  </data>
+  <data name="user_Documents" xml:space="preserve">
+    <value>List of documents assigned to the user</value>
+  </data>
+  <data name="collaborator" xml:space="preserve">
+    <value>Collaborator</value>
+  </data>
+  <data name="user_Affectation_Profil" xml:space="preserve">
+    <value>Profile assignment (s)</value>
+  </data>
+  <data name="dialogDeleteMessage" xml:space="preserve">
+    <value>Do you want to delete {0}&lt;br/&gt;</value>
+  </data>
+  <data name="user_mail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="doc_Deleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="doc_Inactif" xml:space="preserve">
+    <value>Inactif</value>
+  </data>
+  <data name="agencies_Entity" xml:space="preserve">
+    <value>Entity agencies</value>
+  </data>
+  <data name="agency_Assign_document" xml:space="preserve">
+    <value>Assign documents to the agency</value>
+  </data>
+  <data name="agency_Name" xml:space="preserve">
+    <value>Name of the agency</value>
+  </data>
+  <data name="entity_Assign_document" xml:space="preserve">
+    <value>Assign documents to the entity</value>
+  </data>
+  <data name="entity_Name" xml:space="preserve">
+    <value>Name of entity</value>
+  </data>
+  <data name="qcmNewQuestion" xml:space="preserve">
+    <value>New question</value>
+  </data>
+  <data name="down" xml:space="preserve">
+    <value>Down</value>
+  </data>
+  <data name="up" xml:space="preserve">
+    <value>Up</value>
+  </data>
+  <data name="actif" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="DocumentsByAgence" xml:space="preserve">
+    <value>Documents by agency</value>
+  </data>
+  <data name="numero" xml:space="preserve">
+    <value>N°</value>
+  </data>
+  <data name="texteQuestion" xml:space="preserve">
+    <value>Question text</value>
+  </data>
+  <data name="errorQuestionTextRequired" xml:space="preserve">
+    <value>Question text required</value>
+  </data>
+  <data name="errorResponseTexteRequired" xml:space="preserve">
+    <value>Response text required</value>
+  </data>
+  <data name="errorRightResponseMandatory" xml:space="preserve">
+    <value>One right response must at least be checked</value>
+  </data>
+  <data name="selectAgenceToFilter" xml:space="preserve">
+    <value>Select the agency to filter</value>
+  </data>
+  <data name="selectProfilToFilter" xml:space="preserve">
+    <value>Select the profile to filter</value>
+  </data>
+  <data name="user_fullname" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="user_login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="dialogCannotDeleteMessage" xml:space="preserve">
+    <value>Cannot delete {0} &lt;br/&gt;</value>
+  </data>
+  <data name="document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="la_categorie" xml:space="preserve">
+    <value>the category</value>
+  </data>
+  <data name="la_question" xml:space="preserve">
+    <value>the question</value>
+  </data>
+  <data name="le_agence" xml:space="preserve">
+    <value>the agency</value>
+  </data>
+  <data name="le_collaborateur" xml:space="preserve">
+    <value>the collaborator</value>
+  </data>
+  <data name="le_document" xml:space="preserve">
+    <value>the document</value>
+  </data>
+  <data name="le_entite" xml:space="preserve">
+    <value>the entity</value>
+  </data>
+  <data name="le_profil" xml:space="preserve">
+    <value>the profile</value>
+  </data>
+  <data name="le_qcm" xml:space="preserve">
+    <value>the quizz</value>
+  </data>
+  <data name="collapseAll" xml:space="preserve">
+    <value>Collapse all</value>
+  </data>
+  <data name="expandAll" xml:space="preserve">
+    <value>Expand all</value>
+  </data>
+  <data name="deleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="fileUploadPlaceholder" xml:space="preserve">
+    <value>Upload file version</value>
+  </data>
+  <data name="actionModifier" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="actionSupprimer" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="actionTelecharger" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="docCreatedByOn" xml:space="preserve">
+    <value>Created by {0} on {1}</value>
+  </data>
+  <data name="docDeletedByOn" xml:space="preserve">
+    <value>Deleted by {0} on {1}</value>
+  </data>
+  <data name="docModifiedByOn" xml:space="preserve">
+    <value>Updated by {0} on {1}</value>
+  </data>
+  <data name="profilesActu" xml:space="preserve">
+    <value>Current profile</value>
+  </data>
+  <data name="action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="appTitle" xml:space="preserve">
+    <value>WELCOME Administration</value>
+  </data>
+  <data name="appTitleFO" xml:space="preserve">
+    <value>WELCOME</value>
+  </data>
+  <data name="deleteAnswerConfirmation" xml:space="preserve">
+    <value>Do you confirm this deletion?</value>
+  </data>
+  <data name="language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="welcomeMessage" xml:space="preserve">
+    <value>Welcome Message</value>
+  </data>
+  <data name="docPhase" xml:space="preserve">
+    <value>Phase</value>
+  </data>
+  <data name="modeDownload" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="modeLecture" xml:space="preserve">
+    <value>Reading mode</value>
+  </data>
+  <data name="modeNavigateur" xml:space="preserve">
+    <value>Browser</value>
+  </data>
+  <data name="newVersion" xml:space="preserve">
+    <value>New version</value>
+  </data>
+  <data name="phaseEmployee" xml:space="preserve">
+    <value>Employee</value>
+  </data>
+  <data name="phaseOnboarding" xml:space="preserve">
+    <value>Onboarding</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="Listing_complet" xml:space="preserve">
+    <value>Complete listing</value>
+  </data>
+  <data name="Listing_relance" xml:space="preserve">
+    <value>Listing reminders</value>
+  </data>
+  <data name="Statistiques_Analyse" xml:space="preserve">
+    <value>Statistics &amp; Analysis</value>
+  </data>
+  <data name="Vision_global" xml:space="preserve">
+    <value>Global vision</value>
+  </data>
+  <data name="errorDocumentPhaseRequired" xml:space="preserve">
+    <value>Phase required</value>
+  </data>
+  <data name="errorReadingModeRequired" xml:space="preserve">
+    <value>Reading Mode required</value>
+  </data>
+  <data name="actionDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="actionEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="actionVisualize" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="changes" xml:space="preserve">
+    <value>Changes</value>
+  </data>
+  <data name="changesList" xml:space="preserve">
+    <value>Changes list</value>
+  </data>
+  <data name="history" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="mcqPerformed" xml:space="preserve">
+    <value>Performed Quizz</value>
+  </data>
+  <data name="lblAttachment" xml:space="preserve">
+    <value>Affectation</value>
+  </data>
+  <data name="AllSelected" xml:space="preserve">
+    <value>All selected</value>
+  </data>
+  <data name="nSelectedText" xml:space="preserve">
+    <value>selected</value>
+  </data>
+  <data name="selectAllDocument" xml:space="preserve">
+    <value>Select documents</value>
+  </data>
+  <data name="selectAllEntity" xml:space="preserve">
+    <value>Select agences</value>
+  </data>
+  <data name="dialogConfirmEditDocumentMessage" xml:space="preserve">
+    <value>The document {0} already exists. &lt;br/&gt; Do you want to edit it?</value>
+  </data>
+  <data name="dialogConfirmEditDocumentTitle" xml:space="preserve">
+    <value>Confirm edition</value>
+  </data>
+  <data name="data" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="document1" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="histoAction_CDV" xml:space="preserve">
+    <value>CREATE DOC VERSION</value>
+  </data>
+  <data name="histoAction_CRE" xml:space="preserve">
+    <value>CREATE</value>
+  </data>
+  <data name="histoAction_DEL" xml:space="preserve">
+    <value>DELETE</value>
+  </data>
+  <data name="histoAction_UPD" xml:space="preserve">
+    <value>UPDATE</value>
+  </data>
+  <data name="idObject" xml:space="preserve">
+    <value>Object ID</value>
+  </data>
+  <data name="minimalScore" xml:space="preserve">
+    <value>Minimal Score</value>
+  </data>
+  <data name="score" xml:space="preserve">
+    <value>Score</value>
+  </data>
+  <data name="mcqPerformedList" xml:space="preserve">
+    <value>Performed MCQs list</value>
+  </data>
+  <data name="linkedObjects" xml:space="preserve">
+    <value>Linked Objects</value>
+  </data>
+  <data name="slcAttachEntite" xml:space="preserve">
+    <value>Select an Entity/Agency</value>
+  </data>
+  <data name="slcAttachProfile" xml:space="preserve">
+    <value>Select a profile</value>
+  </data>
+  <data name="slcAttachSearch" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="slcGroupAgency" xml:space="preserve">
+    <value>Agency</value>
+  </data>
+  <data name="slcGroupEntity" xml:space="preserve">
+    <value>Entities</value>
+  </data>
+  <data name="disableMaintenanceMode" xml:space="preserve">
+    <value>Disable maintenance mode</value>
+  </data>
+  <data name="enableMaintenanceMode" xml:space="preserve">
+    <value>Enable maintenance mode</value>
+  </data>
+  <data name="maintenanceModeWarning" xml:space="preserve">
+    <value>Warning, this action takes effect immediately</value>
+  </data>
+  <data name="stat_Agence" xml:space="preserve">
+    <value>Agency</value>
+  </data>
+  <data name="stat_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="stat_collab_approved_documents_approve" xml:space="preserve">
+    <value>Collaborators who approved all documents to be approved</value>
+  </data>
+  <data name="stat_collab_lu_documents_propose" xml:space="preserve">
+    <value>Collaborators who have read all the proposed documents</value>
+  </data>
+  <data name="stat_collab_notfinish_sensibilisation" xml:space="preserve">
+    <value>Collaborators who has not finalized the awareness course</value>
+  </data>
+  <data name="stat_collab_success_qcm_propose" xml:space="preserve">
+    <value>Collaborators who have successfully completed all the MCQs offered</value>
+  </data>
+  <data name="stat_consultants" xml:space="preserve">
+    <value>Consultants</value>
+  </data>
+  <data name="stat_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="stat_detail_etape_parcours_sensibilisation" xml:space="preserve">
+    <value>Detailed statistics according to the stages of the awareness course</value>
+  </data>
+  <data name="stat_Documents" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="stat_document_restant_approve" xml:space="preserve">
+    <value>Documents still to be approved</value>
+  </data>
+  <data name="stat_document_restant_consult" xml:space="preserve">
+    <value>Documents remaining to consult</value>
+  </data>
+  <data name="stat_Employees" xml:space="preserve">
+    <value>Employees</value>
+  </data>
+  <data name="stat_Entities" xml:space="preserve">
+    <value>Entities / Agencies</value>
+  </data>
+  <data name="stat_Entity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="stat_filename_all" xml:space="preserve">
+    <value>All employees</value>
+  </data>
+  <data name="stat_filename_relance" xml:space="preserve">
+    <value>Employees to relaunch</value>
+  </data>
+  <data name="stat_Ingenieur" xml:space="preserve">
+    <value>Engineer</value>
+  </data>
+  <data name="stat_lastDate" xml:space="preserve">
+    <value>Last action performed</value>
+  </data>
+  <data name="stat_Legend" xml:space="preserve">
+    <value>Legend</value>
+  </data>
+  <data name="stat_nbCollabTotal" xml:space="preserve">
+    <value>Total number of collaborator</value>
+  </data>
+  <data name="stat_nbParcours_Sensibilisation" xml:space="preserve">
+    <value>Collaborators who have completed the entire awareness course</value>
+  </data>
+  <data name="stat_percent_collab_sensibilise" xml:space="preserve">
+    <value>% of collaborator sensitized</value>
+  </data>
+  <data name="stat_qcm_restant_success" xml:space="preserve">
+    <value>QCM remaining to succeed</value>
+  </data>
+  <data name="stat_read_approve_qcmSuccess" xml:space="preserve">
+    <value>Reading and approval of the document, successful MCQ</value>
+  </data>
+  <data name="stat_stats_general" xml:space="preserve">
+    <value>General statistics</value>
+  </data>
+  <data name="stat_Taux_finalisation" xml:space="preserve">
+    <value>Course completion rate</value>
+  </data>
+  <data name="stat_title" xml:space="preserve">
+    <value>Reception platform - Statistics</value>
+  </data>
+  <data name="stat_ToRelance" xml:space="preserve">
+    <value>To relaunch</value>
+  </data>
+  <data name="stat_workbookname" xml:space="preserve">
+    <value>Engineers</value>
+  </data>
+  <data name="user_isOnboarding" xml:space="preserve">
+    <value>OnBoarding</value>
+  </data>
+  <data name="user_mailOnboarding" xml:space="preserve">
+    <value>Email Onboarding</value>
+  </data>
+  <data name="user_management" xml:space="preserve">
+    <value>Collaborators management</value>
+  </data>
+  <data name="selectActionToFilter" xml:space="preserve">
+    <value>Select the action to filter</value>
+  </data>
+  <data name="selectDataToFilter" xml:space="preserve">
+    <value>Select the data to filter</value>
+  </data>
+  <data name="loginMaintenanceText" xml:space="preserve">
+    <value>The platform is currently under maintenance. However, it remains accessible to administrators.</value>
+  </data>
+  <data name="batchs" xml:space="preserve">
+    <value>Batchs</value>
+  </data>
+  <data name="emailSend" xml:space="preserve">
+    <value>Emails sent</value>
+  </data>
+  <data name="batch" xml:space="preserve">
+    <value>Batch</value>
+  </data>
+  <data name="emailSendList" xml:space="preserve">
+    <value>Emails sent list</value>
+  </data>
+  <data name="end" xml:space="preserve">
+    <value>End</value>
+  </data>
+  <data name="information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="programName" xml:space="preserve">
+    <value>Program Name</value>
+  </data>
+  <data name="returnCode" xml:space="preserve">
+    <value>Return Code</value>
+  </data>
+  <data name="batchsList" xml:space="preserve">
+    <value>Batchs List</value>
+  </data>
+  <data name="emailTemplates" xml:space="preserve">
+    <value>Email templates</value>
+  </data>
+  <data name="emailTemplatesList" xml:space="preserve">
+    <value>Email templates list</value>
+  </data>
+  <data name="newTemplate" xml:space="preserve">
+    <value>New template</value>
+  </data>
+  <data name="the_mailTemplate" xml:space="preserve">
+    <value>the mail template</value>
+  </data>
+  <data name="authorizedKeywords" xml:space="preserve">
+    <value>Authorized keywords</value>
+  </data>
+  <data name="content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="mailObject" xml:space="preserve">
+    <value>Mail object</value>
+  </data>
+  <data name="buttonPreview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="qcm_actionVisualize" xml:space="preserve">
+    <value>View or change badge</value>
+  </data>
+  <data name="qcm_deleteBadge" xml:space="preserve">
+    <value>Delete badge</value>
+  </data>
+  <data name="qcm_DeleteBadgeMessage" xml:space="preserve">
+    <value>32/5000
+Do you want to delete the badge?</value>
+  </data>
+  <data name="removal" xml:space="preserve">
+    <value>Suppression</value>
+  </data>
+  <data name="errorCommentRequired" xml:space="preserve">
+    <value>Comment required</value>
+  </data>
+  <data name="errorContentRequired" xml:space="preserve">
+    <value>Content required</value>
+  </data>
+  <data name="errorKeywordText" xml:space="preserve">
+    <value>The following keywords are not valid:&amp;nbsp;</value>
+  </data>
+  <data name="errorObjectRequired" xml:space="preserve">
+    <value>Object required</value>
+  </data>
+  <data name="errorTemplateNameRequired" xml:space="preserve">
+    <value>Template name required</value>
+  </data>
+  <data name="mailPreview" xml:space="preserve">
+    <value>Mail Preview</value>
+  </data>
+  <data name="unrecognizedKeywords" xml:space="preserve">
+    <value>Unrecognized keywords</value>
+  </data>
+  <data name="keywordNotice" xml:space="preserve">
+    <value>Double-click to add to content</value>
+  </data>
+  <data name="purge" xml:space="preserve">
+    <value>Purge</value>
+  </data>
+  <data name="backOfficeActions" xml:space="preserve">
+    <value>Back Office actions</value>
+  </data>
+  <data name="batchExecution" xml:space="preserve">
+    <value>Batchs execution</value>
+  </data>
+  <data name="doPurge" xml:space="preserve">
+    <value>Purge</value>
+  </data>
+  <data name="histoToPurge" xml:space="preserve">
+    <value>History purge</value>
+  </data>
+  <data name="lineNumberToPurge" xml:space="preserve">
+    <value>Number of lines to purge</value>
+  </data>
+  <data name="purgeAll" xml:space="preserve">
+    <value>Purge All</value>
+  </data>
+  <data name="recalculate" xml:space="preserve">
+    <value>Recalculate</value>
+  </data>
+  <data name="dialogPurgeMessage" xml:space="preserve">
+    <value>Do you want to do the purge?</value>
+  </data>
+  <data name="previewMailObject" xml:space="preserve">
+    <value>Object:&amp;nbsp;</value>
+  </data>
+  <data name="Send_mail" xml:space="preserve">
+    <value>Envoyer un email</value>
+  </data>
+  <data name="relanceMessageFailed" xml:space="preserve">
+    <value>An error occurs during the reminder : {0}</value>
+  </data>
+  <data name="relanceMessageSuccess" xml:space="preserve">
+    <value>The reminder is sent successfully</value>
+  </data>
+  <data name="Badge" xml:space="preserve">
+    <value>Badge</value>
+  </data>
+  <data name="category_msg_UniqueName" xml:space="preserve">
+    <value>The category already exists</value>
+  </data>
+  <data name="datepurgeLabel" xml:space="preserve">
+    <value>Enter the purge reference date</value>
+  </data>
+  <data name="histopurgeLabel" xml:space="preserve">
+    <value>Histories with dates before this date will be purged from the database.</value>
+  </data>
+  <data name="Diplome_Fait_Le" xml:space="preserve">
+    <value>Done at Boulogne-Billancourt on {0}</value>
+  </data>
+  <data name="domains" xml:space="preserve">
+    <value>Domains</value>
+  </data>
+  <data name="address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="domain" xml:space="preserve">
+    <value>Domain</value>
+  </data>
+  <data name="domainsList" xml:space="preserve">
+    <value>Domains List</value>
+  </data>
+  <data name="errorAddressRequired" xml:space="preserve">
+    <value>Address required</value>
+  </data>
+  <data name="errorConfirmationNotIdentical" xml:space="preserve">
+    <value>Confirmation and password are not identical</value>
+  </data>
+  <data name="errorConfirmationRequired" xml:space="preserve">
+    <value>Confirmation required</value>
+  </data>
+  <data name="errorDomainRequired" xml:space="preserve">
+    <value>Domain required</value>
+  </data>
+  <data name="errorNameRequired" xml:space="preserve">
+    <value>Name required</value>
+  </data>
+  <data name="errorUsernameRequired" xml:space="preserve">
+    <value>Username required</value>
+  </data>
+  <data name="lastSynchronization" xml:space="preserve">
+    <value>Last synchronized</value>
+  </data>
+  <data name="newDomain" xml:space="preserve">
+    <value>New Domain</value>
+  </data>
+  <data name="the_domain" xml:space="preserve">
+    <value>the domain</value>
+  </data>
+  <data name="toBeSynchronized" xml:space="preserve">
+    <value>To be synchronized</value>
+  </data>
+  <data name="doApproveAndDoQuizLater" xml:space="preserve">
+    <value>Approve and do the quizz later</value>
+  </data>
+  <data name="doApproveAndDoQuizRightNow" xml:space="preserve">
+    <value>Approve and do the quizz right now</value>
+  </data>
+  <data name="doNotApprove" xml:space="preserve">
+    <value>Don't approve</value>
+  </data>
+  <data name="backToDocument" xml:space="preserve">
+    <value>Reopen the document</value>
+  </data>
+  <data name="backToTest" xml:space="preserve">
+    <value>Repeat the test</value>
+  </data>
+  <data name="errorDuplicateReponseOrder" xml:space="preserve">
+    <value>Duplicated Response Order</value>
+  </data>
+  <data name="doApprove" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="doTest" xml:space="preserve">
+    <value>Perform the quizz</value>
+  </data>
+  <data name="doTestLater" xml:space="preserve">
+    <value>Perform the quizz later</value>
+  </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="typeMetier" xml:space="preserve">
+    <value>METIER</value>
+  </data>
+  <data name="typeStructure" xml:space="preserve">
+    <value>STRUCTURE</value>
+  </data>
+  <data name="errorTypeRequired" xml:space="preserve">
+    <value>Required document type</value>
+  </data>
+  <data name="VideoNotExist" xml:space="preserve">
+    <value>The video {0} does not exist on the disc. Please contact the administrator !</value>
+  </data>
+  <data name="zoomIn" xml:space="preserve">
+    <value>Zoom in</value>
+  </data>
+  <data name="zoomInitial" xml:space="preserve">
+    <value>Zoom initial</value>
+  </data>
+  <data name="zoomOut" xml:space="preserve">
+    <value>Zoom out</value>
+  </data>
+  <data name="errorPasswordMatch" xml:space="preserve">
+    <value>Password not matched</value>
+    <comment>Les mots de passe ne correspondent pas</comment>
+  </data>
+  <data name="errorRequiredPassword" xml:space="preserve">
+    <value>Password Required</value>
+  </data>
+  <data name="errorRequiredUsername" xml:space="preserve">
+    <value>User Name Required</value>
+  </data>
+  <data name="Messages_Error_Title" xml:space="preserve">
+    <value>There are some errors</value>
+  </data>
+  <data name="Message_ValidationRequiredParams" xml:space="preserve">
+    <value>Field {0} is required</value>
+  </data>
+  <data name="paginatorNext" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="paginatorPrev" xml:space="preserve">
+    <value>Prev</value>
+  </data>
+  <data name="doc_Reading" xml:space="preserve">
+    <value>Document to Read</value>
+  </data>
+  <data name="browserNotSupported" xml:space="preserve">
+    <value>Your browser is not compatible with the application. Please, switch to Microsoft EDGE which you can download &lt;a href="{0}"&gt;here&lt;/a&gt;...</value>
+  </data>
+  <data name="errorBrowserTitle" xml:space="preserve">
+    <value>Your browser is not compatible. Do not panic...</value>
+  </data>
+  <data name="doc_SubCategories" xml:space="preserve">
+    <value>Subcategory</value>
+  </data>
+  <data name="NoSubCategory" xml:space="preserve">
+    <value>No subcategory</value>
+  </data>
+  <data name="categorySubcateogry" xml:space="preserve">
+    <value>Category / sub-category</value>
+  </data>
+  <data name="slcGroupCategory" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="slcGroupSubcategory" xml:space="preserve">
+    <value>Sub-categories</value>
+  </data>
+  <data name="slcSelectCategSubCateg" xml:space="preserve">
+    <value>Select category / sub-category</value>
+  </data>
+  <data name="newSubCategory" xml:space="preserve">
+    <value>New Sub Category</value>
+  </data>
+  <data name="errorCategoryNotSelected" xml:space="preserve">
+    <value>Select a category</value>
+  </data>
+  <data name="errorSubCategoryNameRequired" xml:space="preserve">
+    <value>Sub-category Name required</value>
+  </data>
+  <data name="la_sous_categorie" xml:space="preserve">
+    <value>the sub-category</value>
+  </data>
+  <data name="categorySubcategory" xml:space="preserve">
+    <value>Category / sub-category</value>
+  </data>
+  <data name="titleNotSupportedBrowser" xml:space="preserve">
+    <value>Welcome | Not supported</value>
+  </data>
+  <data name="errorPageMessageP1" xml:space="preserve">
+    <value>An error occurs, please retry your action.</value>
+  </data>
+  <data name="errorPageMessageP2" xml:space="preserve">
+    <value>If the error occurs again, close your browser and retry.</value>
+  </data>
+  <data name="errorPageMessageP3" xml:space="preserve">
+    <value>Try eventually in Private Navigation mode.</value>
+  </data>
+  <data name="errorPageMessageP4" xml:space="preserve">
+    <value>If the error persists. Please contact {0}.</value>
+  </data>
+  <data name="errorPageTitle" xml:space="preserve">
+    <value>Server Error</value>
+  </data>
+  <data name="errPageRetryButton" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="doc_Appoveds" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="doc_Readeds" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="doc_Testeds" xml:space="preserve">
+    <value>Tested</value>
+  </data>
+  <data name="BlackList" xml:space="preserve">
+    <value>Black list</value>
+  </data>
+  <data name="BlackList_Title" xml:space="preserve">
+    <value>ADMINISTRATION OF THE BLACK LIST</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="Creation" xml:space="preserve">
+    <value>Creation</value>
+  </data>
+  <data name="ListCityEntitiesBlacklisted" xml:space="preserve">
+    <value>List of Cities / Entities currently blacklisted by the AD synchronization batch</value>
+  </data>
+  <data name="NewPath" xml:space="preserve">
+    <value>New path</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="BlackList_msg_UniqueName" xml:space="preserve">
+    <value>The path already exists!</value>
+  </data>
+  <data name="BlackList_NbCollabActif" xml:space="preserve">
+    <value>Coll. active</value>
+  </data>
+  <data name="BlackList_NbCollabInactif" xml:space="preserve">
+    <value>Coll. inactive</value>
+  </data>
+  <data name="PathRequired" xml:space="preserve">
+    <value>The path is required</value>
+  </data>
+  <data name="Present" xml:space="preserve">
+    <value>Present</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="EmployeesActif" xml:space="preserve">
+    <value>Active Employees</value>
+  </data>
+  <data name="EmployeesAll" xml:space="preserve">
+    <value>All Employees</value>
+  </data>
+  <data name="EmployeesInactif" xml:space="preserve">
+    <value>Inactive Employees</value>
+  </data>
+  <data name="ImportFileInactivityButton" xml:space="preserve">
+    <value>Load inactive</value>
+  </data>
+  <data name="ImportFileInactivityTitle" xml:space="preserve">
+    <value>Load the users inactifs</value>
+  </data>
+  <data name="InvalidFilesXlsx" xml:space="preserve">
+    <value>Please choose an .xlsx file</value>
+  </data>
+  <data name="confirmMessageLoadInactivityFile" xml:space="preserve">
+    <value>Do you want to load inactivities?</value>
+  </data>
+  <data name="inact_attention" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="inact_attention_title" xml:space="preserve">
+    <value>Errors have occurred: The faulty lines have not been imported.</value>
+  </data>
+  <data name="inact_columns_required" xml:space="preserve">
+    <value>Invalid file : At least, the columns [Nom or Prenom or Email] and [Start] must be present.</value>
+  </data>
+  <data name="inact_column_invalide" xml:space="preserve">
+    <value>Line {0} : {1} [{2}] not valid</value>
+  </data>
+  <data name="inact_column_notexist" xml:space="preserve">
+    <value>Line {0} : {1} [{2}] was not found in the database</value>
+  </data>
+  <data name="inact_column_required" xml:space="preserve">
+    <value>Line {0} : {1} required</value>
+  </data>
+  <data name="inact_line_incorrect" xml:space="preserve">
+    <value>Line {0} : [Nom, Prénom, Email] are empty</value>
+  </data>
+  <data name="inact_rows_empty" xml:space="preserve">
+    <value>Invalid file : Lines are empty</value>
+  </data>
+  <data name="inact_start_empty" xml:space="preserve">
+    <value>Empty = today's date ({0})</value>
+  </data>
+  <data name="inact_start_end_invalide" xml:space="preserve">
+    <value>Ligne {0} : End date [{1}] is less than the start date [{2}]</value>
+  </data>
+  <data name="inact_debut" xml:space="preserve">
+    <value>Start inactivity</value>
+  </data>
+  <data name="inact_fin" xml:space="preserve">
+    <value>End of inactivity</value>
+  </data>
+  <data name="inact_result" xml:space="preserve">
+    <value>Results</value>
+  </data>
+  <data name="inact_result_nblines_loaded" xml:space="preserve">
+    <value>Number of rows loaded correctly : {0}</value>
+  </data>
+  <data name="inact_result_nblines_read" xml:space="preserve">
+    <value>Number of rows read : {0}</value>
+  </data>
+  <data name="inact_result_nblines_rejected" xml:space="preserve">
+    <value>Number of lines rejected : {0}</value>
+  </data>
+  <data name="rythme" xml:space="preserve">
+    <value>Rhythm</value>
+  </data>
+  <data name="Departement" xml:space="preserve">
+    <value>Operational management</value>
+  </data>
+  <data name="Manager" xml:space="preserve">
+    <value>Manager</value>
+  </data>
+  <data name="NoDepartement" xml:space="preserve">
+    <value>No direction</value>
+  </data>
+  <data name="selectAllDepartement" xml:space="preserve">
+    <value>Select directions</value>
+  </data>
+  <data name="selectAllManager" xml:space="preserve">
+    <value>Select managers</value>
+  </data>
+  <data name="Statistiques_Analyse_Departement" xml:space="preserve">
+    <value>Statistics &amp; Analysis - Operational management</value>
+  </data>
+  <data name="Statistiques_Analyse_Manager" xml:space="preserve">
+    <value>Statistics &amp; Analysis - Manager</value>
+  </data>
+  <data name="AnalyseByDepartement" xml:space="preserve">
+    <value>Analysis by operational management</value>
+  </data>
+  <data name="stat_Departement" xml:space="preserve">
+    <value>Operational directions</value>
+  </data>
+  <data name="stat_Manager" xml:space="preserve">
+    <value>Managers</value>
+  </data>
+  <data name="percent_pers_sensitized" xml:space="preserve">
+    <value>% of people sensitized</value>
+  </data>
+  <data name="AlreadyDone" xml:space="preserve">
+    <value>Already done</value>
+  </data>
+  <data name="NameCollabotor" xml:space="preserve">
+    <value>Name of collaborator</value>
+  </data>
+  <data name="NbDocApproved" xml:space="preserve">
+    <value>Number of documents to be approved</value>
+  </data>
+  <data name="NbDocRead" xml:space="preserve">
+    <value>Number of documents to read</value>
+  </data>
+  <data name="NbDocTested" xml:space="preserve">
+    <value>Number of quizzes to perform</value>
+  </data>
+  <data name="ToApproved" xml:space="preserve">
+    <value>To approve</value>
+  </data>
+  <data name="ToRead" xml:space="preserve">
+    <value>To read</value>
+  </data>
+  <data name="ToTest" xml:space="preserve">
+    <value>Take the quiz</value>
+  </data>
+  <data name="batch_Debut" xml:space="preserve">
+    <value>Batch start : {0}</value>
+  </data>
+  <data name="batch_DetailError" xml:space="preserve">
+    <value>Details of errors :</value>
+  </data>
+  <data name="batch_Fin" xml:space="preserve">
+    <value>End of batch : {0}</value>
+  </data>
+  <data name="batch_NbErrors" xml:space="preserve">
+    <value>Number of errors encountered : {0}</value>
+  </data>
+  <data name="batch_NbPersonnes" xml:space="preserve">
+    <value>Number of people to raise : {0}</value>
+  </data>
+  <data name="batch_NbSendMail" xml:space="preserve">
+    <value>Number of emails actually sent : {0}</value>
+  </data>
+  <data name="batch_Success" xml:space="preserve">
+    <value>Batch successfully completed</value>
+  </data>
+  <data name="allCategoriesSub" xml:space="preserve">
+    <value>All the documents</value>
+  </data>
+  <data name="noCategoryInclus" xml:space="preserve">
+    <value>Uncategorized documents</value>
+  </data>
+  <data name="noSubcategoryInclus" xml:space="preserve">
+    <value>Documents without subcategory</value>
+  </data>
+  <data name="mail_synthese_subject" xml:space="preserve">
+    <value>[WELCOME] Summary mail - {0}</value>
+  </data>
+  <data name="toDO" xml:space="preserve">
+    <value>To do</value>
+  </data>
+  <data name="batchHostIPSendMail" xml:space="preserve">
+    <value>Message sent by server {0} - IP {1}</value>
+  </data>
+  <data name="errorFileSelected" xml:space="preserve">
+    <value>The selected file is not valid</value>
+  </data>
+  <data name="periodAnalysis" xml:space="preserve">
+    <value>Period analysis from</value>
+  </data>
+  <data name="to" xml:space="preserve">
+    <value>to</value>
+  </data>
+  <data name="DateExit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="DateEntry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="filterEntryDate" xml:space="preserve">
+    <value>Entry from</value>
+  </data>
+  <data name="filterExitDate" xml:space="preserve">
+    <value>Exit before the</value>
+  </data>
+  <data name="illustration" xml:space="preserve">
+    <value>Illustration</value>
+  </data>
+  <data name="deleteIllustration" xml:space="preserve">
+    <value>Trash</value>
+  </data>
+  <data name="awarenessapprovals" xml:space="preserve">
+    <value>Awareness/ Approvals</value>
+  </data>
+  <data name="awareness_approvals" xml:space="preserve">
+    <value>Awareness &amp; Approvals</value>
+  </data>
+  <data name="awareness_approvals_doc_approved" xml:space="preserve">
+    <value>Approved documents</value>
+  </data>
+  <data name="awareness_approvals_doc_validated" xml:space="preserve">
+    <value>Documents validated by questionnaire</value>
+  </data>
+  <data name="awareness_approvals_month_selection" xml:space="preserve">
+    <value>Select month</value>
+  </data>
+  <data name="awareness_approvals_title" xml:space="preserve">
+    <value>Document approval / validation data archive</value>
+  </data>
+  <data name="sensibilisation_workbookname" xml:space="preserve">
+    <value>Sensitizations</value>
+  </data>
+  <data name="approbation_active_inactive" xml:space="preserve">
+    <value>Active/ Inactive</value>
+  </data>
+  <data name="approbation_admin_charter" xml:space="preserve">
+    <value>Administrator charter</value>
+  </data>
+  <data name="approbation_engineer" xml:space="preserve">
+    <value>Engineer</value>
+  </data>
+  <data name="approbation_entity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="approbation_mail" xml:space="preserve">
+    <value>Mail address</value>
+  </data>
+  <data name="approbation_practical_guide" xml:space="preserve">
+    <value>Practical guide to document classification and handling</value>
+  </data>
+  <data name="approbation_present_not_present" xml:space="preserve">
+    <value>Present/ not present</value>
+  </data>
+  <data name="approbation_workbookname" xml:space="preserve">
+    <value>Approved_Docs</value>
+  </data>
+  <data name="sensibilisation_active_inactive" xml:space="preserve">
+    <value>Active/ inactive</value>
+  </data>
+  <data name="sensibilisation_agency" xml:space="preserve">
+    <value>Agency</value>
+  </data>
+  <data name="sensibilisation_approbation_active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="sensibilisation_approbation_inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="sensibilisation_approbation_not_present" xml:space="preserve">
+    <value>Not present</value>
+  </data>
+  <data name="sensibilisation_approbation_present" xml:space="preserve">
+    <value>Present</value>
+  </data>
+  <data name="sensibilisation_corruption" xml:space="preserve">
+    <value>Awareness of corruption risks</value>
+  </data>
+  <data name="sensibilisation_engineer" xml:space="preserve">
+    <value>Engineer</value>
+  </data>
+  <data name="sensibilisation_entity" xml:space="preserve">
+    <value>Entity</value>
+  </data>
+  <data name="sensibilisation_environment" xml:space="preserve">
+    <value>Environmental awareness (ISO 14001)</value>
+  </data>
+  <data name="sensibilisation_mail" xml:space="preserve">
+    <value>Mail address</value>
+  </data>
+  <data name="sensibilisation_present_not_present" xml:space="preserve">
+    <value>Present/ not present</value>
+  </data>
+  <data name="sensibilisation_quality" xml:space="preserve">
+    <value>Quality awareness (ISO 9001)</value>
+  </data>
+  <data name="sensibilisation_safety_business" xml:space="preserve">
+    <value>Safety Awareness - Business Consultant (ISO 27001)</value>
+  </data>
+  <data name="sensibilisation_safety_common" xml:space="preserve">
+    <value>Safety awareness - Common core (ISO 27001)</value>
+  </data>
+  <data name="approbation_title" xml:space="preserve">
+    <value>Approved_Docs</value>
+  </data>
+  <data name="sensibilisation_title" xml:space="preserve">
+    <value>Sensitizations</value>
+  </data>
+  <data name="approbation_agency" xml:space="preserve">
+    <value>Agency</value>
+  </data>
+  <data name="modeMagazine" xml:space="preserve">
+    <value>Magazine mode</value>
+  </data>
+  <data name="exportQuizz" xml:space="preserve">
+    <value>Export to Excel</value>
+  </data>
+  <data name="importQuizz" xml:space="preserve">
+    <value>Import a Quizz</value>
+  </data>
+  <data name="changeemails" xml:space="preserve">
+    <value>Change emails</value>
+  </data>
+  <data name="change_emails" xml:space="preserve">
+    <value>Mass change emails</value>
+  </data>
+  <data name="change_emails_title" xml:space="preserve">
+    <value>Mass change emails</value>
+  </data>
+  <data name="change_email_upload_exel" xml:space="preserve">
+    <value>Upload email list</value>
+  </data>
+  <data name="change_emails_btn_validate" xml:space="preserve">
+    <value>Validate</value>
+  </data>
+  <data name="change_emails_file_upload" xml:space="preserve">
+    <value>Upload file</value>
+  </data>
+  <data name="change_emails_results" xml:space="preserve">
+    <value>Email change results</value>
+  </data>
+  <data name="change_mail_error" xml:space="preserve">
+    <value>An error occurred while reading the file.</value>
+  </data>
+  <data name="change_mail_mail_result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="change_mail_new_mail" xml:space="preserve">
+    <value>New Mail</value>
+  </data>
+  <data name="change_mail_previous_mail" xml:space="preserve">
+    <value>Previous Mail</value>
+  </data>
+  <data name="documentsInformatifs" xml:space="preserve">
+    <value>Informative Documents</value>
+  </data>
+  <data name="user_dop" xml:space="preserve">
+    <value>DOP</value>
+  </data>
+  <data name="user_manager" xml:space="preserve">
+    <value>Manager</value>
+  </data>
+  <data name="user_operational_direction" xml:space="preserve">
+    <value>Operational direction</value>
+  </data>
+  <data name="change_mail_title" xml:space="preserve">
+    <value>RESULTS OF THE MASS MODIFICATION OF EMAIL ADDRESSES</value>
+  </data>
+  <data name="errorIllustrationFormat" xml:space="preserve">
+    <value>Only image formats are accepted</value>
+  </data>
+  <data name="doc_Sharable_Link" xml:space="preserve">
+    <value>Link</value>
+  </data>
+  <data name="doc_Sharable_Link_Dialog_Title" xml:space="preserve">
+    <value>Document link</value>
+  </data>
+  <data name="doc_Sharable_Link_Tooltip" xml:space="preserve">
+    <value>Sharable Link</value>
+  </data>
+  <data name="noAccessDocument" xml:space="preserve">
+    <value>Unauthorized access</value>
+  </data>
+  <data name="noAccessDocumentText" xml:space="preserve">
+    <value>Sorry, you do not have access to this document.</value>
+  </data>
+  <data name="btnCopyLink" xml:space="preserve">
+    <value>Copy link</value>
+  </data>
+  <data name="copiedLinkText" xml:space="preserve">
+    <value>The link above has been copied.</value>
+  </data>
+  <data name="doc_Sharable_Link_Doc_Name" xml:space="preserve">
+    <value>Document name:</value>
+  </data>
+  <data name="noAgence" xml:space="preserve">
+    <value>No agency</value>
+  </data>
+</root>

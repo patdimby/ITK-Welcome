@@ -1,0 +1,500 @@
+﻿@using Intitek.Welcome.Infrastructure.Helpers;
+@model Intitek.Welcome.UI.ViewModels.WelcomeViewModel
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    @Styles.Render("~/Content/documents")
+}
+@{
+    var class_odd = Model.Grid2.ItemsCount > 0 ? "card-odd" : "";
+    ViewBag.Title = @Resource.documentTitlePage;
+}
+<style type="text/css">
+    a.disabled {
+        /* Make the disabled links grayish*/
+        color: gray;
+        /* And disable the pointer events */
+        pointer-events: none;
+        cursor: default;
+    }
+    .progress-orange {
+        height: 20px;        
+        overflow: hidden;
+        background-color: #ffa500;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+    }
+
+    .progress-green {
+        height: 20px;      
+        overflow: hidden;
+        background-color: #00FF00;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+    }
+
+    .progress-red {
+        height: 20px;       
+        overflow: hidden;
+        background-color: #FF0000;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+    }
+
+    .progress-white {
+        height: 20px;       
+        overflow: hidden;
+        background-color: #ffffff;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+    }
+
+    .icone-right {
+        right: 0px !important;
+        line-height: 2rem !important;
+        font-size: 16px !important;
+        color: #666666 !important;
+        cursor: pointer;
+    }
+
+    a.download {
+        width: 50px;
+        display: inline-block;
+    }
+
+    .tooltip-inner {
+        text-align: left;
+    }
+
+    .table-responsive {
+        min-height: unset;
+    }
+    th.category {
+        width: 110px !important;
+        min-width: 110px;
+        max-width: 110px;
+    }
+
+    th.subcategory {
+        width: 115px !important;
+        min-width: 115px;
+        max-width: 115px;
+    }
+
+    th.docname {
+        min-width: 14vW;
+    }
+
+    td.docname {
+        padding-left: 28px;
+        min-width: 14vW;
+        max-width: 14vW;
+    }
+</style>
+<div>
+    @Html.Partial("_header")
+</div>
+<div class="main-wrapper" id="content">
+    <!-- ============================================================== -->
+    <!-- Ariane  -->
+    <!-- ============================================================== -->
+    @{ 
+        
+    }
+    @if (ViewBag.ViewAs == null)
+    {
+        <div class="row page-breadcrumb">
+
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="@Url.Action("Index","Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page"> @Resource.userDocument</li>
+                    </ol>
+                </nav>
+            </div>
+
+
+            <div class="row m-r-0 m-l-0 p-r-15 p-l-0">
+                <div class="pageheader-title">
+                    <span>@Resource.userDocument</span>
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+                       class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {       
+    <div class="row page-breadcrumb" style="margin-left:5px;">
+        <div class="col">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item" style="color:gold">
+                        <a href="@Url.Action("Index","UserDocument", new { })" class="breadcrumb-link" onclick="openLoading();">Voir en tant que </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">@ViewBag.ViewAs</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    }
+    <!-- ============================================================== -->
+    <!-- End Ariane  -->
+    <!-- ============================================================== -->
+    <div class="card-body p-l-0 p-r-0 p-t-0">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+            <div class="accordion-regular">
+                <div class="card card-form mb-2">
+                    <div class="card card-form p-0">
+                        <div class="card-header card-header-form">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link btn-link-collapse" data-toggle="collapse" id="btnCollapse"
+                                        data-target="#collapseStep" aria-expanded="true" aria-controls="collapseSeven">
+                                    <span class="fas fa-arrow-down"></span>
+                                </button>
+                                <div class="accordion-title">
+                                    <span>@Resource.loginDescH3</span>
+                                </div>
+                            </h5>
+                        </div>
+                        <div id="collapseStep" class="card-body collapse show" aria-labelledby="Step">
+                            <div class="my-content">
+                                @Html.Raw(Model.WelcomeMessage)
+                            </div>
+                            @if (Model.HistoUserQcms != null && Model.HistoUserQcms.Count > 0)
+                            {
+                                <div class="bagde_container">
+                                    @foreach (var histoUserQcm in Model.HistoUserQcms)
+                                    {
+                                        <div class="badge_item" data-toggle="tooltip" title="@histoUserQcm.QcmName">
+                                            <a href="@Url.Action("Index", "Diplome", new { rrr= @Html.EncryptURL(string.Format("doc={0}&ID={1}",histoUserQcm.QcmID, histoUserQcm.ID))})" target="_blank">
+                                                <img src="@Html.Badge(histoUserQcm.QcmID, Model.CodeLangue, Model.DefaultCodeLangue)">
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    @if (Model.Grid1.ItemsCount > 0 || Model.Grid1.HasFilter)
+                    {
+                        <div class="card card-form p-0 card-odd">
+                            <div class="card-header card-header-form">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link btn-link-collapse collapsed" data-toggle="collapse"
+                                            data-target="#collapseStep1" aria-expanded="true" aria-controls="collapseSeven">
+                                        <span class="fas fa-arrow-down"></span>
+                                    </button>
+                                    <div class="accordion-subtitle row">
+                                        <div class=""> @Resource.documentsRequiringAction</div>&nbsp;<div class="number-items" id="total-grid1">@Model.Grid1.ItemsCount</div>
+                                    </div>
+                                </h5>
+                            </div>
+                            <div id="collapseStep1" class="card-body collapse" aria-labelledby="Step">
+                                <div class="row ml-0 mr-0">
+                                    <div class="col-6 pl-0">
+                                        <form class="display-inline" action="javascript:void(0);" id="grid1_searchForm" name="grid1_searchForm" onsubmit="javascript:return rechercher(event, this);">
+                                            <div class="inline-input inline-input-sm card-header-custom height-auto has-input-icon-left">
+                                                <button type="button" class="btn btn-white margin-right opacity-1 btn-search" onclick="submitForm(this)">
+                                                    <span for="filter-2"><i class="fa fa-search"></i></span>
+                                                </button>
+                                                <input type="search" id="grid1_search"
+                                                       name="grid1_search"
+                                                       placeholder="@Resource.search"
+                                                       class="custom-form-control" value="@Model.Grid1.Search">
+                                                <input type="hidden" id="grid1_filtre" name="grid1_filtre" value="@Model.Grid1.Search">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-6 pr-0">
+                                        <div class="text-right">
+                                            @Html.Partial("_PageSizes", Model.Grid1.Pager, new ViewDataDictionary { { "grid", "grid1" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="parent_grid1">
+                                    @Html.Partial("_DocumentGrid", Model.Grid1, new ViewDataDictionary { { "DefaultCodeLangue", Model.DefaultCodeLangue },{ "isReadOnly", Model.IsReadOnly } })
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.Grid2.ItemsCount > 0 || Model.Grid2.HasFilter)
+                    {
+                        <div class="card card-form p-0">
+                            <div class="card-header card-header-form">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link btn-link-collapse collapsed" data-toggle="collapse"
+                                            data-target="#collapseStep2" aria-expanded="true" aria-controls="collapseSeven">
+                                        <span class="fas fa-arrow-down"></span>
+                                    </button>
+                                    <div class="accordion-subtitle">
+                                        <div> @Resource.documentsInformatifs</div>&nbsp;<div class="number-items" id="total-grid2">@Model.Grid2.ItemsCount</div>
+                                    </div>
+                                </h5>
+                            </div>
+                            <div id="collapseStep2" class="card-body collapse" aria-labelledby="Step">
+                                <div class="row ml-0 mr-0">
+                                    <div class="col-6 pl-0">
+                                        <form class="display-inline" action="javascript:void(0);" id="grid2_searchForm" name="grid2_searchForm" onsubmit="javascript:return rechercher(event, this);">
+                                            <div class="inline-input inline-input-sm card-header-custom height-auto has-input-icon-left">
+                                                <button type="button" class="btn btn-white margin-right opacity-1 btn-search" onclick="submitForm(this)">
+                                                    <span for="filter-2"><i class="fa fa-search"></i></span>
+                                                </button>
+                                                <input type="search" id="grid2_search"
+                                                       name="grid2_search"
+                                                       placeholder="@Resource.search"
+                                                       class="custom-form-control"
+                                                       value="@Model.Grid2.Search">
+                                                <input type="hidden" id="grid2_filtre" name="grid2_filtre" value="@Model.Grid2.Search">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-6 pr-0">
+                                        <div class="text-right">
+                                            @Html.Partial("_PageSizes", Model.Grid2.Pager, new ViewDataDictionary { { "grid", "grid2" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="parent_grid2">
+                                    @Html.Partial("_DocumentGrid", Model.Grid2, new ViewDataDictionary { { "Informatif", true }, { "DefaultCodeLangue", Model.DefaultCodeLangue } })
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.Grid3.ItemsCount > 0 || Model.Grid3.HasFilter)
+                    {
+                        <div class="card card-form p-0 @class_odd">
+                            <div class="card-header card-header-form">
+                                <h5 class="mb-0">
+                                    <button class="btn btn-link btn-link-collapse collapsed" data-toggle="collapse"
+                                            data-target="#collapseStep3" aria-expanded="true" aria-controls="collapseSeven">
+                                        <span class="fas fa-arrow-down"></span>
+                                    </button>
+                                    <div class="accordion-subtitle">
+                                        <div> @Resource.documentsAlreadyReadReviewed</div>&nbsp;<div class="number-items" id="total-grid3">@Model.Grid3.ItemsCount</div>
+                                    </div>
+                                </h5>
+                            </div>
+                            <div id="collapseStep3" class="card-body collapse" aria-labelledby="Step">
+                                <div class="row ml-0 mr-0">
+                                    <div class="col-6 pl-0">
+                                        <form class="display-inline" action="javascript:void(0);" id="grid3_searchForm" name="grid3_searchForm" onsubmit="javascript:return rechercher(event, this);">
+                                            <div class="inline-input inline-input-sm card-header-custom height-auto has-input-icon-left">
+                                                <button type="button" class="btn btn-white margin-right opacity-1 btn-search" onclick="submitForm(this)">
+                                                    <span for="filter-2"><i class="fa fa-search"></i></span>
+                                                </button>
+                                                <input type="search" id="grid3_search" name="grid3_search" placeholder="@Resource.search" class="custom-form-control" value="@Model.Grid3.Search">
+                                                <input type="hidden" id="grid3_filtre" name="grid3_filtre" value="@Model.Grid3.Search">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-6 pr-0">
+                                        <div class="text-right">
+                                            @Html.Partial("_PageSizes", Model.Grid3.Pager, new ViewDataDictionary { { "grid", "grid3" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="parent_grid3">
+                                    @Html.Partial("_DocumentGrid", Model.Grid3, new ViewDataDictionary { { "DefaultCodeLangue", Model.DefaultCodeLangue } })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <!---->
+                    @Html.Partial("_StatGrid")
+                    <!---->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    @Scripts.Render("~/bundles/jquery.fileDownload")
+
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script>
+        function _showDocument(urlDoc, event) {
+            var grid = $(event.srcElement).closest('div.grid-mvc');
+            Cookies.set(COOOKIES_NAMES.UserDocumentHash, grid.attr('id'));
+            Cookies.set(COOOKIES_NAMES.ScrollTop, wScrollTop);
+            openLoading();
+            location.href = '/UserDocument/Show/?rrr=' + urlDoc + "&" + new Date().getTime();
+        }
+        function jumpTo(hash) {
+            if (hash) {
+                console.log("hash", hash);
+                wScrollTop = Cookies.get(COOOKIES_NAMES.ScrollTop);
+                console.log('wScrollTop', wScrollTop);
+                if (wScrollTop !== -1) {
+                    $('html, body').animate({
+                        scrollTop: wScrollTop
+                    }, 500);
+                }
+                else {
+                    window.location.href = hash;
+                }
+            }
+        }
+    </script>
+    <script>
+        var wScrollTop = -1;
+        function restoreState() {
+            stcollapse = Cookies.get(COOOKIES_NAMES.UserDocumentCollapseState);
+            stcollapse1 = Cookies.get(COOOKIES_NAMES.UserDocumentCollapseState_1);
+            stcollapse2 = Cookies.get(COOOKIES_NAMES.UserDocumentCollapseState_2);
+            stcollapse3 = Cookies.get(COOOKIES_NAMES.UserDocumentCollapseState_3);
+            stcollapse4 = Cookies.get(COOOKIES_NAMES.UserDocumentCollapseState_4);
+            if (stcollapse == 'hide') {
+                $("#collapseStep").collapse();
+            }
+            if (stcollapse1 == 'hide') {
+                $("#collapseStep1").collapse();
+            }
+            if (stcollapse2 == 'hide') {
+                $("#collapseStep2").collapse();
+            }
+            if (stcollapse3 == 'hide') {
+                $("#collapseStep3").collapse();
+            }
+            if (stcollapse4 == 'hide') {
+                $("#collapseStep4").collapse();
+            }
+            setTimeout(function () {
+                jumpTo(window.location.hash);
+                return false;
+            }, 0);
+        }
+
+        $(function () {
+            $(window).scroll(function () {
+                //console.log('wScrollTop', wScrollTop);
+                wScrollTop = $(window).scrollTop();
+            });
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+            if (window.pageGrids["grid1"] != null) {
+                window.pageGrids["grid1"].addFilterWidget(new CategoriesFilterWidget());
+                window.pageGrids["grid1"].addFilterWidget(new SubCategoriesFilterWidget());
+                window.pageGrids["grid1"].addFilterWidget(new ActionsFilterWidget());
+                window.pageGrids["grid1"].ajaxify({
+                    getData: '@Url.Action("AjaxDocGrid")',
+                    gridFilterForm: $('#grid1_searchForm'),
+                });
+            }
+            if (window.pageGrids["grid2"] != null) {
+                window.pageGrids["grid2"].addFilterWidget(new CategoriesFilterWidget());
+                window.pageGrids["grid2"].addFilterWidget(new SubCategoriesFilterWidget());
+                window.pageGrids["grid2"].addFilterWidget(new ActionsFilterWidget());
+                window.pageGrids["grid2"].ajaxify({
+                    getData: '@Url.Action("AjaxDocGrid")',
+                    gridFilterForm: $('#grid2_searchForm'),
+                });
+            }
+
+            if (window.pageGrids["grid3"] != null) {
+                window.pageGrids["grid3"].addFilterWidget(new CategoriesFilterWidget());
+                window.pageGrids["grid3"].addFilterWidget(new SubCategoriesFilterWidget());
+                window.pageGrids["grid3"].addFilterWidget(new ActionsFilterWidget());
+                 window.pageGrids["grid3"].ajaxify({
+                    getData: '@Url.Action("AjaxDocGrid")',
+                    gridFilterForm: $('#grid3_searchForm'),
+                 });
+            }
+
+            $('#grid1_search', '#grid2_search', '#grid3_search').keydown(function (e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode == 13) {
+                    var search = $(this).val();
+                    e.preventDefault();
+                    if (search != "") {
+                        submitForm(this);
+                    }
+                    return false;
+                }
+            });
+            $(document).on('click', '[data-target="download"]', function (e) {
+                var grid = $(e.target).closest('div.grid-mvc');
+                var gridName = grid.attr('id');
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                //openLoading();
+                $.fileDownload(url, {
+                    httpMethod: "GET",
+                    successCallback: function (url) {
+                        if (gridName == 'grid3') {
+                            closeLoading();
+                        }
+                        //Si le grid n'appartent pas au DOCUMENTS DÉJÀ LUS ET REVUS => Rafraichissement de la page
+                        else {
+                            document.location = '@Url.Action("Index", "UserDocument")';
+                        }
+                    },
+                    failCallback: function (responseHtml, url) {
+                        closeLoading();
+                    } 
+                });
+                closeLoading();
+                return false;
+            });
+            $("#collapseStep").on("hide.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState, 'hide');
+            }).on("show.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState, 'show');
+            });
+            $("#collapseStep1").on("hidden.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_1, 'hide');
+            }).on("show.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_1, 'show');
+            });
+            $("#collapseStep2").on("hidden.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_2, 'hide');
+            }).on("show.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_2, 'show');
+            });
+            $("#collapseStep3").on("hidden.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_3, 'hide');
+            }).on("show.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_3, 'show');
+                });
+            $("#collapseStep4").on("hidden.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_4, 'hide');
+            }).on("show.bs.collapse", function () {
+                Cookies.set(COOOKIES_NAMES.UserDocumentCollapseState_4, 'show');
+                console.log("showed");
+            });
+            //restoreState();
+    });
+    function rechercher(e, element) {
+        e.preventDefault();
+        var gridName = $(element).attr('id').replace("_searchForm", "");
+        var search = $("#" + gridName + "_search").val();
+        $("#" + gridName + "_filtre").val(search);
+        rechercherFiltre(gridName);
+    }
+    </script>
+}
+@Html.Partial("_TemplateFiltre")

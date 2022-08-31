@@ -1,0 +1,55 @@
+﻿<div id="toolTipDialogTemplate">
+    <div id="[ID]" class="modal fade" role="dialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="content"></div>
+                    <div class="modal-bouton-action">
+                        <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.btnClose</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function showInformationOfColumn(self, columnName) {
+        var tr = $(self).closest('tr');
+        var tdCol = $("td[data-name='" + columnName + "']", tr);
+        showInformation(tdCol);
+    }
+
+    function showInformation(self) {
+        var html = $(self).html();
+        $(self).closest("tr").addClass("dblselected");
+        var template = $('#toolTipDialogTemplate');
+        $("div.content", template).empty().append(html);
+        var response = template.html().replace("[ID]", "toolTipDialog");
+        $("body").append(response);
+        $('#toolTipDialog').on('show.bs.modal', function () {
+            var contentHeight = $(window).height();
+            var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+            var maxHeight = contentHeight - footerHeight;
+            $(this).find('.modal-dialog').css({
+                'max-width': '40%'
+            });
+            $(this).find('.modal-body').css({
+                'max-height': maxHeight,
+                'overflow-y': 'auto',
+            });
+            $(this).before($('.modal-backdrop'));
+            $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+        });
+        $("#toolTipDialog").on('hidden.bs.modal', function () {
+            $(self).closest("tr").removeClass("dblselected");
+            $(this).remove();
+        });
+        $("#toolTipDialog").modal({
+            "show": true
+        });
+    }
+
+</script>
+
+
+

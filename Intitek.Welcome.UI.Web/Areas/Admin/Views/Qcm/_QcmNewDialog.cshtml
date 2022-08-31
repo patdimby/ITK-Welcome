@@ -1,0 +1,81 @@
+﻿<div id="newQcmModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row m-r-0 m-l-0 p-l-0 center">
+                    <h3>@Resource.newQCM</h3>
+                </div>
+                <form id="newQcmForm" action="@Url.Action("Edit", "Qcm")" method="post" enctype="multipart/form-data">
+                    <div class="card-body show">
+                        <input type="hidden" id="Inactif" name="Inactif" value="false">
+                        <input type="hidden" id="IsUpdatable" name="IsUpdatable" value="true">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <label class="col-4 col-form-label label-align-right">@Resource.qcm_Name</label>
+                                    <div class="col-7">
+                                        <input type="text" required="" data-parsley-minlength="6"
+                                               name="Name" placeholder="@Resource.qcm_Name"
+                                               autofocus class="form-control form-control-required">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <label class="col-4 col-form-label label-align-right">@Resource.qcm_NbQuestions</label>
+                                    <div class="col-7">
+                                        <input type="number" data-parsley-minlength="6"
+                                               name="NbQuestions" placeholder="@Resource.qcm_NbQuestions"
+                                               value="0"
+                                               autofocus class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <label class="col-4 col-form-label label-align-right">@Resource.qcm_NoteMinimal</label>
+                                    <div class="col-7">
+                                        <input type="number" data-parsley-minlength="6"
+                                               name="NoteMinimal" placeholder="@Resource.qcm_NoteMinimal"
+                                               value="0"
+                                               autofocus class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="row qcm-inactif">
+            <div class="col-12 form-group row">
+
+                <label class="col-4 col-form-label label-align-right" for="inlineRadio2" style="padding-left: 10px">@Resource.qcm_Inactif</label>
+
+                <div class="col-7">
+                    <label class="switch">
+                        <input type="checkbox" id="chkInactif" name="Inactif" value="false">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>*@
+                        <div class="row mb-3">
+                            <div class="col center p-t-25">
+                                <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                        data-dismiss="modal">
+                                    @Resource.buttonCancel
+                                </button>
+
+                                <button type="submit"
+                                        class="btn btn-wme btn-green next-btn space-betwen-btn">
+                                    @Resource.buttonValidate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

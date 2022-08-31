@@ -1,0 +1,133 @@
+﻿@model Intitek.Welcome.UI.ViewModels.Admin.ListCategoryViewModel
+<div class="p-4">
+    <table class="table row-collapsible table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <span>@Resource.Order</span>
+                </th>
+                <th class="question-answer-column">
+                    <span>
+                        <i id="expandAllTrigger" class="fa fa-minus-square"></i>
+                        <span>@Resource.categorySubcategory</span></i>
+                    </span>
+                    <span class="answer-column">
+
+                    </span>
+                </th>
+                <th style="width:128px;">
+                    <span></span>
+                </th>
+                <th class="action-column"><span>@Resource.actions</span></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var categ in Model.Categories)
+            {
+            <tr>
+                <td>
+                    @categ.OrdreCategory
+                </td>
+                <td>
+                    @if (categ.SubCategories.Any())
+                    {
+                        <span class="btn-question btn btn-link-collapse expand-plus-minus" data-toggle="collapse"
+                              data-target="@string.Format("#collapseQ_{0}",categ.ID)" aria-expanded="false" aria-controls="collapseSeven">
+                            <i class="fa fa-minus-square"></i>
+                        </span>
+                    }
+                    else
+                    {
+                        <span style="padding-left:16px">&nbsp;</span>
+                    }
+                    <span class="title"
+                          title="@(categ.Name != null ? HttpUtility.HtmlDecode(categ.Name) : string.Empty)">
+                        <span class="title @(categ.IsDefaultLangName ? "defaultName" : string.Empty)"
+                              style="font-weight: bolder;"
+                              title="@(categ.Name)">
+                            @(string.Format("{0} ", categ.Name))
+                        </span>
+                    </span>
+                    @if (categ.SubCategories.Any())
+                    {
+                        <div id="@string.Format("collapseQ_{0}", categ.ID)" class="collapse" aria-labelledby="Step">
+
+                            <ul class="list-unstyled list-subcategory">
+                                @foreach (var souscateg in categ.SubCategories)
+                                {
+                                    <li class=''>
+                                        <div class="row no-padding">
+                                            <div class="col-8 item-subcategory @(souscateg.IsDefaultLangName ? "defaultName" : "")">
+                                                @(string.Format("{0} ", souscateg.Name))
+                                            </div>
+                                            <div class="col-3  item-nbdoc row no-padding justify-content-end">
+                                                @(string.Format("{0} document(s)", souscateg.NbDocuments))
+                                            </div>
+                                            <div class="col-auto row no-padding actions">
+                                                <a href="@Url.Action("Edit", "SubCategory", new { Id = souscateg.ID })" role="button"
+                                                   class="action-icon icon-primary" 
+                                                   style="margin: 0px 2px;">
+                                                    <i data-toggle="tooltip" title="@Resource.update" class="fas fa-edit"></i>
+                                                </a>
+                                               
+                                                <a href="@Url.Action("ConfirmDelete", "SubCategory", new { Id = souscateg.ID })" 
+                                                   class="action-icon icon-danger" 
+                                                   style="margin: 0px 2px;" 
+                                                   role="button" data-target="deleteModal">
+                                                    @if (souscateg.IsDeleted)
+                                                    {
+                                                        <i class="fas fa-trash icon-danger" data-toggle="tooltip" title="@Resource.delete"></i>
+                                                    }
+                                                    </a>
+                                               
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+
+                            </ul>
+
+                        </div>
+                    }
+                </td>
+
+                <td style="width:128px;">
+                    @(string.Format("{0} document(s)",categ.NbDocuments))
+                </td>
+                <td class="action-column no-padding" style="width:70px;">
+                    <div class="row no-padding" style="width: 100%;">                       
+                            <a href="@Url.Action("Edit", "Category", new { Id = categ.ID })" role="button"
+                               class="action-icon icon-primary">
+                                <i data-toggle="tooltip" title="@Resource.update" class="fas fa-edit"></i>
+                            </a>
+                            &nbsp;
+                            <a href="@Url.Action("ConfirmDelete", "Category", new { Id= categ.ID})" role="button" 
+                                class="action-icon icon-danger"
+                               data-toggle="tooltip" title="@Resource.delete" data-target="deleteModal">
+                                @if (categ.IsDeleted)
+                                {
+                                    <i class="fas fa-trash" style="color:red"></i>
+                                }
+                                </a>
+                    </div>
+                </td>
+                @*<td>
+            <i data-toggle="tooltip" title="@Resource.down" class="fas fa-arrow-down" onclick="moveDown(@categ.ID)"></i>
+            &nbsp;
+            <i data-toggle="tooltip" title="@Resource.up" class="fas fa-arrow-up" onclick="moveUp(@categ.ID)"></i>
+        </td>*@
+
+            </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+           
+        });
+    </script>
+}

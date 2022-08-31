@@ -1,0 +1,848 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@using System.Configuration;
+@model Intitek.Welcome.UI.ViewModels.Admin.DocumentViewModel
+@{
+    /**/
+
+    ViewBag.Title = Model.ID > 0 ? string.Format("Administration | {0}", HttpUtility.HtmlDecode(Model.Name)) : string.Format("Administration | {0}", Resource.newDocument);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <style>
+        .dropzone {
+            border-radius: 18px;
+            min-height: auto;
+            padding: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+        }
+
+        #fileUpload.form-control-required {
+            border: 1px solid var(--input-border-color-error);
+        }
+
+        #fileUpload.dropzone .dz-message {
+            margin: 0;
+            padding: 10px;
+        }
+
+        #fileUpload.dropzone.disabled,
+        #fileUpload.dropzone.disabled .dz-message {
+            pointer-events: none;
+            background-color: var(--input-disable-bg);
+            border: 1px solid #e3e3e3;
+        }
+
+        .placement-right-div {
+            position: absolute;
+            right: -10px;
+            top: 25px;
+        }
+
+            .placement-right-div:hover {
+                cursor: pointer;
+            }
+
+        select optgroup {
+            background-color: black;
+            color: white;
+            font-style: normal
+        }
+
+            select optgroup option {
+                background-color: white;
+                color: black;
+                font-style: normal
+            }
+
+            select optgroup option:hover {
+                background-color: orange;
+                color:white;
+                font-style: normal
+            }
+
+        #nav-tabContent .card-form {
+            border-top-left-radius: 0px;
+        }
+
+        #myTab li {
+            width: 200px;
+            text-align: center;
+        }
+
+        #myTab a.nav-link {
+            border-radius: 0px !important;
+        }
+
+        #myTab li:first-child > a.nav-link {
+            border-top-left-radius: 25px !important;
+        }
+
+        #myTab li:last-child > a.nav-link {
+            border-top-right-radius: 25px !important;
+        }
+
+        #myTab .nav-link {
+            padding: 0.65rem 1rem;
+        }
+
+        #myTab li > a.nav-link:hover {
+            color: white;
+        }
+
+        #myTab li:first-child > a {
+            width: 200px;
+        }
+
+        span.fileContainerDownload {
+            float: right;
+            width: 0px;
+            text-align: center;
+        }
+
+            span.fileContainerDownload a {
+                display: inline-block;
+                width: 25px;
+                height: 32px;
+                line-height: 32px;
+                vertical-align: bottom;
+            }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Document")" class="breadcrumb-link">@Resource.documentsList</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@(Model.ID > 0 ? (string.IsNullOrEmpty(Model.Name) ? HttpUtility.HtmlDecode(Model.DocumentTitle) : HttpUtility.HtmlDecode(Model.Name)) : Resource.newDocument)</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@(Model.ID > 0 ? (string.IsNullOrEmpty(Model.Name) ? HttpUtility.HtmlDecode(Model.DocumentTitle) : HttpUtility.HtmlDecode(Model.Name)) : Resource.newDocument)</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="@Url.Action("Index", "Document")"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@(Model.ID > 0 ? string.Format("Edition {0}", (string.IsNullOrEmpty(Model.Name) ? HttpUtility.HtmlDecode(Model.DocumentTitle) : HttpUtility.HtmlDecode(Model.Name))) : Resource.newDocument)</h2>
+                </div>
+                <div class="pb-0">
+                    <div class="row" style="padding-bottom: 1px;">
+                        <div class="col-8">
+                            <ul class="nav nav-pills" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="tab-nav nav-link active" id="infoG-tab" data-toggle="tab"
+                                       href="#nav-infoG" role="tab" aria-controls="infoG"
+                                       aria-selected="true">@Resource.docTabInfoGeneral</a>
+                                </li>
+                                @if (Model.ID > 0)
+                                {
+                                    <li class="nav-item">
+                                        <a class="tab-nav nav-link" id="versions-tab" data-toggle="tab" href="#nav-versions"
+                                           role="tab" aria-controls="versions" aria-selected="true">
+                                            @string.Format("{0}", Resource.version) (<span class="nbdocversion">@Model.Versions.Count</span>)
+
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="card card-form p-0 tab-pane fade show active" id="nav-infoG" role="tabpanel" aria-labelledby="nav-infoG-tab">
+                        <form id="newDocumentForm" action="@Url.Action("Edit", "Document")" method="post" enctype="multipart/form-data" data-toggle="validator">
+                            <input type="hidden" id="ID" name="ID" value="@Model.ID" />
+                            <input type="hidden" id="NomOrigineFichier" name="NomOrigineFichier" value="@Model.NomOrigineFichier" />
+                            <input type="hidden" id="IdLang" name="IdLang" value="@Model.IdLang" />
+                            <input type="hidden" id="IsNotAlreadyTrad" name="IsNotAlreadyTrad" value="@Model.IsDefaultLangName.ToString()" />
+                            <div class="card-body show">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.name</label>
+                                            <div id="name-autocomplete" class="col-9">
+                                                <input type="text" required="" data-parsley-minlength="6"
+                                                       name="Name" placeholder="@Resource.name" value="@HttpUtility.HtmlDecode(Model.Name)"
+                                                       autofocus class="form-control form-control-required  input-trad">
+                                                <input type="hidden" id="OriginalName" name="OriginalName" value="@HttpUtility.HtmlDecode(Model.Name)" />
+                                                <input type="hidden" id="IsDuplicatedName" name="IsDuplicatedName" value="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group row autosize">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.comment</label>
+                                            <div class="col-9 left">
+                                                <textarea rows="1" class="form-control" id="comment" name="Commentaire"
+                                                          placeholder="@Resource.comment">@Model.Commentaire</textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.file</label>
+                                            <div class="col-9">
+                                                <label class="fileContainer" id="fileContainer">
+                                                    <div class="fileContainerFileName" id="fileName"></div>
+                                                    <span id="uploadLabel" class="uploadLabel-holder">@(!string.IsNullOrEmpty(Model.NomOrigineFichier) ? Model.NomOrigineFichier : Resource.fileUploadPlaceholder)</span>
+                                                    <span class="fileContainerButton"><i class="fas fa-upload"></i></span>
+                                                    <input title="@(!string.IsNullOrEmpty(Model.NomOrigineFichier) ? Model.NomOrigineFichier: Resource.version)"
+                                                           name="FileUpload" id="FileUpload" type="file"
+                                                           @*accept="@(Model.ID == 0 ? "application/pdf,video/mp4": (Model.Extension == "pdf" ? "application/pdf" : "video/mp4"))"*@
+                                                           accept="application/pdf,video/mp4" />
+                                                    <input type="hidden" id="uploadedFileSize" name="uploadedFileSize" value="" />
+                                                    <input type="hidden" id="uploadedFileType" name="uploadedFileType" value="" />
+                                                </label>
+                                                @if (!string.IsNullOrEmpty(Model.NomOrigineFichier))
+                                                {
+                                                    <span class="fileContainerDownload">
+                                                        <a href="@Html.Raw(Url.Action("GetFileFromDatabase", "Document", new { documentID = Model.ID,inline=false }))" target="_blank" data-toggle="tooltip" class="icon-green" title="@Resource.actionTelecharger @Model.NomOrigineFichier">
+                                                            <i class="far fa-arrow-alt-circle-down"></i>
+                                                        </a>
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group row">
+
+                                            <label class="col-3 col-form-label label-align-right">@Resource.version</label>
+                                            <div class="col-2">
+                                                <input type="text" data-parsley-minlength="6" disabled="disabled" style="background-color: white"
+                                                       placeholder="@Resource.version"
+                                                       class="form-control"
+                                                       value="@Model.Version" />
+                                                <input type="hidden" name="Version" id="Version" value="@Model.Version">
+                                            </div>
+
+                                            @if (Model.ID > 0)
+                                            {
+                                                <div class="col-2" style="margin-top: -20px;">
+                                                    <div class="form-group row">
+                                                        <div class="row col-12">
+                                                            <div class="col-4">
+                                                                <label for="priorityMajor"
+                                                                       class="custom-control custom-radio custom-control-inline radio-button">
+                                                                    <input type="radio" id="priorityMajor" name="IsMajor" value="true" required disabled="disabled"
+                                                                           class="custom-control-input priorityVersion" @(Model.IsMajor ? "checked" : "")>
+                                                                    <span class="custom-control-label pl-0">@Resource.major</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <label for="priorityMinor"
+                                                                       class="custom-control custom-radio custom-control-inline radio-button">
+                                                                    <input type="radio" id="priorityMinor" name="IsMajor" value="false" required disabled="disabled"
+                                                                           class="custom-control-input priorityVersion" @(!Model.IsMajor ? "checked" : "")>
+                                                                    <span class="custom-control-label pl-0">@Resource.minor</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            <label class="col-3 col-form-label label-align-right newVersion" style="display:none">@Resource.newVersion</label>
+                                            <div class="col-2">
+                                                <input type="text" data-parsley-minlength="6" disabled="disabled"
+                                                       id="NewVersion" name="NewVersion" placeholder="@Resource.newVersion"
+                                                       class="form-control newVersion"
+                                                       style="display:none"
+                                                       value="">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right" style="white-space: normal">@Resource.categorySubcategory</label>
+                                            <div class="col-9">
+                                                <select id="CategorySubCategory" name="CategorySubCategory" class="form-control input-trad">
+                                                    <option value="">@Resource.slcSelectCategSubCateg</option>
+                                                    <optgroup label="@Resource.slcGroupCategory">
+                                                        @foreach (var categ in Model.CategorySubcategories.Where(e => string.IsNullOrEmpty(e.Subcategory)).Distinct())
+                                                        {
+                                                            <option value="@string.Format("{0}|NULL", categ.ID_Category)" @(Model.ID_Category == categ.ID_Category ? "selected" : "")>@categ.Category</option>
+                                                        }
+                                                    </optgroup>
+                                                    <optgroup label="@Resource.slcGroupSubcategory">
+                                                        @foreach (var categ in Model.CategorySubcategories.Where(e => !string.IsNullOrEmpty(e.Subcategory)).Distinct())
+                                                        {
+                                                            <option value="@string.Format("{0}|{1}", categ.ID_Category, categ.ID_SubCategory)" @(Model.ID_Category == categ.ID_Category && Model.ID_SubCategory == categ.ID_SubCategory ? "selected" : "")>@string.Format("{0} > {1}", categ.Category, categ.Subcategory) </option>
+                                                        }
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.docPhase</label>
+                                            <div class="row col-9">
+                                                <div class="col-4">
+                                                    <label id="docPhaseOnboardingCheckbox"
+                                                           class="custom-control custom-checkbox custom-control-inline">
+                                                        <input id="chkPhaseOnboarding" name="PhaseOnboarding"
+                                                               type="checkbox" value="@Model.PhaseOnboarding.ToString()" @(Model.PhaseOnboarding ? "checked" : "")
+                                                               class="custom-control-input is-positive">
+                                                        <span class="custom-control-label pl-0">@Resource.phaseOnboarding</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <label id="docPhaseEmployeeCheckbox"
+                                                           class="custom-control custom-checkbox custom-control-inline">
+                                                        <input id="chkPhaseEmployee" name="PhaseEmployee"
+                                                               type="checkbox" value="@Model.PhaseEmployee.ToString()" @(Model.PhaseEmployee ? "checked" : "")
+                                                               class="custom-control-input is-positive">
+                                                        <span class="custom-control-label pl-0">@Resource.phaseEmployee</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="checkDocPhase" name="checkDocPhase" value="false" data-validate="true" />
+                                            <span id="phaseRequiredErrorMessage"></span>
+                                        </div>
+                                    </div>
+                                    @*}*@
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.modeLecture</label>
+                                            <div class="row col-9">
+                                                <div class="col-3">
+                                                    <label id="readBrowserCheckbox"
+                                                           class="custom-control custom-checkbox custom-control-inline">
+                                                        <input id="chkReadBrowser" name="ReadBrowser"
+                                                               type="checkbox" value="@Model.ReadBrowser.ToString()" @(Model.ReadBrowser ? "checked" : "")
+                                                               class="custom-control-input is-positive">
+                                                        <span class="custom-control-label pl-0">@Resource.modeNavigateur</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label id="readDownloadCheckbox"
+                                                           class="custom-control custom-checkbox custom-control-inline">
+                                                        <input id="chkReadDownload" name="ReadDownload"
+                                                               type="checkbox" value="@Model.ReadDownload.ToString()" @(Model.ReadDownload ? "checked" : "")
+                                                               class="custom-control-input is-positive">
+                                                        <span class="custom-control-label pl-0">@Resource.modeDownload</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="checkReadingMode" name="checkReadingMode" value="false" data-validate="true" />
+                                            <span id="readingRequiredErrorMessage"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">                                      
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.assignmentType</label>
+                                            <div class="row col-9">
+                                                <input type="hidden" id="TypeAffectation" name="TypeAffectation" value="@Model.TypeAffectation" />
+                                                <div class="col-4">
+                                                    <label for="assignmentType-1"
+                                                           class="custom-control custom-radio custom-control-inline radio-button">
+                                                        <input type="radio" id="assignmentType-1" name="rdTypeAffectation" value="Profil" required
+                                                               class="custom-control-input typeAffectation" @(Model.TypeAffectation == "Profil" ? "checked" : "") @(!string.IsNullOrEmpty(Model.Affectation) ? "disabled='disabled'" : "")>
+                                                        <span class="custom-control-label pl-0">@Resource.profile</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <label for="assignmentType-0"
+                                                           class="custom-control custom-radio custom-control-inline radio-button">
+                                                        <input type="radio" id="assignmentType-0" name="rdTypeAffectation" value="Entité/Agence" required
+                                                               class="custom-control-input typeAffectation" @(Model.TypeAffectation == "Entité/Agence" ? "checked" : "") @(!string.IsNullOrEmpty(Model.Affectation) ? "disabled='disabled'" : "")>
+                                                        <span class="custom-control-label pl-0">@Resource.agency</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.informative</label>
+                                            <div class="col-9">
+                                                <label id="informativeCheckbox"
+                                                       class="custom-control custom-checkbox custom-control-inline">
+                                                    <input id="IsNoActionRequired" name="IsNoActionRequired"
+                                                           type="checkbox" value="@Model.IsNoActionRequired.ToString()" @(Model.IsNoActionRequired ? "checked" : "")
+                                                           class="custom-control-input is-positive">
+                                                    <span class="custom-control-label pl-0">&nbsp;</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">                                      
+                                        <div class="form-group row attachment">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.lblAttachment</label>
+                                            <div class="col-9">
+                                                @if (Model.TypeAffectation == "Entité/Agence" && Model.ID > 0)
+                                                {
+                                                    <select multiple
+                                                            title="<span>@Resource.slcAttachEntite</span>"
+                                                            data-live-search="true"
+                                                            data-live-search-placeholder="@Resource.slcAttachSearch"
+                                                            data-focus-off="true"
+                                                            data-style="bg-white rounded-pill"
+                                                            class="selectpicker form-control"
+                                                            id="EntityAffectation" name="EntityAffectation">
+
+                                                        <optgroup label="@Resource.slcGroupEntity">
+                                                            @foreach (var entite in Model.Entites.Where(e => string.IsNullOrEmpty(e.AgencyName)).Select(e => e.EntityName).Distinct())
+                                                            {
+                                                                var tabEntite = Model.Affectation.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                <option value="@string.Format("{0}|NULL", entite)" @(tabEntite.Contains(string.Format("{0}|NULL", entite)) ? "selected" : "")>@entite</option>
+                                                            }
+                                                        </optgroup>
+                                                        <optgroup label="@Resource.slcGroupAgency">
+                                                            @foreach (var entite in Model.Entites.Where(e => !string.IsNullOrEmpty(e.AgencyName)))
+                                                            {
+                                                                <option value="@string.Format("{0}|{1}", entite.EntityName, entite.AgencyName)" @(Model.Affectation.Contains(string.Format("{0}|{1}", entite.EntityName, entite.AgencyName)) ? "selected" : "")>@string.Format("{0} > {1}", entite.EntityName, entite.AgencyName)</option>
+                                                            }
+                                                        </optgroup>
+                                                    </select>
+                                                    <select multiple
+                                                            title="<span>@Resource.slcAttachProfile</span>"
+                                                            data-live-search="true"
+                                                            data-live-search-placeholder="@Resource.slcAttachSearch"
+                                                            data-focus-off="true"
+                                                            data-style="bg-white rounded-pill"
+                                                            class="selectpicker form-control"
+                                                            id="ProfilAffectation" name="ProfilAffectation">
+
+                                                        @foreach (var profil in Model.Profiles)
+                                                        {
+                                                            <option value="@profil.ID" @(Model.Affectation.Contains(profil.ID.ToString()) ? "selected" : "")>@profil.Name</option>
+                                                        }
+
+                                                    </select>
+                                                }
+                                                else if (Model.TypeAffectation == "Profil" && Model.ID > 0)
+                                                {
+                                                    <select multiple
+                                                            title="<span>@Resource.slcAttachProfile</span>"
+                                                            data-live-search="true"
+                                                            data-live-search-placeholder="@Resource.slcAttachSearch"
+                                                            data-focus-off="true"
+                                                            data-style="bg-white rounded-pill"
+                                                            class="selectpicker form-control"
+                                                            id="ProfilAffectation" name="ProfilAffectation">
+
+                                                        @foreach (var profil in Model.Profiles)
+                                                        {
+                                                            <option value="@profil.ID" @(Model.Affectation.Contains(profil.ID.ToString()) ? "selected" : "")>@profil.Name</option>
+                                                        }
+
+                                                    </select>
+                                                    <select multiple
+                                                            title="<span>@Resource.slcAttachEntite</span>"
+                                                            data-live-search="true"
+                                                            data-live-search-placeholder="@Resource.slcAttachSearch"
+                                                            data-focus-off="true"
+                                                            data-style="bg-white rounded-pill"
+                                                            class="selectpicker form-control"
+                                                            id="EntityAffectation" name="EntityAffectation">
+
+                                                        <optgroup label="@Resource.slcGroupEntity">
+                                                            @foreach (var entite in Model.Entites.Where(e => string.IsNullOrEmpty(e.AgencyName)).Select(e => e.EntityName).Distinct())
+                                                            {
+                                                                var tabEntite = Model.Affectation.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                <option value="@string.Format("{0}|NULL", entite)" @(tabEntite.Contains(string.Format("{0}|NULL", entite)) ? "selected" : "")>@entite</option>
+                                                            }
+                                                        </optgroup>
+                                                        <optgroup label="@Resource.slcGroupAgency">
+                                                            @foreach (var entite in Model.Entites.Where(e => !string.IsNullOrEmpty(e.AgencyName)))
+                                                            {
+                                                                <option value="@string.Format("{0}|{1}", entite.EntityName, entite.AgencyName)" @(Model.Affectation.Contains(string.Format("{0}|{1}", entite.EntityName, entite.AgencyName)) ? "selected" : "")>@string.Format("{0} > {1}", entite.EntityName, entite.AgencyName)</option>
+                                                            }
+                                                        </optgroup>
+                                                    </select>
+                                                }
+                                                else
+                                                {
+                                                    <select multiple
+                                                            title="<span>@Resource.slcAttachEntite</span>"
+                                                            data-live-search="true"
+                                                            data-live-search-placeholder="@Resource.slcAttachSearch"
+                                                            data-focus-off="true"
+                                                            data-style="bg-white rounded-pill"
+                                                            class="selectpicker form-control"
+                                                            id="EntityAffectation" name="EntityAffectation">
+
+                                                        <optgroup label="@Resource.slcGroupEntity">
+                                                            @foreach (var entite in Model.Entites.Where(e => string.IsNullOrEmpty(e.AgencyName)).Select(e => e.EntityName).Distinct())
+                                                            {
+                                                                var tabEntite = Model.Affectation.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                                <option value="@string.Format("{0}|NULL", entite)" @(tabEntite.Contains(string.Format("{0}|NULL", entite)) ? "selected" : "")>@entite</option>
+                                                            }
+                                                        </optgroup>
+                                                        <optgroup label="@Resource.slcGroupAgency">
+                                                            @foreach (var entite in Model.Entites.Where(e => !string.IsNullOrEmpty(e.AgencyName)))
+                                                            {
+                                                                <option value="@string.Format("{0}|{1}", entite.EntityName, entite.AgencyName)" @(Model.Affectation.Contains(string.Format("{0}|{1}", entite.EntityName, entite.AgencyName)) ? "selected" : "")>@string.Format("{0} > {1}", entite.EntityName, entite.AgencyName)</option>
+                                                            }
+                                                        </optgroup>
+                                                    </select>
+                                                    <select multiple
+                                                            title="<span>@Resource.slcAttachProfile</span>"
+                                                            data-live-search="true"
+                                                            data-live-search-placeholder="@Resource.slcAttachSearch"
+                                                            data-focus-off="true"
+                                                            data-style="bg-white rounded-pill"
+                                                            class="selectpicker form-control"
+                                                            id="ProfilAffectation" name="ProfilAffectation">
+
+                                                        @foreach (var profil in Model.Profiles)
+                                                        {
+                                                            <option value="@profil.ID" @(Model.Affectation.Contains(profil.ID.ToString()) ? "selected" : "")>@profil.Name</option>
+                                                        }
+
+                                                    </select>
+                                                }
+                                                <input type="hidden" id="Affectation" name="Affectation" value="@Model.Affectation" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.approval</label>
+                                            <div class="row col-9">
+                                                <div class="col-3">
+                                                    <label for="approval-1"
+                                                           class="custom-control custom-radio custom-control-inline radio-button">
+                                                        <input type="radio" id="approval-1" name="Approbation" value="1"
+                                                               class="custom-control-input" @(Model.Approbation == 1 ? "checked" : "")>
+                                                        <span class="custom-control-label pl-0">@Resource.yes</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <label for="approval-0"
+                                                           class="custom-control custom-radio custom-control-inline radio-button">
+                                                        <input type="radio" id="approval-0" name="Approbation" value="0"
+                                                               class="custom-control-input" @(Model.Approbation == 0 ? "checked" : "")>
+                                                        <span class="custom-control-label pl-0">@Resource.no</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">Type</label>
+                                            <div class="row col-9">
+                                                <div class="col-4">
+                                                    <label id="IsMetierCheckbox"
+                                                           class="custom-control custom-checkbox custom-control-inline">
+                                                        <input id="chkIsMetier" name="IsMetier"
+                                                               type="checkbox" value="@Model.IsMetier.ToString()" @(Model.IsMetier ? "checked" : "")
+                                                               class="custom-control-input is-positive">
+                                                        <span class="custom-control-label pl-0">@Resource.typeMetier</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <label id="IsStructureCheckbox"
+                                                           class="custom-control custom-checkbox custom-control-inline">
+                                                        <input id="chkIsStructure" name="IsStructure"
+                                                               type="checkbox" value="@Model.IsStructure.ToString()" @(Model.IsStructure ? "checked" : "")
+                                                               class="custom-control-input is-positive">
+                                                        <span class="custom-control-label pl-0">@Resource.typeStructure</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="checkType" name="checkType" value="false" data-validate="true" />
+                                            <span id="typeRequiredErrorMessage"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.test</label>
+                                            <div class="row col-9">
+                                                <div class="col-3">
+                                                    <label for="test-1"
+                                                           class="custom-control custom-radio custom-control-inline radio-button">
+                                                        <input type="radio" id="test-1" name="Test" value="1"
+                                                               class="custom-control-input is-test" @(Model.Test == 1 ? "checked" : "")>
+                                                        <span class="custom-control-label pl-0">@Resource.yes</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <label for="test-2"
+                                                           class="custom-control custom-radio custom-control-inline radio-button">
+                                                        <input type="radio" id="test-2" name="Test" value="0"
+                                                               class="custom-control-input is-test" @(Model.Test == 0 ? "checked" : "")>
+                                                        <span class="custom-control-label pl-0">@Resource.no</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label for="chkMagazine" class="col-3 col-form-label label-align-right">@Resource.modeMagazine</label>
+                                            <div class="row col-9">
+                                                <div class="col-4">
+                                                    <label class="custom-control custom-checkbox custom-control-inline">
+                                                        <input id="chkMagazine" name="IsMagazine" class="custom-control-input is-positive"
+                                                               type="checkbox" value="true" @(Model.IsMagazine ? "checked" : "")>
+                                                        <span class="custom-control-label pl-0">&nbsp;</span>
+                                                    </label>
+                                                </div>
+                                                <div class="col-auto row">
+                                                    <label for="chkDelete" class="col-8 col-form-label label-align-right">@Resource.deleted</label>
+                                                    <div class="col-4">
+                                                        <label class="custom-control custom-checkbox custom-control-inline">
+                                                            <input id="chkDelete" name="Inactif"
+                                                                   type="checkbox" class="custom-control-input is-positive"
+                                                                   value="@Model.Inactif.ToString()" @(Model.Inactif ? "checked" : "")>
+                                                            <span class="custom-control-label pl-0">&nbsp;</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group row  quizz-group">
+                                            <label class="col-3 col-form-label label-align-right">@Resource.mcq</label>
+                                            <div class="col-9">
+                                                <select id="IdQcm" name="IdQcm" class="form-control">
+                                                    <option value="">@Resource.selectQcm</option>
+                                                    @foreach (var qcm in Model.Qcms)
+                                                    {
+                                                        <option class="@(qcm.QcmTrad == null ? "defaultName" : string.Empty)" value="@qcm.Id" @(qcm.Id == Model.IdQcm ? "selected" : "")>
+                                                            @(qcm.QcmTrad == null ? qcm.Name : HttpUtility.HtmlDecode(qcm.QcmTrad.QcmName))
+                                                        </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label label-align-right">&nbsp;</label>
+                                            <div class="col-9" style="padding-left: 0px;">
+                                                @if (!string.IsNullOrEmpty(Model.CreatedBy))
+                                                {
+                                                    <span class="col-auto col-form-label label-align-left histo">
+                                                        @Html.Raw(string.Format(Resource.docCreatedByOn, string.Format("<b>{0}</b>", Model.CreatedBy), string.Format("<b>{0}</b>", Model.CreationDate)))
+                                                    </span>
+                                                }
+                                                @if (!string.IsNullOrEmpty(Model.ModifiedBy))
+                                                {
+                                                    <span class="col-auto col-form-label label-align-left histo">
+                                                        @Html.Raw(string.Format(Resource.docModifiedByOn, string.Format("<b>{0}</b>", Model.ModifiedBy), string.Format("<b>{0}</b>", Model.ModificationDate)))
+                                                    </span>
+                                                }
+                                                @if (!string.IsNullOrEmpty(Model.DeletedBy))
+                                                {
+
+                                                    <span class="col-auto col-form-label label-align-left histo histo-delete">
+                                                        @Html.Raw(string.Format(Resource.docDeletedByOn, string.Format("<b>{0}</b>", Model.DeletedBy), string.Format("<b>{0}</b>", Model.DeletionDate)))
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col center p-t-25 mb-3">
+                                    <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                            onclick="_redirectTo('@Url.Action("Index", "Document")')">
+                                        @Resource.buttonCancel
+                                    </button>
+
+                                    <button type="submit"
+                                            class="btn btn-wme btn-green next-btn space-betwen-btn btnValid">
+                                        @Resource.buttonValidate
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="nav-versions" role="tabpanel" aria-labelledby="nav-versions-tab"
+                         class="card card-form p-0 tab-pane fade">
+                        <div class="card-body show">
+                            @*Si aucune version archivée*@
+                            @*<div class="text-center">
+                                    <span class="text-center">Pas de versions archivées pour ce document.</span>
+                                </div>*@
+                            <table id="user-document-tab2" class="table table-striped fit-content">
+                                <thead>
+                                    <tr>
+                                        <th><span>@Resource.gridHdDateHeure</span> </th>
+                                        <th><span>@Resource.gridHdVersion</span></th>
+                                        <th><span>@Resource.gridHdFileName</span></th>
+                                        <th><span>@Resource.gridHdAuthor</span></th>
+                                        <th><span>@Resource.actions</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Versions.Any())
+                                    {
+                                        foreach (var version in Model.Versions)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @version.DateCre
+                                                </td>
+                                                <td>
+                                                    @version.Version
+                                                </td>
+                                                <td>
+                                                    @HttpUtility.HtmlDecode(version.NomOrigineFichier)
+                                                </td>
+                                                <td>
+                                                    @version.UserName
+                                                </td>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(version.NomOrigineFichier))
+                                                    {
+                                                        <a href="@Url.Action("Download", "Document", new { versionID = version.ID, langID = Model.IdLang })" download="pdf-4"
+                                                           class="action-icon icon-green">
+                                                            <i class="far fa-arrow-alt-circle-down"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            @*@Html.Partial("_DeleteDialog")*@
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts{
+    @Scripts.Render("~/bundles/admin-document.js")
+    @Scripts.Render("~/bundles/dialog.js")
+    @Scripts.Render("~/bundles/bootstrap-select")
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+}, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+    });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+    });
+
+    const DIALOGDELETEMESSAGE = "@string.Format(Resource.dialogDeleteMessage, Model.Name)";
+    </script>
+    @*<script>
+
+            var myDropzone = new Dropzone("div#fileUpload", {
+                url: "/", @Resource.errorDocumentNameRequired                dictDefaultMessage: "Cliquez ou déposez un fichier",
+                dictRemoveFile: "Retirer",
+                dictMaxFilesExceeded: "1 seul fichier possible",
+                autoProcessQueue: false,
+                maxFiles: 1,
+                createImageThumbnails: false,
+                acceptedFiles: "application/pdf",
+                addRemoveLinks: true,
+            });
+        </script>*@
+    <script type="text/javascript">
+        // highlights the sidebar
+        $(document).ready(function () {
+            $('#sidebar-document').addClass('active');
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    </script>
+    <script type="module">
+        import { constants }
+        from '../../Scripts/js/constants.js';
+
+        $("#FileUpload").on('change', function(e) {
+            //alert(e.target.files[0]);
+            if (e.target.files[0])
+            {
+               
+                $("#uploadLabel").text(e.target.files[0].name);
+                $("#uploadedFileSize").val(e.target.files[0].size);
+                $("#uploadedFileType").val(e.target.files[0].type);
+                $("#uploadLabel").removeClass('uploadLabel-holder').addClass('uploadLabel');
+                $("#fileContainer").css({ borderColor: 'var(--input-border-color)' });
+                $('#NomOrigineFichier').val('');
+                if ($("#ID").val() > 0) {
+                    var exist = checkDocumentVersionLang($("#ID").val(),$("#IdLang").val(), $("input[name=Version]").val());
+                 
+                    if(exist){
+                        $("input[name='IsMajor']").prop('disabled', '');
+                        var version = getNewDocumentVersion($("#ID").val());
+                        $("#NewVersion").val(version);
+                        $(".newVersion").show();
+                    }
+                }
+            }
+            else
+            {
+                $("#uploadLabel").text("@Html.Raw(Resource.version)");
+                $("#uploadLabel").addClass('uploadLabel-holder').removeClass('uploadLabel');
+                $("#fileContainer").css({ borderColor: 'var(--input-border-color-error)' });
+                $("#uploadedFileSize").val(0);
+                $("#uploadedFileType").val('');
+                $("input[name='IsMajor']").prop('disabled', 'disabled');
+                if ($("#ID").val() > 0) {
+                    $("#fileContainer").removeAttr('style');
+                    $("#uploadLabel").html("@(!string.IsNullOrEmpty(Model.NomOrigineFichier) ? Model.NomOrigineFichier : Resource.fileUploadPlaceholder)");
+                }
+                $(".newVersion").hide();
+            }
+        });
+
+        function formatSelectTitle() {
+            var selectedOptions = [...$(this)[0].selectedOptions];
+            var newTitle = selectedOptions.map(x => x.label).join(',\n');
+            $(this).parent().find("button").attr('title', newTitle);
+        }
+
+        $("#EntityAffectation").on("change", formatSelectTitle);
+
+        $("#ProfilAffectation").on("change", formatSelectTitle);
+
+    </script>
+}

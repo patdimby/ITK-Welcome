@@ -1,0 +1,207 @@
+﻿@using Intitek.Welcome.Infrastructure.Helpers
+@model  Intitek.Welcome.UI.Web.Admin.Models.AwarenessApprovalsResponseViewModel
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.awareness_approvals);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@Scripts.Render("~/bundles/chartjs")
+@section Styles
+{
+    @Styles.Render("~/Content/bootstrap-multiselect")
+    <style type="text/css">
+        .custom-collapsed-container {
+            border-radius: 30px;
+        }
+
+        .custom-col {
+            padding-left: calc(16.666667% - 62px);
+        }
+
+        .control-label {
+            padding-top: 8px;
+        }
+
+        .table-responsive {
+            min-height: unset;
+        }
+
+        .custom-form-control {
+            padding: 9px 12px;
+            height: 39px;
+        }
+
+        select .placeholder, select:focus.placeholder {
+            color: inherit;
+            font-style: normal;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.awareness_approvals</li>
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.awareness_approvals_title</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <form id="getdocs" method="post" action="@Url.Action("Index", "AwarenessApprovals")" style="width:64%;margin-left:auto;margin-right:auto;">
+                            <div class="col-lg-10" style="margin-right:auto; margin-left:auto;">
+                                <div class="divider">&nbsp;</div>
+                                <div class="row ml-0 mr-0" style="justify-content:center;">
+                                    <div class="col-lg-6 " >
+                                        <label class="control-label">@Resource.awareness_approvals_month_selection : </label>
+                                    </div>
+                                    <div class="row col-lg-6" style="justify-content:center;">
+                                        <select id="Month" name="Month" class="custom-form-control">
+                                            @foreach (var mois in Model.Months)
+                                            {
+                                                <option value="@mois.Mois">@WebUtility.HtmlDecode(mois.Mois)</option>
+                                            }
+                                        </select>&nbsp;
+                                    </div>
+                                </div>
+                                <div class="divider">&nbsp;</div>
+                                <div class="row ml-0 mr-0">
+                                    <span id="FormButton" class="row col-lg-12" style="text-align:center">
+                                        <span class="col-lg-6">
+                                            <button type="submit" style="white-space: inherit; height: 60px;" class="btn-wme excel-btn btn btn-green" name="SubmitButton" value="DocValidated">
+                                                <span id="butValid">@Resource.awareness_approvals_doc_validated</span>
+                                            </button>
+                                        </span>
+                                        <span class="col-lg-6">
+                                            <button type="submit" style="white-space: inherit; height: 60px;" class="btn-wme excel-btn btn btn-green" name="SubmitButton" value="DocApproved">
+                                                <span id="butValid">@Resource.awareness_approvals_doc_approved</span>
+                                            </button>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="divider">&nbsp;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/justgage")
+    @Scripts.Render("~/bundles/bootstrap-multiselect")
+    @Scripts.Render("~/bundles/jquery.fileDownload")
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+    </script>
+    <script type="text/javascript">
+        $('#MultiDocSelect').hide();
+        $('#MultiEntitySelect').hide();
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#sidebar-awareness-approvals').addClass('active');
+            $('#MultiDocSelect').multiselect({
+                buttonWidth: '300px',
+                maxHeight: 400,
+                enableCollapsibleOptGroups: true,
+                enableClickableOptGroups :true,
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                enableAccentInsensitive :true,
+                buttonContainer: '<div class="custom-collapsed-container"/>',
+                selectAllText : '@Html.Raw(Resource.selectAll)',
+                nonSelectedText: '@Html.Raw(Resource.selectAllDocument)',
+                filterPlaceholder: '@Html.Raw(Resource.search)',
+                nSelectedText: '@Html.Raw(Resource.nSelectedText)',
+                allSelectedText: '@Html.Raw(Resource.AllSelected)',
+                onFiltering: function ($filter) {
+                    var container = $filter.closest('.custom-collapsed-container');
+                    var $ul = $('ul.multiselect-container', container);
+                    var $li = $('li', $ul).not(".multiselect-filter-hidden, .multiselect-filter, .multiselect-all");
+                    var $liAll = $('li.multiselect-all', $ul);
+                    if ($li && $li.length > 0) {
+                        $liAll.css('display', 'block');
+                    }
+                    else {
+                        $liAll.css('display', 'none');
+                    }
+                }
+            });
+            $('#MultiEntitySelect').multiselect({
+                buttonWidth: '300px',
+                maxHeight: 400,
+                enableCollapsibleOptGroups: true,
+                enableClickableOptGroups: true,
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                enableAccentInsensitive: true,
+                buttonContainer: '<div class="custom-collapsed-container"/>',
+                selectAllText : '@Html.Raw(Resource.selectAll)',
+                nonSelectedText: '@Html.Raw(Resource.selectAllEntity)',
+                filterPlaceholder: '@Html.Raw(Resource.search)',
+                nSelectedText: '@Html.Raw(Resource.nSelectedText)',
+                allSelectedText: '@Html.Raw(Resource.AllSelected)',
+                onFiltering: function ($filter) {
+                    var container = $filter.closest('.custom-collapsed-container');
+                    var $ul = $('ul.multiselect-container', container);
+                    var $li = $('li', $ul).not(".multiselect-filter-hidden, .multiselect-filter, .multiselect-all");
+                    var $liAll = $('li.multiselect-all', $ul);
+                    if ($li && $li.length > 0) {
+                        $liAll.css('display', 'block');
+                    }
+                    else {
+                        $liAll.css('display', 'none');
+                    }
+                }
+            });
+
+            $("#getdocs").submit(function (event) {
+                var $Btn = $(this).find("button[type=submit]:focus");
+                //console.log("butonn======",$Btn.val());
+                if ($Btn.val() == "Filter") {
+                    openLoading();
+                }
+                else {
+                    //openLoading();
+                    $.fileDownload("@Url.Action("GenerateDocs", "AwarenessApprovals")", {
+                            httpMethod: "POST",
+                            data: $("#getdocs").serialize() + "&SubmitButton=" + $Btn.val(),
+                            successCallback: function (url) {
+                                closeLoading();
+                            },
+                            failCallback: function (responseHtml, url) {
+                                $("#FormButton").append("<div class=\"alert alert-danger fade in\" role=\"alert\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>" + responseHtml + "</div>");
+                                closeLoading();
+                            }
+                        });
+                    event.preventDefault();
+                }
+            });
+            $('.datepicker').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+            });
+
+        });
+    </script>
+}
+

@@ -1,0 +1,219 @@
+﻿
+@model Intitek.Welcome.UI.ViewModels.Admin.PurgeViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = $"Administration | {Resource.purge}";
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    <style>
+        .labelInfo {
+            font-weight: bold;
+            text-align: left;
+            vertical-align: middle;
+            height: 40px;
+            line-height: 1.2em;
+            flex: 0 0 19%;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link">@Resource.purge</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.histoToPurge</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <div class="row ml-0 mt-3 mr-0">
+                            <div class="col-3 pl-0 labelInfo"><p>@Resource.datepurgeLabel</p></div>
+                            <div class="col-2 center pl-0">
+                                <div class="date has-input-icon-right" id="datetimepicker">
+                                    @Html.TextBoxFor(m => m.LimitDateString, new { @class = "form-control" })
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <button type="button"
+                                        class="btn btn-wme btn-green next-btn space-betwen-btn"
+                                        id="searchFromDate">
+                                    @Resource.recalculate
+                                </button>
+                            </div>
+                        </div>
+                        <div><p class="labelInfo">@Resource.histopurgeLabel</p></div>
+                        <div id="purgeGrid">
+                            <table class="table intitek table-striped grid-table">
+                                <thead>
+                                <th>@Resource.history</th>
+                                <th style="white-space: nowrap;">@Resource.lineNumberToPurge</th>
+                                <th>
+                                    <a href="#" class="link-green" id="purgeAll">@Resource.purgeAll</a>
+                                    <br />
+                                    @Resource.action
+                                </th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Resource.backOfficeActions</td>
+                                        <td id="histoAction" class="center">@(Model.HistoActionsCount)</td>
+                                        <td class="center"><a class="link-green" id="purgeHistoActions" href="#">@Resource.doPurge</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Resource.emailSend</td>
+                                        <td id="histoEmail" class="center">@(Model.HistoEmailsCount)</td>
+                                        <td class="center"><a class="link-green" id="purgeHistoEmails" href="#">@Resource.doPurge</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Resource.batchExecution</td>
+                                        <td id="histoBatch" class="center">@(Model.HistoBatchsCount)</td>
+                                        <td class="center"><a class="link-green" id="purgeHistoBatchs" href="#">@Resource.doPurge</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Resource.mcqPerformed</td>
+                                        <td id="histoUserQcm" class="center">@(Model.HistoUserQcmCount)</td>
+                                        <td class="center"><a class="link-green" id="purgeHistoUserQcm" href="#">@Resource.doPurge</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Styles.Render("~/Content/modalcss")
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+    <script>
+        var histoActionsCount = @Model.HistoActionsCount;
+        var histoEmailsCount = @Model.HistoEmailsCount;
+        var histoBatchsCount = @Model.HistoBatchsCount;
+        var histoUserQcmCount = @Model.HistoUserQcmCount;
+
+        function setTableCountData() {
+            $("#histoAction").html(histoActionsCount);
+            $("#histoEmail").html(histoEmailsCount);
+            $("#histoBatch").html(histoBatchsCount);
+            $("#histoUserQcm").html(histoUserQcmCount);
+        }
+
+        $(function () {
+            $('#sidebar-history').addClass('active');
+
+            setTableCountData();
+
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $("#datetimepicker").datepicker({
+                format: "dd/mm/yyyy",
+                orientation: "top",
+                autoclose: true
+            });
+
+        });
+
+        $("#datetimepicker").on("keydown", function (e) {
+            if(e.keyCode !== 8) e.preventDefault();
+        });
+
+        function getHistosPriorDate() {
+            openLoading();
+            $.get("@Url.Action("AjaxHistoList", "Purge")", { limitDateString: $("#datetimepicker").find("input").val() }, function (data) {
+                histoActionsCount = data.HistoActionsCount;
+                histoEmailsCount = data.HistoEmailsCount;
+                histoBatchsCount = data.HistoBatchsCount;
+                histoUserQcmCount = data.HistoUserQcmCount;
+                setTableCountData();
+                closeLoading();
+            }).always(function () {
+                closeLoading();
+            });
+        }
+
+        $("#searchFromDate").on("click", getHistosPriorDate);
+
+        function openConfirmPurgeModal(url) {
+            var link = $(this);
+            openLoading();
+            $.get(url, function (reponse) {
+                $("body").append(reponse);
+                $('#deleteDial').on('show.bs.modal', function () {
+                    var contentHeight = $(window).height();
+                    var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+                    var maxHeight = contentHeight - footerHeight;
+                    $(this).find('.modal-body').css({
+                        'max-height': maxHeight,
+                        'overflow-y': 'auto',
+                    });
+                    $(this).before($('.modal-backdrop'));
+                    $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                });
+                $("#deleteDial").on('hidden.bs.modal', function () {
+                    $(this).remove();
+                });
+                $("#deleteDial").modal({
+                    "show": true,
+                    backdrop: 'static',
+                    keyboard: false
+                });
+            }).done(function () {
+                console.log("second success");
+            }).fail(function () {
+                console.log("error");
+            }).always(function () {
+                closeLoading();
+            });
+            return false;
+        }
+
+        //Purge actions
+        $("#purgeHistoActions").on("click", function () {
+            openConfirmPurgeModal("/Admin/Purge/ConfirmPurge?HistoActionsCount=" + histoActionsCount + "&LimitDateString=" + $("#datetimepicker").find("input").val());
+        });
+
+        $("#purgeHistoEmails").on("click", function () {
+            openConfirmPurgeModal("/Admin/Purge/ConfirmPurge?HistoEmailsCount=" + histoEmailsCount + "&LimitDateString=" + $("#datetimepicker").find("input").val());
+        });
+
+        $("#purgeHistoBatchs").on("click", function () {
+            openConfirmPurgeModal("/Admin/Purge/ConfirmPurge?HistoBatchsCount=" + histoBatchsCount + "&LimitDateString=" + $("#datetimepicker").find("input").val());
+        });
+
+        $("#purgeHistoUserQcm").on("click", function () {
+            openConfirmPurgeModal("/Admin/Purge/ConfirmPurge?HistoUserQcmCount=" + histoUserQcmCount + "&LimitDateString=" + $("#datetimepicker").find("input").val());
+        });
+
+        $("#purgeAll").on("click", function () {
+            openConfirmPurgeModal("/Admin/Purge/ConfirmPurge?HistoUserQcmCount=" + histoUserQcmCount
+                + "&HistoActionsCount=" + histoActionsCount
+                + "&HistoEmailsCount=" + histoEmailsCount
+                + "&HistoBatchsCount=" + histoBatchsCount
+                + "&LimitDateString=" + $("#datetimepicker").find("input").val());
+        });
+
+        
+
+    </script>
+}

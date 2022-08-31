@@ -1,0 +1,49 @@
+﻿@section Styles
+{
+
+    <style type="text/css">
+        .text-form {
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            display: block;
+            width: 100%;
+            font-size: var(--normal-size);
+            line-height: 1.42857143;
+            height: auto;
+            color: var(--input-value-color);
+            background-color: #fff;
+            background-image: none;
+            border-radius: 16px;
+            border: 1px solid var(--input-border-color);
+            overflow-y: scroll;
+        }
+    </style>
+}
+<div id="linkModal" class="modal fade" role="dialog" style="position: fixed">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <span id="modalError">
+                    <i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;&nbsp;
+                    <span>@Resource.doc_Sharable_Link_Dialog_Title</span>
+                </span>
+            </div>
+            <div class="modal-body">
+                <p style="padding-left:0.75rem"><b style="font-weight:500" >@Resource.doc_Sharable_Link_Doc_Name</b> <b id="link-dialog-docname">Le titre</b></p>
+                <p id="linkMessageContainer">
+                    <input type="text" id="linkMessage" 
+                           style="padding: 0.375rem 0.75rem; border-radius: 0.25rem; transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out; display: block; width: 100%; font-size: var(--normal-size); line-height: 1.42857143; height: auto; color: var(--input-value-color); background-color: #fff; background-image: none; border-radius: 16px; border: 1px solid var(--input-border-color); overflow-y: scroll;"
+                           value="link not found" 
+                           disabled/>
+                </p>
+                <div class="modal-bouton-action">
+                    <div style="float:left;padding-left:0.85rem" id="div-result-copy">
+                        <div style="color:#029c4a;font-weight:600;white-space:nowrap;font-size:13px;padding-left:0%;margin-top:3%;">@Resource.copiedLinkText</div>
+                    </div>
+                    <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.btnClose</a>
+
+                </div>
+            </div>
+        </div>
+    </div>

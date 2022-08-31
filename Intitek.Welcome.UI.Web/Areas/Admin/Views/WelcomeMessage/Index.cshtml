@@ -1,0 +1,108 @@
+﻿@model Intitek.Welcome.UI.ViewModels.Admin.WelcomeMessageViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = $"Administration | {Resource.welcomeMessage}";
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link"  onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#" class="breadcrumb-link">@Resource.welcomeMessage</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.welcomeMessage</h2>
+                </div>
+                <form action="@Url.Action("Index", "WelcomeMessage")" method="post">
+                    <div class="card card-form p-0">
+                        <div class="card-body show">
+                            <div class="row mt-3">
+                                <div class="row col-4 pl-0">
+                                    <label class="col-auto center align-left mb-0 pr-3">@Resource.language</label>
+                                    <div class="col-8 pl-0">
+                                        @Html.HiddenFor(model => model.ID_Lang)
+                                        <select id="ID_Language" name="ID_Lang" class="form-control">
+                                            <option value="1" @(Model.ID_Lang == 1 ? "selected" : "")>Français</option>
+                                            <option value="2" @(Model.ID_Lang == 2 ? "selected" : "")>English</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3 mb-3">
+                                <input type="hidden" id="messageHiden" />
+                                <span id="spanMessage" class="cke_mef full-width">
+                                    @Html.HiddenFor(model => model.WelcomeMessageHtml)
+                                    <textarea required=""
+                                              class="form-control editor"
+                                              id="messageArea" name="messageArea" height="">@(Model.WelcomeMessage)</textarea>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col center p-t-25">
+                            <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                    id="resetMessage"
+                                    disabled
+                                    onclick="resetMessageArea()">
+                                @Resource.buttonCancel
+                            </button>
+
+                            <button type="submit"
+                                    class="btn btn-wme btn-green next-btn space-betwen-btn"  onclick="openLoading();">
+                                @Resource.buttonValidate
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ckeditor")
+    @Scripts.Render("~/bundles/ckeditor-adapter")
+
+    <script>
+        $('#sidebar-welcome-message').addClass('active');
+
+        var initialMessage = "@HttpUtility.HtmlDecode(Model.WelcomeMessage)";
+
+        $("#messageArea").ckeditor();
+
+        CKEDITOR.instances.messageArea.on('change', function (data) {
+            $("#WelcomeMessageHtml").val(CKEDITOR.instances.messageArea.getData().replace(/\r?\n|\r/g, ''));
+            $("#resetMessage").prop("disabled", false);
+        });
+
+        $("#ID_Lang").val($("#ID_Language").val());
+        $("#ID_Language").on('change', function () {
+            $("#ID_Lang").val($("#ID_Language").val());
+
+            $.get("@Url.Action("AjaxWelcomeMessage", "WelcomeMessage")", { ID_Lang: $("#ID_Language").val()}, function (data) {
+                CKEDITOR.instances.messageArea.setData(data.Message, function () { $("#resetMessage").prop("disabled", true); });
+                initialMessage = data.Message;
+            });
+
+        });
+
+        function resetMessageArea() {
+            openLoading();
+            CKEDITOR.instances.messageArea.setData(initialMessage);
+            $("#resetMessage").prop("disabled", true);
+            closeLoading();
+        }
+    </script>
+}

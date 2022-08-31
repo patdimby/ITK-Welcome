@@ -1,0 +1,242 @@
+﻿@model Intitek.Welcome.UI.Web.Admin.EntiteResponseViewModel
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.entiteLists);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    @Styles.Render("~/Content/documents")
+    @Styles.Render("~/Content/modalcss")
+    <style type="text/css">
+        td.actions {
+           text-align :center ;
+        }
+        td.actions a {
+            margin-right: 10px;
+        }
+        #relanceModal .modal-dialog {
+            max-width: 35% !important;
+        }
+
+        .modal-body input[type=radio] {
+            display: inline-block;
+        }
+
+        .modal-body label {
+            margin-bottom: 10px;
+        }
+
+        thead tr {
+            height: 45px;
+        }
+
+        .table-responsive {
+            min-height: unset;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.entiteLists</li>
+                @*<li class="breadcrumb-item active" aria-current="page">@Resource.newDocument</li>*@
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.entiteLists</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        @*<div class="row ml-0 mr-0 mb-3">
+                            <a href="@Url.Action("Edit","Entite",  new { area = "Admin" })" class="btn btn-wme btn-green">@Resource.newEntite</a>
+                        </div>*@
+                        <div class="row ml-0 mr-0">
+                            <div class="col-6 pl-0">
+                                <label> @Resource.Entity</label>
+                                @Html.DropDownListFor(x =>x.EntityName,
+                                    new SelectList(Model.EntityNameList.Select(s => new SelectListItem() { Value = s.ToString(), Text = s.ToString() }), "Value", "Text"),
+                                    new { @onchange = "changeEntity(this.value);return false;" , @class= "custom-form-control" })
+                            </div>
+                        </div>
+                        <div id="parent_entGrid">
+                            @Html.Partial("_EntiteGrid", @Model.EntityGrid)
+                        </div><br />
+                        <h3>@Resource.agencies_Entity @Model.EntityName</h3>
+                        <div id="parent_agGrid">
+                            @Html.Partial("_AgencyGrid", @Model.ListAgency)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script>
+        function _showDocument(id) {
+            return false;
+        }
+        function changeEntity(entity) {
+            openLoading();
+            var $uri = URI("@Url.Action("Index", "Entite")").addQuery("EntityName", entity);
+            document.location = $uri.toString();
+            return false;
+        }
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip({ placement: 'bottom' });
+            $('#sidebar-entity-profil').addClass('active');
+            $('#sidebar-entity').addClass('active');
+            $(document).on('click', '[data-target="readFocusModal"]', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                openLoading();
+                $.get(url, function (reponse) {
+                    $("body").append(reponse);
+                    $('#readFocusDial').on('shown.bs.modal', function () {
+                        var contentHeight = $(window).height();
+                        var headerHeight = $(this).find('.modal-header').height() || 0;
+                        var maxHeight = contentHeight - Math.abs(headerHeight);
+                        $(this).find('.modal-body').css({
+                            'max-height': maxHeight,
+                            'overflow-y': 'auto',
+                        });
+                        $(this).before($('.modal-backdrop'));
+                        $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    });
+                    $('#readFocusDial').on('shown.bs.modal', function () {
+                        
+                        dialog = $(this).find('.modal-dialog');
+                        // Dividing by two centers the modal exactly, but dividing by three 
+                        // or four works better for larger screens.
+                        var top = ($(window).height() - dialog.height()) / 2;
+                        dialog.css("top", Math.max(0, top));                       
+                    });
+                    $("#readFocusDial").on('hidden.bs.modal', function () {
+                        $(this).data('modal', null);
+                        $('.modal-backdrop').remove();
+                        $(this).remove();    
+                    });
+                    $("#readFocusDial").modal({
+                        "show": true,
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+               }).done(function () {
+                    console.log("second success");
+                }).fail(function () {
+                    console.log("error");
+                }).always(function () {
+                    closeLoading();
+                });
+                return false;
+            });
+            $(document).on('click', '[data-target="relanceModal"]', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                openLoading();
+                $.get(url, function (reponse) {
+                    $("body").append(reponse);
+                    $('#relanceModal').on('show.bs.modal', function () {
+                        var contentHeight = $(window).height();
+                        var headerHeight = $(this).find('.modal-header').height() || 0;
+                        var maxHeight = contentHeight - Math.abs(headerHeight);
+                        $(this).find('.modal-body').css({
+                            'max-height': maxHeight,
+                            'overflow-y': 'auto',
+                        });
+                        $(this).before($('.modal-backdrop'));
+                        $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    });
+                    $("#relanceModal").on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    });
+                    $("#relanceModal").modal({
+                        "show": true,
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                }).done(function () {
+                    console.log("second success");
+                }).fail(function () {
+                    console.log("error");
+                }).always(function () {
+                    closeLoading();
+                });
+                return false;
+            });
+            $(document).on('submit', '#frmRelance', function (e) {
+                var frm = $(this);
+                console.log(frm);
+                e.preventDefault();
+                openLoading();
+                $.ajax({
+                    type: frm.attr('method'),
+                    url: frm.attr('action'),
+                    data: frm.serialize(),
+                    success: function (response) {
+                        if (response.success == 1) {
+                            $("#frmRelance").hide();
+                            var result = $("#result", $("#relanceModal"));
+                            var label = result.find("label");
+                            label.addClass("info");
+                            label.html(response.Message);
+                            result.prepend(label);
+                            result.show();
+                            closeLoading(true);
+                        }
+                        else {
+                            $("#frmRelance").hide();
+                            var result = $("#result", $("#relanceModal"));
+                            var label = result.find("label");
+                            label.addClass("error");
+                            label.html(response.Message);
+                            result.prepend(label);
+                            result.show();
+                            closeLoading(true);
+                        }
+                        return false;
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('An error occurred.');
+                        var result = $("#result", $("#relanceModal"));
+                        var label = result.find("label");
+                        label.addClass("error");
+                        label.html(xhr.responseText);
+                        result.prepend(label);
+                        result.show();
+                        closeLoading(true);
+                        return false;
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}

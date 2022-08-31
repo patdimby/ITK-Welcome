@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+    <title>DIPLOME</title>
+    <style>
+        body {
+            font-family: "Arial","sans-serif";
+            display: block;
+            margin: 0px;
+        }
+        table.diplome {
+            margin: 0 auto; /* or margin: 0 auto 0 auto */
+            width: 720px;
+        }
+        table.cadre {
+            border: 2px black solid;
+            margin: 0 auto; 
+        }
+        table.cadre td.content {
+            padding: 15px;
+        }
+
+        span.headerLeft {
+            font-size: 14.0pt;
+            font-weight: bold;
+        }
+        td.texte{
+            padding : 10px 0px ;
+        }
+        span.texte1 {
+            font-size: 12.0pt;
+            font-weight: bold;
+        }
+        span.texte2 {
+            font-size: 12.0pt;
+        }
+        div.nomPrenom {
+            font-size: 12.0pt;
+            font-weight: bold;
+            color: black;
+        }
+        div.date {
+            font-size: 10.0pt;
+            text-align: left;
+        }
+        div.formateurName {
+            font-size: 11.0pt;
+            font-weight: bold;
+            text-align: center;
+        }
+        div.formateurTitre {
+            font-size: 11.0pt;
+            font-weight: normal;
+            text-align: center;
+        }     
+        
+    </style>
+</head>
+<body>
+    <table border="0" cellspacing="0" cellpadding="0" class="diplome">
+    <tr>
+        <td>
+            <table class="cadre" align="center" >
+               <tr>
+                <td class="content">
+                    <table border="0" style="width:100%">
+                        <tr>
+                            <td width="200"><span class="headerLeft">INTITEK GROUP</span></td>
+                            <td >&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td width="142"><img src="../Images/LogoIntitekGroup.png" width="140" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="center" class="texte">
+                                <span class="texte1">Il est certifié par ce présent certificat que :</span>
+                                <span class="texte2">a reçu les initiations et les connaissances nécéssaires concernant  <b>{{Theme}}</b></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="3"><div class="nomPrenom"><p>{{Name}} {{FirstName}}</p></div></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="3"><div class="date">Date : {{Date}}</div></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="2">
+                                <div class="formateurName">{{NameFormateur}}</div><br>
+                                <div class="formateurTitre">{{TitreFormateur}}</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+               </tr>
+            </table>
+        </td>
+    </tr>
+    </table>
+</body>
+</html>

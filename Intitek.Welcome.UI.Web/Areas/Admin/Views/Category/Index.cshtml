@@ -1,0 +1,159 @@
+﻿
+@model Intitek.Welcome.UI.ViewModels.Admin.ListCategoryViewModel
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.categoryList);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles
+{
+    @*@Styles.Render("~/Content/gridmvc")
+        <style type="text/css">
+            th.actions, td.actions {
+                text-align: left !important;
+            }
+            td.actions a {
+                margin-right: 10px;
+            }
+        </style>*@
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.categoryList</li>
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.categoryList</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <div class="row ml-0 mr-0 mb-3">
+                            <a href="@Url.Action("Edit", "Category",  new { area = "Admin" })" class="btn btn-wme btn-green" onclick="openLoading();">@Resource.newCategory</a>&nbsp;
+                            <a href="@Url.Action("Edit", "SubCategory",  new { area = "Admin" })" class="btn btn-wme btn-green" onclick="openLoading();">@Resource.newSubCategory</a>
+                        </div>
+                        <div class="row ml-0 mr-0">
+                            @*<div class="col-6 pl-0">
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-right">
+                                        @Html.Partial("_PageSizes", Model.Pager, new ViewDataDictionary { { "grid", "catGrid" } })
+                                    </div>
+                                </div>*@
+                        </div>
+                        <div id="parent_catGrid">
+                            @Html.Partial("_CategoryList", @Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    @Styles.Render("~/Content/modalcss")
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script>
+        var gridName = "catGrid";
+        var questionExpanded = true;
+        $(function () {
+            $('.collapse').collapse('show');
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#sidebar-document').addClass('active');
+            $('#sidebar-category').addClass('active');
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+            if (window.pageGrids[gridName] != null) {
+                window.pageGrids[gridName].ajaxify({
+                    getData: '@Url.Action("AjaxCategoryGrid", "Category")',
+                });
+            }
+
+            $(document).on('click', '[data-target="deleteModal"]', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                openLoading();
+                $.get(url, function (reponse) {
+                    $("body").append(reponse);
+                    $('#deleteDial').on('show.bs.modal', function () {
+                        var contentHeight = $(window).height();
+                        var footerHeight = $(this).find('.modal-footer').outerHeight() || 0;
+                        var maxHeight = contentHeight - footerHeight;
+                        $(this).find('.modal-body').css({
+                            'max-height': maxHeight,
+                            'overflow-y': 'auto',
+                        });
+                        $(this).before($('.modal-backdrop'));
+                        $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    });
+                    $("#deleteDial").on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    });
+                    $("#deleteDial").modal({
+                        "show": true,
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                }).done(function () {
+                    console.log("second success");
+                }).fail(function () {
+                    console.log("error");
+                }).always(function () {
+                    closeLoading();
+                });
+                return false;
+            });
+
+            $('#expandAllTrigger').on('click', function () {
+                if (questionExpanded) {
+                    questionExpanded = false;
+
+                    toggleButtonPlusMinus($(this), true);
+                    toggleButtonPlusMinus($('.btn-link-collapse i'), true);
+
+                    $('.collapse').collapse('hide');
+                } else {
+                    questionExpanded = true;
+
+                    toggleButtonPlusMinus($(this), false);
+                    toggleButtonPlusMinus($('.btn-link-collapse i'), false);
+
+                    $('.collapse').collapse('show');
+                }
+            })
+
+            $('.collapse').on('show.bs.collapse', function () {
+                questionExpanded = true;
+                toggleButtonPlusMinus($('#expandAllTrigger'), false);
+            });
+
+            $('.collapse').on('hide.bs.collapse', function () {
+                questionExpanded = false;
+                toggleButtonPlusMinus($('#expandAllTrigger'), true);
+            });
+        });
+    </script>
+}

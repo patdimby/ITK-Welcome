@@ -1,0 +1,60 @@
+﻿
+@model Intitek.Welcome.UI.ViewModels.Admin.ConfigViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = Resource.submenuToggleList;
+}
+
+<div class="card-body mt-5 pl-0 pr-0 pt-0">
+    <div class="col-6 offset-3 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div class="form-check form-check-inline center">
+                    @if (Model.Value == "false")
+                    {
+                        <label class="switch mb-0">
+                            <input id="enableMaintenanceToggle" type="checkbox" />
+                            <span class="slider round"></span>
+                        </label>
+                        <label class="form-check-label" id="toggleLabel" style="padding-left: 10px">@Resource.enableMaintenanceMode</label>
+                    }
+                    else
+                    {
+                        <label class="switch mb-0">
+                            <input id="enableMaintenanceToggle" type="checkbox" checked />
+                            <span class="slider round"></span>
+                        </label>
+                        <label class="form-check-label" id="toggleLabel" style="padding-left: 10px">@Resource.disableMaintenanceMode</label>
+                    }
+                </div>
+                <div class="row center">
+                    <h6 class="mb-0 mt-1" style="color: #bb0000"><i class="fas fa-info-circle"></i><span class="pl-1">@Resource.maintenanceModeWarning</span></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/ckeditor")
+    @Scripts.Render("~/bundles/ckeditor-adapter")
+
+    <script>
+        $('#sidebar-maintenance').addClass('active');
+
+        $("#enableMaintenanceToggle").on("change", function () {
+            openLoading();
+            var checked = this.checked;
+            $.post("@Url.Action("AjaxChangeMaintenanceMode", "Config")", { value: this.checked }, function (data) {
+                closeLoading();
+
+                if (checked) $("#toggleLabel").html("@Resource.disableMaintenanceMode");
+                else $("#toggleLabel").html("@Resource.enableMaintenanceMode");
+            }).fail(function () {
+                //Handle error here
+                closeLoading();
+            });
+        });
+
+    </script>
+}

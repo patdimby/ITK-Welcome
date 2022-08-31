@@ -1,0 +1,111 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<DocumentViewModel>
+@helper Assigned(DocumentViewModel vm)
+{
+    var checkd = "";
+    var disabled = "";
+    if (vm.IsSessionChecked) { checkd = "checked"; }
+    if (vm.IsDisabled) { disabled = "disabled"; }
+    <!--<div style="margin:0 auto;" onclick="affecterDoc('@vm.ID', event);"><input value="@vm.ID" name="DocsList" type="checkbox" @checkd @disabled /></div>-->
+    <input value="@vm.ID" name="DocsList" type="checkbox" @checkd @disabled onclick="affecterDoc('@vm.ID', event);" />
+    <input value="@vm.IsChecked.ToString()" name="docState_@vm.ID" id="docState_@vm.ID" type="hidden" />
+}
+@helper CustomRenderingOfApproved(DocumentViewModel vm)
+{
+    if (vm.Approbation.HasValue && vm.Approbation == 1)
+    {
+        <i class="fas fa-check-circle text-success" style="color:blue;"></i>
+    }
+    else
+    {
+        <i class="fas fa-minus-circle" style="color:black;"></i>
+    }
+}
+
+@helper CustomRenderingOfTest(DocumentViewModel vm)
+{
+    if (vm.Test.HasValue && vm.Test == 1)
+    {
+        <i class="fas fa-check-circle text-success"></i>
+    }
+    else
+    {
+        <i class="fas fa-minus-circle" style="color:black;"></i>
+    }
+}
+@helper CustomRenderingOfInformatif(DocumentViewModel vm)
+{
+    if (vm.IsNoActionRequired)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfMetier(DocumentViewModel vm)
+{
+    if (vm.IsMetier)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper CustomRenderingOfStructure(DocumentViewModel vm)
+{
+    if (vm.IsStructure)
+    {
+        <input type="checkbox" checked style="display:inline" onclick="return false;" />
+    }
+    else
+    {
+        <input type="checkbox" style="display:inline" onclick="return false;" />
+    }
+}
+@helper RenderNameWithTooltip(DocumentViewModel vm)
+{
+    <span data-toggle="tooltip" title="@vm.Name" class="@(vm.IsDefaultLangName ? "defaultName": string.Empty)">@vm.Name</span>
+}
+
+@Html.Grid(Model, "_GridDocument").Columns(columns =>
+{
+    columns.Add(o => o.ID_Category).RenderValueAs(o=> "").Css("category")
+    .SetFilterWidgetType("CategoryNameFilterWidget", "/Admin/Document/SearchCategories")
+    .Filterable(true).Sortable(false);
+
+    columns.Add(o => o.ID_SubCategory).RenderValueAs(o => "").Css("subcategory")
+         .SetFilterWidgetType("SubCategoryNameFilterWidget", "/Admin/Document/SearchSousCategories")
+         .Filterable(true).Sortable(false);
+
+    columns.Add(o => o.Name)
+        .RenderValueAs(o => RenderNameWithTooltip(o))
+        .SortInitialDirection(GridSortDirection.Ascending)
+        .Filterable(true).Sortable(true).Css("docname").IsHtml(true).SetColspan(3);
+
+    columns.Add(o => o.Version).Css("center")
+    .SetFilterWidgetType("CategoryNameFilterWidget", "/Admin/Document/SearchVersions")
+    .SetWidth(120).Filterable(true).Sortable(true);
+
+
+    columns.Add(o => o.Date).Format("{0:dd/MM/yyyy}").SetWidth(60).Filterable(false).Sortable(true).Css("center");
+    columns.Add(o => o.IsMetier).Titled("MET").RenderValueAs(o => CustomRenderingOfMetier(o)).SetWidth(20).Filterable(true).Sortable(true).IsHtml(true).Css("center");
+    columns.Add(o => o.IsStructure).Titled("STR").RenderValueAs(o => CustomRenderingOfStructure(o)).SetWidth(20).Filterable(true).Sortable(true).IsHtml(true).Css("center");
+    columns.Add(o => o.IsNoActionRequired).Titled("Info").RenderValueAs(o => CustomRenderingOfInformatif(o)).SetWidth(130).Filterable(true).Sortable(true).IsHtml(true).Css("center");
+    columns.Add(o => o.Approbation).Titled("Appro").RenderValueAs(o => CustomRenderingOfApproved(o)).SetWidth(145).Css("center")
+    .SetFilterWidgetType("System.Boolean")
+    .Filterable(true).Sortable(true).IsHtml(true);
+    columns.Add(o => o.Test).RenderValueAs(o => CustomRenderingOfTest(o)).SetWidth(95).Css("center")
+     .SetFilterWidgetType("System.Boolean")
+     .Filterable(true).Sortable(true).IsHtml(true);
+    //columns.Add(o => o.Commentaire).SetWidth(135).Filterable(false).Sortable(true);
+    columns.Add(o=> o.IsSessionChecked).Titled(@Resource.assigned).RenderValueAs(o=> Assigned(o)).Filterable(true).Sortable(false).IsHtml(true).Css("center");
+
+
+
+}).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "clickable" : string.Empty)
+

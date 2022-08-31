@@ -1,0 +1,158 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@model Intitek.Welcome.UI.Web.Admin.Models.GridBO<DocumentViewModel>
+@{
+    ViewBag.Title = string.Format("Administration | {0}", Resource.entity_Assign_document);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    @Styles.Render("~/Content/documents")
+    @Styles.Render("~/Content/modalcss")
+}
+
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Entite")" class="breadcrumb-link" onclick="openLoading();">@Resource.entiteLists</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.agency_Assign_document</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@ViewBag.AgencyName</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.agency_Assign_document</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <form id="ajaxDocumentForm" name="ajaxDocumentForm">
+                            <input type="hidden" id="EntityName" name="EntityName" value="@ViewBag.EntityName" />
+                            <input type="hidden" id="AgencyName" name="AgencyName" value="@ViewBag.AgencyName" />
+                        </form>
+                        <form id="affectForm" action="@Url.Action("AffectAgency", "Entite")" method="post">
+                            <input type="hidden" id="EntityName" name="EntityName" value="@ViewBag.EntityName" />
+                            <input type="hidden" id="AgencyName" name="AgencyName" value="@ViewBag.AgencyName" />
+                            <div class="row ml-0 mr-0">
+                                <div class="col-6 pl-0">
+                                    <b>@Resource.Entity</b>: &nbsp;<span class="label label-warning">@ViewBag.EntityName</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <b>@Resource.user_agency</b>: &nbsp;<span class="label label-warning">@ViewBag.AgencyName</span>
+                                </div>
+                            </div>
+                            <div id="parent_docGrid">
+                                @Html.Partial("_DocumentGrid", @Model)
+                            </div>
+                            <br />
+                            <div class="row mb-3">
+                                <div class="col center p-t-25">
+                                    <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                            onclick="_redirectTo('@Url.Action("Index", "Entite")')">
+                                        @Resource.buttonCancel
+                                    </button>
+
+                                    <button type="submit"
+                                            class="btn btn-wme btn-green next-btn space-betwen-btn" onclick="openLoading();">
+                                        @Resource.buttonValidate
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    <script>
+        function _showDocument(id) {
+            return false;
+        }
+
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script>
+        function affecterDoc(docId, event) {
+            //console.log("affecterDoc", event.target.tagName);
+            var grid = $("#docGrid");
+            var objChk = $("input[name='DocsList'][value='" + docId + "']", grid);
+            if (event.target.tagName == 'DIV') {
+                var chkDD = objChk.is(":checked");
+                objChk.prop("checked", !chkDD);
+            }
+            var chk = objChk.is(":checked");
+            var docstate = $("#docState_" + docId).val();
+            var oldCheck = (docstate === "True") ? true : false;
+            if (oldCheck != chk ) {
+                objChk.closest("tr").addClass("coched");
+            }
+            else {
+                objChk.closest("tr").removeClass("coched");
+            }
+            $.ajax({
+                url: '@Url.Action("AffectAgencySession", "Entite")',
+                data: { DocId: docId, OldCheckState: docstate, NewCheckState: chk },
+                type: 'post',
+                cache: false
+            }).done(function (response) {
+                console.log("done");
+                return false;
+            }).fail(function (xhr) {
+                console.log("error..");
+                var errorMessage = $.trim(xhr.responseText);
+                console.log("errorMessage", errorMessage);
+                return false;
+            });
+            return false;
+        }
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#sidebar-entity-profil').addClass('active');
+            $('#sidebar-entity').addClass('active');
+            var grid1Name = "docGrid";
+            //Infobulles
+            if (window.pageGrids[grid1Name] != null) {
+                window.pageGrids[grid1Name].addFilterWidget(new CategoriesFilterWidget());
+                window.pageGrids[grid1Name].addFilterWidget(new SubCategoriesFilterWidget());
+                window.pageGrids[grid1Name].ajaxify({
+                    getData: '@Url.Action("AjaxDocumentGrid", "Entite")',
+                    gridFilterForm: $('#ajaxDocumentForm')
+                });
+            }
+        });
+
+    </script>
+}
+@Html.Partial("_TemplateFiltre")

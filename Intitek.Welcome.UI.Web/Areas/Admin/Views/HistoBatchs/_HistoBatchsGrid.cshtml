@@ -1,0 +1,36 @@
+﻿@using GridMvc.Html;
+@using GridMvc.Sorting;
+@using Intitek.Welcome.Infrastructure.Helpers
+
+@model  Intitek.Welcome.UI.Web.Admin.Models.GridBO<HistoBatchsViewModel>
+
+@helper RenderColWithTooltip(string str)
+{
+    <span data-toggle="tooltip" title="@str">@str</span>
+}
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(o => o.DateStart).Format("{0:dd/MM/yyyy H:mm:ss}").Css("col-date min-width")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.BatchProgName).Css("min-width center")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.Description).Css("min-width col-description")
+    .RenderValueAs(o => RenderColWithTooltip(o.Description)).IsHtml(true)
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.DateEnd).Format("{0:dd/MM/yyyy H:mm:ss}").Css("min-width col-date")
+    .Filterable(true).Sortable(true);
+
+    columns.Add(o => o.ReturnCode).Css("min-width center")
+    .Filterable(false).Sortable(true);
+
+    columns.Add(o => o.Message).Css("overflow-ellipsis")
+    .Filterable(false).Sortable(true);
+
+}).WithPaging().EmptyText(@Resource.noDocumentResult).WithGridItemsCount(Resource.labelNbEnreg).WithMultipleFilters().SetRowCssClasses(e=> true ? "admclickable dblclickable fit-content-columns" : string.Empty).SetOnClick("showInformationOfColumn(this, 'Message');")
+
+
+

@@ -1,0 +1,260 @@
+﻿@using Intitek.Welcome.Infrastructure.Helpers
+@model  Intitek.Welcome.UI.Web.Admin.Models.AwarenessApprovalsResponseViewModel
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.change_emails);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@Scripts.Render("~/bundles/chartjs")
+@section Styles
+{
+    @Styles.Render("~/Content/bootstrap-multiselect")
+    <style type="text/css">
+        .textarea-form {
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            display: block;
+            width: 100%;
+            font-size: var(--normal-size);
+            line-height: 1.42857143;
+            height: auto;
+            color: var(--input-value-color);
+            background-color: #fff;
+            background-image: none;
+            border-radius: 16px;
+            border: 1px solid var(--input-border-color);
+            overflow-y: scroll;
+        }
+        .dropzone {
+            border-radius: 18px;
+            min-height: auto;
+            padding: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+        }
+
+        #fileUpload.form-control-required {
+            border: 1px solid var(--input-border-color-error);
+        }
+
+        #fileUpload.dropzone .dz-message {
+            margin: 0;
+            padding: 10px;
+        }
+
+        #fileUpload.dropzone.disabled,
+        #fileUpload.dropzone.disabled .dz-message {
+            pointer-events: none;
+            background-color: var(--input-disable-bg);
+            border: 1px solid #e3e3e3;
+        }
+        .custom-collapsed-container {
+            border-radius: 30px;
+        }
+
+        .custom-col {
+            padding-left: calc(16.666667% - 62px);
+        }
+
+        .control-label {
+            padding-top: 8px;
+        }
+
+        .table-responsive {
+            min-height: unset;
+        }
+
+        .custom-form-control {
+            padding: 9px 12px;
+            height: 39px;
+        }
+
+        select .placeholder, select:focus.placeholder {
+            color: inherit;
+            font-style: normal;
+        }
+    </style>
+}
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@Resource.change_emails</li>
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.change_emails_title</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <form id="getresult" method="post" action="@Url.Action("Index", "ChangeEmails")" style="width:100%;">
+                            <div class=" ml-0 mr-0">
+                                <div class="divider">&nbsp;</div>
+                                <div class="row ml-0 mr-0">
+                                    <div class="col-lg-3 ">
+                                        <label class="control-label">@Resource.change_email_upload_exel : </label>
+                                    </div>
+                                    <div class="col-lg-6">
+
+                                        <label class="fileContainer" id="fileContainer">
+                                            <div class="fileContainerFileName" id="fileName"></div>
+                                            <span id="uploadLabel" class="uploadLabel-holder">@Resource.change_emails_file_upload</span>
+                                            <span class="fileContainerButton"><i class="fas fa-upload"></i></span>
+                                            <input name="FileUpload" id="FileUpload" type="file"
+                                                   accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <button type="submit" style="" class="btn-wme excel-btn btn btn-green" name="SubmitButton" value="emailValidated">
+                                            <span id="butValid">@Resource.change_emails_btn_validate</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="divider">&nbsp;</div>
+                                <div id="email-results" style="margin-top:1rem" class="row ml-0 mr-0">
+                                    
+                                </div>
+                                <div id="email-results-error" style="margin-top:.5rem" class="row ml-0 mr-0">
+                                    
+                             
+                                </div>
+                            </div>
+                        </form>
+                        <div class="divider">&nbsp;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @Scripts.Render("~/bundles/justgage")
+    @Scripts.Render("~/bundles/bootstrap-multiselect")
+    @Scripts.Render("~/bundles/jquery.fileDownload")
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#sidebar-change-emails').addClass('active');
+            $('#email-results').hide();
+            $('#email-results').append(
+                '<div class="col-lg-12 row">'+
+                                        '<div class="col-lg-12">'+
+                                            '<h3>@Resource.change_emails_results</h3>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="col-lg-12 row">'+
+                                        '<div class="col-lg-12" id="results-area">'+
+                                        '</div>'+
+                                    '</div>');
+            $('#email-results-error').hide();
+            $('#email-results-error').append(
+                '<div class="col-lg-12 row">' +
+                '<div class="col-lg-12" >' +
+                '<h5 style="color:red">@Resource.change_mail_error</h5>' +
+                '</div>' +
+                '</div>');
+
+
+            $("#getresult").submit(function (event) {
+                event.preventDefault();
+                $('#email-results').hide();
+                $('#email-results-error').hide();
+                var fileUpload = $("#FileUpload").get(0);
+                if ($("#FileUpload").get(0).files.length == 0) {
+                    errorFileUpload();
+                    return;
+                }
+                openLoading();
+                var files = fileUpload.files;
+                var fileData = new FormData();
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                $.ajax({
+                    url: '@Url.Action("GenerateResult", "ChangeEmails")',
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    data: fileData,
+                    success: function (result) {
+                        closeLoading();
+                        console.log("result", result);
+                        if (result != false) {
+                            let emailResults = '@Resource.change_mail_title :';
+                            emailResults=emailResults.replace("&#233;", "é");
+                            for (let i = 0; i < result.length; i++){
+                                emailResults += '\n- "' + result[i].PreviousEmail + '" -> "' + result[i].NewEmail + '": ' + result[i].Result;
+                            }
+                            //$('#email-result-area').val(emailResults);
+                            
+
+                            let areaToDisplay = '<textarea rows="15" id="email-result-area" class="textarea-form autosize"  readonly>' + emailResults + '</textarea>';
+                            $('#email-results').empty();
+                            $('#email-results').append(areaToDisplay);
+                            $('#email-results').show();
+                        }
+                        else {
+                            $('#email-results-error').show();
+                            $('#email-results').hide();
+                            console.log("Something went wrong.Please contact administrator");
+                        }
+                    },
+                    error: function (err) {
+                        closeLoading();
+                        $('#email-results-error').show();
+                        $('#email-results').hide();
+                        console.log("Something went wrong.Please contact administrator");
+                    }
+                });
+
+            });
+            $("#FileUpload").on('change', function (e) {
+            //alert(e.target.files[0]);
+            if (e.target.files[0])
+            {
+
+                $("#uploadLabel").text(e.target.files[0].name);
+                $("#uploadLabel").removeClass('uploadLabel-holder').addClass('uploadLabel');
+                $("#fileContainer").css({ borderColor: 'var(--input-border-color)' });
+
+
+
+            }
+            else
+            {
+
+                $("#uploadLabel").addClass('uploadLabel-holder').removeClass('uploadLabel');
+                $("#fileContainer").css({ borderColor: 'var(--input-border-color-error)' });
+                $("input[name='IsMajor']").prop('disabled', 'disabled');
+            }
+            });
+
+            function errorFileUpload() {
+                $("#uploadLabel").addClass('uploadLabel-holder').removeClass('uploadLabel');
+                $("#fileContainer").css({ borderColor: 'var(--input-border-color-error)' });
+                $("input[name='IsMajor']").prop('disabled', 'disabled');
+            }
+
+
+        });
+    </script>
+}
+

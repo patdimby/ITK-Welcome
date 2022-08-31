@@ -1,0 +1,270 @@
+﻿@using Intitek.Welcome.UI.ViewModels.Admin
+@model Intitek.Welcome.UI.Web.Admin.Models.UserResponseViewModel
+@{
+    ViewBag.Title = Model.User.ID > 0 ? string.Format("Administration | {0}", @Resource.user_management + " " + @HttpUtility.HtmlDecode(Model.User.FullName)) : string.Format("Administration | {0}", Resource.newUser);
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var chkOnbording = "";
+    if (Model.User.IsOnBoarding)
+    {
+        chkOnbording = "checked";
+    }
+    var usrDisabled = !Model.User.Active;
+    var usrActif = Model.User.Active;
+    var typeDisplay = "";
+    if (Intitek.Welcome.Service.Back.Constante.UserType_METIER.Equals(Model.User.Type))
+    {
+        typeDisplay = Resource.typeMetier;
+    }
+    else if(Intitek.Welcome.Service.Back.Constante.UserType_STRUCTURE.Equals(Model.User.Type)) {
+        typeDisplay = Resource.typeStructure;
+    }
+
+}
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    @Styles.Render("~/Content/documents")
+    @Styles.Render("~/Content/modalcss")
+    <style type="text/css">
+        textarea {
+            overflow-y: auto;
+        }
+
+        .custom-form-control:disabled {
+            background-color: rgba(118, 118, 118, 0.3);
+            width:144px;
+        }
+    </style>
+}
+
+<div class="row page-breadcrumb">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="pt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "User")" class="breadcrumb-link" onclick="openLoading();">@Resource.userLists</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@(Model.User.ID > 0 ? @Resource.user_management + " - " + @HttpUtility.HtmlDecode(Model.User.FullName) : Resource.newUser)</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="row m-r-0 m-l-0 p-r-15 p-l-0 align-items-center">
+        <div class="pageheader-title">
+            <span>@(Model.User.ID > 0 ? Model.User.FullName : Resource.newUser)</span>
+        </div>
+        <div class="pt-2">
+            <a data-i18n-title="menu.go-back" href="#" onclick="goBack()"
+               class="btn action-icon btn-ariane-back btn-xs"><i class="fas fa-arrow-left"></i></a>
+        </div>
+    </div>
+</div>
+<!-- ============================================================== -->
+<!-- End Ariane  -->
+<!-- ============================================================== -->
+<div class="card-body p-l-0 p-r-0 p-t-0">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 p-l-0 p-r-0">
+        <div class="accordion-regular">
+            <div class="card card-form mb-2">
+                <div>
+                    <h2 class="center">@Resource.user_management</h2>
+                </div>
+                <div class="card card-form p-0">
+                    <div class="card-body show">
+                        <p> @Resource.collaborator&nbsp;<span class="label label-warning">@Model.User.FullName</span></p>
+                        @if (usrDisabled)
+                        {
+                            <p>
+                                @Resource.administrateur : &nbsp;<span class="label label-default">@Html.CheckBox("IsRoot", Model.User.IsRoot, new { Onclick = "return false;" })</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Resource.Present : &nbsp;<span class="label label-default">@Html.CheckBox("Actif", Model.User.Active, new { Onclick = "return false;" })</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Resource.Actif : &nbsp;<span class="label label-default">@Html.CheckBox("Activity", Model.User.Activity, new { Onclick = "return false;" })</span>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                @Resource.administrateur : &nbsp;@Html.CheckBox("IsRoot", Model.User.IsRoot)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Relecteur : &nbsp;@Html.CheckBox("isReader", Model.User.isReader)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Resource.Present : &nbsp;<span class="label label-default">@Html.CheckBox("Actif", Model.User.Active, new { Onclick = "return false;" })</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@Resource.Actif : &nbsp;<span class="label label-default">@Html.CheckBox("Activity", Model.User.Activity, new { Onclick = "return false;" })</span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label>@Resource.DateEntry : &nbsp;</label>
+                                @Html.TextBox("EntryDate", Model.User.EntryDate, "{0:dd/MM/yyyy}", new { @class = "custom-form-control", @type = "text", @disabled = true, @readonly = true })
+                                <label class="input-group-btn" for="" style="margin-left:-45px">
+                                    <span class="btn btn-default">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label> @Resource.DateExit : &nbsp;</label>
+                                @Html.TextBoxFor(u => u.User.ExitDate, "{0:dd/MM/yyyy}", new { @class = "datepicker custom-form-control", @size = 12, @maxlength = 10, @data_date_format = "dd/mm/yyyy" })
+                                <label class="input-group-btn" for="User_ExitDate" style="margin-left:-45px">
+                                    <span class="btn btn-default">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </label>
+                            </p>
+                        }
+                        @if (Model.User.InactivityStart.HasValue)
+                        {
+                            <p>
+                                @Resource.inact_debut : &nbsp;<span class="label label-default">@Model.User.InactivityStart.Value.ToString("dd/MM/yyyy")</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Resource.inact_fin :&nbsp;
+                                @if (Model.User.InactivityEnd.HasValue)
+                                {<span class="label label-default">@Model.User.InactivityEnd.Value.ToString("dd/MM/yyyy")</span>}
+                            else
+                            { <span class="label label-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>}
+                            </p>
+                            <p><span style="vertical-align:top;">@Resource.Reason : &nbsp;</span>@Html.TextArea("Motif", Model.User.InactivityReason, new { @disabled = true, cols = 120, style = "inline;" })</p>
+                        }
+                        @if (Model.User.Manager != null)
+                        {
+                            <p> @Resource.user_manager&nbsp;<span class="label label-warning">@Model.User.Manager.FullName</span></p>
+                        }
+                        @if (Model.User.ImportManager != null)
+                        {
+                            <p> @Resource.user_operational_direction&nbsp;<span class="label label-warning">@Model.User.ImportManager.DOP</span></p>
+                        }
+                        <p>
+                            <b>@Resource.Entity</b> : &nbsp;<span class="label label-default">@Model.User.EntityName</span>&nbsp;&nbsp;
+                            <b>@Resource.user_agency</b> : &nbsp;<span class="label label-default">@Model.User.AgencyName</span>&nbsp;&nbsp;
+                            @if (Model.User.IsOnBoarding)
+                            {
+                                <text><b>@Resource.user_mail</b>: &nbsp;<span class="label label-info">@Model.User.EmailOnBoarding</span>&nbsp;&nbsp;</text>
+                            }
+                            else if (!string.IsNullOrEmpty(Model.User.Email))
+                            {
+                                <text><b>@Resource.user_mail</b>: &nbsp;<span class="label label-info">@Model.User.Email</span>&nbsp;&nbsp;</text>
+                            }
+                            <b>@Resource.fieldType</b> : &nbsp;<span class="label label-default">@typeDisplay</span>&nbsp;&nbsp;
+                            <b>@Resource.user_isOnboarding</b> : &nbsp;<span class="label label-default"><input type="checkbox" @chkOnbording style="display:inline" onclick="return false;" /></span>&nbsp;&nbsp;
+
+
+                        </p>
+                        <p><b>@Resource.profilesActu</b>: &nbsp;<span class="label label-warning">@Model.User.Profiles</span></p>
+                        <form id="ajaxProfilForm" name="ajaxProfilForm">
+                            <input type="hidden" id="UserID" name="UserID" value="@Model.User.ID" />
+                        </form>
+                        <form id="newUserForm" action="@Url.Action("Affected", "User")" method="post">
+                            <input type="hidden" id="Id" name="Id" value="@Model.User.ID" />
+                            <input type="hidden" id="Status" name="Status" value="10" />
+                            <input type="hidden" id="Active" name="Active" value="@Model.User.Active" />
+                            <input type="hidden" id="ExitDate" name="ExitDate" value="@Model.User.ExitDate" />
+                            <input type="hidden" id="isReader" name="isReader" value="@Model.User.isReader" />
+                            <div id="parent_prfGrid">
+                                @Html.Partial("_ProfilGrid", @Model.ListProfil, new ViewDataDictionary { { "UsrActive", usrActif } })
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col center p-t-25">
+
+                                    @if (usrActif)
+                                    {
+                                        <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                                onclick="_redirectTo('@Url.Action("Index", "User")')">
+                                            @Resource.buttonCancel
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-wme btn-green next-btn space-betwen-btn" onclick="openLoading();">
+                                            @Resource.buttonValidate
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-wme btn-dark space-betwen-btn"
+                                                onclick="_redirectTo('@Url.Action("Index", "User")')">
+                                            @Resource.btnClose
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts{
+        @Scripts.Render("~/bundles/gridmvc")
+        @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+        @Scripts.Render("~/bundles/bootstrap-datepicker")
+        <script>
+        function affecterProfil(prfId, event) {
+            console.log("affecterProfil", prfId);
+            var grid = $("#prfGrid");
+            var objChk = $("input[name='ProfsList'][value='" + prfId + "']", grid);
+            if (event.target.tagName == 'DIV') {
+                var chkDD = objChk.is(":checked");
+                objChk.prop("checked", !chkDD);
+            }
+            var chk = objChk.is(":checked");
+            var docstate = $("#docState_" + prfId).val();
+            var oldCheck = (docstate === "True") ? true : false;
+            if (oldCheck != chk) {
+                objChk.closest("tr").addClass("coched");
+            }
+            else {
+                objChk.closest("tr").removeClass("coched");
+            }
+
+           console.log("data", { DocId: docId, OldCheckState: docstate, NewCheckState: chk });
+            $.ajax({
+                url: '@Url.Action("AffectProfilSession", "User")',
+                data: { DocId: prfId, OldCheckState: docstate, NewCheckState: chk },
+                type: 'post',
+                cache: false
+            }).done(function (response) {
+                console.log("done");
+                return false;
+            }).fail(function (xhr) {
+                console.log("error");
+                var errorMessage = $.trim(xhr.responseText);
+                console.log("errorMessage", errorMessage);
+                return false;
+            });
+        }
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#sidebar-collaborator').addClass('active');
+
+            var grid1Name = "prfGrid";
+            //Infobulles
+            if (window.pageGrids[grid1Name] != null) {
+                window.pageGrids[grid1Name].ajaxify({
+                    getData: '@Url.Action("AjaxProfilGrid", "User")',
+                    gridFilterForm: $('#ajaxProfilForm')
+                });
+            }
+            $("#newUserForm").submit(function (e) {
+                $("#Status", $(this)).val(10);
+                var chk = $("#IsRoot").is(":checked");
+                if (chk)
+                    $("#Status", $(this)).val(0);
+                var isReader = $("#isReader").is(":checked");
+                $("#isReader", $(this)).val(isReader);
+            });
+
+            /*$(document).on('click', '[name="ProfsList"]', function (e) {
+                var chk = $(this).is(":checked");
+                if (chk) {
+                    $(this).closest("tr").addClass("coched");
+                }
+                else {
+                    $(this).closest("tr").removeClass("coched");
+                }
+            });*/
+        });
+
+        $("#newUserForm").submit(function () {
+            openLoading();
+            });
+
+            $('.datepicker').datepicker({
+                autoclose: true,
+                todayHighlight: true,
+                dateFormat: "dd/mm/yy",
+                onSelect: function (dateText) {
+                    $("#ExitDate").val(this.value);
+                }
+            });
+        </script>
+    }

@@ -1,0 +1,358 @@
+﻿@model  Intitek.Welcome.UI.Web.Admin.Models.UserResponseViewModel
+@{
+    ViewBag.Title = string.Format("Administration | {0}", @Resource.userLists);
+}
+
+@section Styles
+{
+    @Styles.Render("~/Content/gridmvc")
+    @Styles.Render("~/Content/documents")
+    @Styles.Render("~/Content/modalcss")
+    <style type="text/css">
+        
+        td.actions a {
+            margin-right: 8px;
+        }
+
+        option[value=""] {
+            color: inherit;
+        }
+
+        select.placeholder, select:focus.placeholder {
+            color: inherit;
+        }
+
+        #relanceModal .modal-dialog {
+            max-width: 35% !important;
+        }
+
+        .modal-body input[type=radio] {
+            display: inline-block;
+        }
+
+        .modal-body label {
+            margin-bottom: 10px;
+        }
+
+        .col-user-name {
+            min-width: 150px;
+            max-width: 150px;
+            width: 150px !important;
+        }
+
+        .col-user-fullname {
+            min-width: 200px;
+            max-width: 200px;
+            width: 200px !important;
+        }
+
+        .col-user-agency {
+            min-width: 140px;
+            max-width: 140px;
+            width: 140px !important;
+        }
+
+        .col-user-entity {
+            min-width: 140px;
+            max-width: 140px;
+            width: 450px !important;
+        }
+
+
+        .col-user-email {
+            min-width: 190px;
+            max-width: 190px;
+            width: 190px !important;
+        }
+
+        input[type="date"] {
+            position: relative;
+        }
+
+        .dropdown-menu.stats {
+            min-width: 230px;
+        }        
+
+        .navbar-brand #logo-white,
+        .navbar-brand #logo-black {
+            padding-top: 5px;
+        }
+
+    </style>
+}
+
+<div>
+    @Html.Partial("_header")
+</div>
+<div class="wrapper">
+    <div id="content">       
+        <br />
+        <br />
+        <br />
+        <div class="row page-breadcrumb">
+            <div class="col">
+                <nav aria-label="breadcrumb" class="pt-2">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="@Url.Action("Index", "Home")" class="breadcrumb-link" onclick="openLoading();">@Resource.menuHome</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <a href="" class="breadcrumb-link">Liste utilisateurs</a>
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div>
+                <div class="accordion-regular">
+                    <div class="card card-form mb-2">
+                        <div>
+                            <h2 class="center">Liste utilisateurs</h2>
+                        </div>
+                        <div class="card card-form p-0">
+                            <div class="card-body show">
+                                <div class="row ml-0 mr-0">
+                                    <div class="col pl-0">
+                                        <label> @Resource.Entity</label>
+                                        @Html.DropDownListFor(x =>x.EntityName,
+                                            new SelectList(Model.EntityNameList.Select(s => new SelectListItem() { Value = s.ToString(), Text = string.IsNullOrEmpty(s.ToString()) ? Resource.All : s.ToString() }), "Value", "Text"),
+                                            new { @onchange = "changeEntity(this.value);return false;" , @class= "custom-form-control" })
+                                        <label>&nbsp;&nbsp;</label>
+                                        <label> @Resource.user_agency</label>
+                                        @Html.DropDownListFor(y=>y.AgencyName,
+                                           new SelectList(Model.AgencyNameList.Select(s => new SelectListItem() { Value = s.ToString(), Text = string.IsNullOrEmpty(s.ToString())? Resource.All : s.ToString() }), "Value", "Text"),
+                                           new { @onchange = "changeAgency(this.value);return false;" , @class= "custom-form-control" })
+                                        <label>&nbsp;&nbsp;</label>
+                                        <button type="button" class="btn btn-wme btn-green" name="SubmitButton" value="Filter" onclick="refresh();">
+                                            <span id="butValid">@Resource.Refresh</span>
+                                        </button>&nbsp;&nbsp;
+                                    </div>
+                                </div>
+                                <div class="row ml-0 mr-0">
+                                    <div class="col-8 pl-0">
+
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="text-right">
+                                            @Html.Partial("_PageSizes", Model.ListUser.Pager, new ViewDataDictionary { { "grid", "usrGrid" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <form id="ajaxUserForm" name="ajaxUserForm">
+                                    <input type="hidden" id="EntityName" name="EntityName" value="@Model.EntityName" />
+                                    <input type="hidden" id="AgencyName" name="AgencyName" value="@Model.AgencyName" />
+                                    <input type="hidden" id="Actif" name="Actif" value="@Model.Actif" />
+                                    <input type="hidden" id="Activity" name="Activity" value="@Model.Activity" />
+                                    <input type="hidden" id="EntryDate" name="EntryDate" value="@Model.EntryDate" />
+                                    <input type="hidden" id="ExitDate" name="ExitDate" value="@Model.ExitDate" />
+                                </form>
+                                <br />
+                                <div id="parent_usrGrid">
+                                    @Html.Partial("_UserGrid", @Model.ListUser, new ViewDataDictionary { { "EntityName", @Model.EntityName } })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            @section Scripts{
+                @Scripts.Render("~/bundles/gridmvc")
+                @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+                @Scripts.Render("~/bundles/bootstrap-datepicker")
+                <script>
+                    setTimeout(function () {
+                        $("#nav-home").addClass('current-menu-item');
+                    }, 500);
+                    $('input[type=checkbox][name=tab1-check-all]').change(function () {
+                        $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+                    });
+                    $('input[type=checkbox][name=tab2-check-all]').change(function () {
+                        $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+                    });
+                </script>
+                <script>
+        var gridName = "usrGrid";
+        function changeEntity(entity) {
+            openLoading();
+             var $uri = URI("@Url.Action("ChangeAgences", "Home")").addQuery("EntityName", entity);
+             var agency = $("#AgencyName").val();
+             $.ajax({
+                 type: "GET",
+                 url:  $uri,
+                 success: function (response) {
+                     if (response.success == 1) {
+                         //console.log(response.Agences);
+                         var options = $("#AgencyName");
+                         options.empty();
+                         $.each(response.Agences, function (index) {
+                             var agence = response.Agences[index];
+                             var agenceText = agence;
+                             if (agence === "")
+                                 agenceText = "@Resource.All";
+
+                             options.append(new Option(agenceText, agence));
+                             if (agence === agency)
+                                 $("#AgencyName").val(agency);
+
+                         });
+                         closeLoading(true);
+                     }
+                     return false;
+                 },
+                 error: function (xhr, status, error) {
+                     console.log('An error occurred.');
+                     closeLoading(true);
+                     return false;
+                 }
+             });
+           return false;
+        }
+        function changeAgency(agency) {
+            return false;
+            var entity = $("#EntityName").val();
+            var actif = $("#Actif").val();
+            var $uri = URI("@Url.Action("ListUser", "Home")").addQuery("AgencyName", agency).addQuery("EntityName", entity).addQuery("Actif", actif);          
+            openLoading();
+            document.location = $uri.toString();
+            return false;
+        }
+        function changeActif(actif) {
+            return false;
+            var entity = $("#EntityName").val();
+            var agency = $("#AgencyName").val();
+            var $uri = URI("@Url.Action("ListUser", "Home")").addQuery("AgencyName", agency).addQuery("EntityName", entity).addQuery("Actif", actif);
+            openLoading();
+            document.location = $uri.toString();
+            return false;
+        }
+        function refresh() {
+            var entity = $("#EntityName").val();
+            var agency = $("#AgencyName").val();
+            var activity = $("#Activity").val();
+            var actif = $("#Actif").val();
+            var entryDate = $("#EntryDate").val();
+            var exitDate = $("#ExitDate").val();
+            var $uri = URI("@Url.Action("ListUser", "Home")").addQuery("AgencyName", agency).addQuery("EntityName", entity).addQuery("Actif", actif).addQuery("Activity", activity).addQuery("EntryDate", entryDate).addQuery("ExitDate", exitDate);
+            openLoading();
+            document.location = $uri.toString();
+            return false;
+        }
+        function loadFile() {
+            var $uri = URI("@Url.Action("LoadInactif", "Home")");
+            openLoading();
+            document.location = $uri.toString();
+            return false;
+        }
+        $(function () {
+            $('#sidebar-collaborator').addClass('active');
+            //Infobulles
+            $('[data-toggle="tooltip"]').tooltip();
+            if (window.pageGrids[gridName] != null) {
+                window.pageGrids[gridName].addFilterWidget(new ProfilsFilterWidget());
+                window.pageGrids[gridName].addFilterWidget(new AgencesFilterWidget());
+                window.pageGrids[gridName].addFilterWidget(new TypeIntitekUserFilterWidget());
+                window.pageGrids[gridName].ajaxify({
+                    getData: '@Url.Action("AjaxUserGrid", "Home")',
+                    gridFilterForm: $('#ajaxUserForm')
+                });
+            }
+            $(document).on('click', '[data-target="relanceModal"]', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                var url = link.attr('href');
+                openLoading();
+                $.get(url, function (reponse) {
+                    $("body").append(reponse);
+                    $('#relanceModal').on('show.bs.modal', function () {
+                        var contentHeight = $(window).height();
+                        var headerHeight = $(this).find('.modal-header').height() || 0;
+                        var maxHeight = contentHeight - Math.abs(headerHeight);
+                        $(this).find('.modal-body').css({
+                            'max-height': maxHeight,
+                            'overflow-y': 'auto',
+                        });
+                        $(this).before($('.modal-backdrop'));
+                        $(this).css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+                    });
+                    $("#relanceModal").on('hidden.bs.modal', function () {
+                        $(this).remove();
+                    });
+                    $("#relanceModal").modal({
+                        "show": true,
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                }).done(function () {
+                    console.log("second success");
+                }).fail(function () {
+                    console.log("error");
+                }).always(function () {
+                    closeLoading();
+                });
+                return false;
+            });
+
+            $(document).on('submit', '#frmRelance', function (e) {
+                var frm = $(this);
+                e.preventDefault();
+                openLoading();
+                $.ajax({
+                    type: frm.attr('method'),
+                    url: frm.attr('action'),
+                    data: frm.serialize(),
+                    success: function (response) {
+                        if (response.success == 1) {
+                            $("#frmRelance").hide();
+                            var result = $("#result", $("#relanceModal"));
+                            var label = result.find("label");
+                            label.addClass("info");
+                            label.html(response.Message);
+                            result.prepend(label);
+                            result.show();
+                            closeLoading(true);
+                        }
+                        else {
+
+                            $("#frmRelance").hide();
+                            var result = $("#result", $("#relanceModal"));
+                            var label = result.find("label");
+                            label.addClass("error");
+                            label.html(response.Message);
+                            result.prepend(label);
+                            result.show();
+                            closeLoading(true);
+                        }
+                        return false;
+                   },
+                    error: function (xhr, status, error) {
+                        console.log('An error occurred.');
+                        var result = $("#result", $("#relanceModal"));
+                        var label = result.find("label");
+                        label.addClass("error");
+                        label.html(xhr.responseText);
+                        result.prepend(label);
+                        result.show();
+                        closeLoading(true);
+                        return false;
+                    }
+                });
+                return false;
+            });
+
+        });
+
+        $('.datepicker').datepicker({
+            autoclose: true,
+            dateFormat: "dd/mm/yy",
+            todayHighlight:true,
+        });
+
+                </script>
+            }
+            @Html.Partial("_TemplateFiltre")

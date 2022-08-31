@@ -1,0 +1,96 @@
+﻿@using System.Security.Claims;
+@using Newtonsoft.Json;
+
+@{
+    var claimIdentity = this.User.Identity as ClaimsIdentity;
+    var userDataConnected = JsonConvert.DeserializeObject<UserViewModel>(claimIdentity.FindFirst(ClaimTypes.UserData).Value);
+}
+<div class="page-header">
+    <nav class="navbar nav-init-color navbar-expand-lg fixed-top">
+        <div class="navbar-container">
+            <div class="top-menu-content">
+                <nav>
+                    <div class="row">
+                        <div class="col-sm-10 col-md-4 col-lg-4">
+                            <ul class="nav">
+                                <li class="menu-info">
+                                    <a href="@Url.Action("Index","Home")" onclick="openLoading();"><img src="@Url.Content("~/Content/images/IdCard.png")" width="60px" height="auto" alt="" /></a>
+                                    <div class="nav-user-info" href="#" style="float: right;">
+                                        <div>@userDataConnected.NomPrenom</div>
+                                        <div>@userDataConnected.EntityName</div>
+                                        <div>@userDataConnected.AgencyName</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-sm-0 col-md-2 col-lg-4 p-l-0 p-r-0 m-l-0 m-r-0 row">
+                            <div class="col-6 app_logo text-right pr-0">
+                                <a href="@Url.Action("Index","Home")" onclick="openLoading();">
+                                    <img id="logo-white" class="" src="@Url.Content(string.Format("~/Content/images/{0}-wh.png",userDataConnected.CompanyLogo))" alt="" />
+                                    <img id="logo-black" class="hide" src="@Url.Content(string.Format("~/Content/images/{0}.png",userDataConnected.CompanyLogo))" alt="" />
+                                </a>
+                            </div>
+                            <div class="col-6 app_title text-left">@Resource.appTitleFO</div>
+                        </div>
+
+                        <div class="col-sm-2 col-md-6 col-lg-4" align="right">
+                            <div class="mobile-menu-icon">
+                                <i class="fa fa-bars"></i>
+                            </div>
+                            <div class="tm-nav hide">
+                                <ul>
+                                    <li>
+                                        <a href="@Url.Action("Index","Home")" onclick="openLoading();">@Resource.menuHome</a>
+                                    </li>
+                                    @*<li>
+                                            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"> @Resource.menuSettings</a>
+                                            <div class="dropdown-menu dropdown-sous-menu first-plan animated fadeIn" aria-labelledby="navbarDropdownMenuLink3">
+                                                <a id="nav2-adminlist" class="dropdown-item" href="SettingsAdminList.html"><i class="fas fa-user mr-2"></i><span> @Resource.submenuAdminList</span></a>
+                                                <a id="nav2-emaillist" class="dropdown-item" href="SettingsEmailList.html"><i class="fas fa-cog mr-2"></i><span> @Resource.submenuEmailList</span></a>
+                                                <a id="nav2-settings" class="dropdown-item" href="Settings.html"><i class="fas fa-power-off mr-2"></i><span> @Resource.submenuToggleList</span></a>
+                                            </div>
+                                        </li>*@
+                                    <li>
+                                        <a title="" href="@Url.Action("Logout","Login")" onclick="openLoading();">@Resource.logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <ul id="nav" class="nav nav-lg nav-group-right">
+                                <li id="nav-home" class="menu-item">
+                                    <a href="@Url.Action("Index","Home")" onclick="openLoading();"> @Resource.menuHome</a>
+                                </li>
+                                <li id="nav-lan" class="menu-item">
+                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link nav-link-lan dropdown-toggle">
+                                        @if (ViewBag.CulturName != null && ViewBag.CulturName.StartsWith("en"))
+                                        {
+                                            <img id="nav-img" src="@Url.Content("~/Content/images/flags/en.png")" alt="en" data-i18n-title="menu.lan">
+                                        }
+                                        else if (ViewBag.CulturName != null && ViewBag.CulturName.StartsWith("fr"))
+                                        {
+                                            <img id="nav-img" src="@Url.Content("~/Content/images/flags/fr.png")" alt="en" data-i18n-title="menu.lan">
+                                        }
+                                    </a>
+                                    <div class="dropdown-menu dropdown-sous-menu first-plan dropdown-menu-right nav-lan-dropdown" aria-labelledby="navbarDropdownMenuLink3">
+                                        @foreach (var lang in ViewBag.Langues)
+                                        {
+                                            <a class="dropdown-item" id="@lang.Code.Substring(0,2)" href="@Url.Action("SetCulture", "Home", new { area = "", lang = lang.Code })" onclick="openLoading();">
+                                                <img src="@Url.Content(string.Format("../../Content/images/flags/{0}.png", lang.Code.Substring(0,2)))" alt="fr">
+                                            </a>
+                                        }
+                                        @*<a class="dropdown-item" id="fr" href="@Url.Action("SetCulture","Home", new { lang = "fr-FR" })"><img src="@Url.Content("~/Content/images/flags/fr.png")" alt="fr" data-i18n-title="menu.lan-fr"  onclick="openLoading();"></a>
+                                            <a class="dropdown-item" id="en" href="@Url.Action("SetCulture","Home", new { lang = "en-GB" })"><img src="@Url.Content("~/Content/images/flags/en.png")" alt="en" data-i18n-title="menu.lan-en"  onclick="openLoading();"></a>*@
+                                    </div>
+                                </li>
+                                <li id="nav-list" class="menu-logout">
+                                    <a title="logout" href="@Url.Action("Logout","Login")" onclick="openLoading();"><img src="@Url.Content("~/Content/images/Exit.png")" width="60px" height="auto" alt="" /></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </nav>
+</div>

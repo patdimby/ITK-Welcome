@@ -1,0 +1,26 @@
+﻿@model  Intitek.Welcome.UI.ViewModels.Admin.PurgeViewModel
+<div class="modal fade" id="deleteDial" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <span id="modalDelete"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;&nbsp;<span>@Resource.modalTitleDeleteItem</span></span>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="purgeForm" action="@Url.Action("Purge","Purge")">
+                    @Html.HiddenFor(m => m.LimitDateString)
+                    @Html.HiddenFor(m => m.HistoActionsCount)
+                    @Html.HiddenFor(m => m.HistoBatchsCount)
+                    @Html.HiddenFor(m => m.HistoEmailsCount)
+                    @Html.HiddenFor(m => m.HistoUserQcmCount)
+                    <p>@Resource.dialogPurgeMessage</p>
+                    <div class="modal-bouton-action">
+                        <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.buttonNo</a>
+                        <input type="submit" id="modalBtnDelete" class="btn btn-danger btn-wme btn-xs" value="@Resource.buttonYes" onclick="openLoading();"/>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

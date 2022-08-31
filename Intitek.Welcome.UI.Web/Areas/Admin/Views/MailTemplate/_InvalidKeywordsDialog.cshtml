@@ -1,0 +1,15 @@
+﻿<div id="invalidKeywordsModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-delete">
+                <span id="modalKeywords"><i class="fas fa-exclamation-triangle"></i>&nbsp;&nbsp;&nbsp;<span>@Resource.unrecognizedKeywords</span></span>
+            </div>
+            <div class="modal-body">
+                <p>@Html.Raw(Resource.errorKeywordText)<b id="keywords"></b></p>
+                <div class="modal-bouton-action">
+                    <a href="#" class="btn btn-dark btn-wme btn-xs" data-dismiss="modal" rel="modal:close">@Resource.buttonBack</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
