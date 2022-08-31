@@ -387,8 +387,10 @@
                         console.log("error..");
                         var errorMessage = $.trim(xhr.responseText);
                         console.log("errorMessage", errorMessage);                       
-                    });;
-                   $("#FormButton").show();
+                        });
+                    setTimeout(function () {
+                        $("#FormButton").show();
+                    }, 5000);                  
                     event.preventDefault();
                 }                
                
