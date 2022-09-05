@@ -9,7 +9,7 @@
     @Styles.Render("~/Content/documents")
     @Styles.Render("~/Content/modalcss")
     <style type="text/css">
-        
+
         td.actions a {
             margin-right: 8px;
         }
@@ -38,12 +38,14 @@
             min-width: 150px;
             max-width: 150px;
             width: 150px !important;
+            height: 53px;
         }
 
         .col-user-fullname {
-            min-width: 200px;
-            max-width: 200px;
-            width: 200px !important;
+            min-width: 150px;
+            max-width: 150px;
+            width: 150px !important;
+            height: 53px;
         }
 
         .col-user-agency {
@@ -68,16 +70,6 @@
         input[type="date"] {
             position: relative;
         }
-
-        .dropdown-menu.stats {
-            min-width: 230px;
-        }        
-
-        .navbar-brand #logo-white,
-        .navbar-brand #logo-black {
-            padding-top: 5px;
-        }
-
     </style>
 }
 
@@ -85,7 +77,7 @@
     @Html.Partial("_header")
 </div>
 <div class="wrapper">
-    <div id="content">       
+    <div id="content">
         <br />
         <br />
         <br />
@@ -161,22 +153,22 @@
         </div>
     </div>
 </div>
-            @section Scripts{
-                @Scripts.Render("~/bundles/gridmvc")
-                @Scripts.Render("~/bundles/gridmvc-custom-ajax")
-                @Scripts.Render("~/bundles/bootstrap-datepicker")
-                <script>
-                    setTimeout(function () {
-                        $("#nav-home").addClass('current-menu-item');
-                    }, 500);
-                    $('input[type=checkbox][name=tab1-check-all]').change(function () {
-                        $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
-                    });
-                    $('input[type=checkbox][name=tab2-check-all]').change(function () {
-                        $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
-                    });
-                </script>
-                <script>
+@section Scripts{
+    @Scripts.Render("~/bundles/gridmvc")
+    @Scripts.Render("~/bundles/gridmvc-custom-ajax")
+    @Scripts.Render("~/bundles/bootstrap-datepicker")
+    <script>
+        setTimeout(function () {
+            $("#nav-home").addClass('current-menu-item');
+        }, 500);
+        $('input[type=checkbox][name=tab1-check-all]').change(function () {
+            $('input[type=checkbox][name=ck1]').prop('checked', $('input[type=checkbox][name=tab1-check-all]').prop('checked'));
+        });
+        $('input[type=checkbox][name=tab2-check-all]').change(function () {
+            $('input[type=checkbox][name=ck2]').prop('checked', $('input[type=checkbox][name=tab2-check-all]').prop('checked'));
+        });
+    </script>
+    <script>
         var gridName = "usrGrid";
         function changeEntity(entity) {
             openLoading();
@@ -217,7 +209,7 @@
             return false;
             var entity = $("#EntityName").val();
             var actif = $("#Actif").val();
-            var $uri = URI("@Url.Action("ListUser", "Home")").addQuery("AgencyName", agency).addQuery("EntityName", entity).addQuery("Actif", actif);          
+            var $uri = URI("@Url.Action("ListUser", "Home")").addQuery("AgencyName", agency).addQuery("EntityName", entity).addQuery("Actif", actif);
             openLoading();
             document.location = $uri.toString();
             return false;
@@ -353,6 +345,6 @@
             todayHighlight:true,
         });
 
-                </script>
-            }
-            @Html.Partial("_TemplateFiltre")
+    </script>
+}
+@Html.Partial("_TemplateFiltre")
