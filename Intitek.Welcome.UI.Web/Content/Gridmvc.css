@@ -113,7 +113,8 @@ select.grid-filter-type {
     height: 34px !important;
 }
 .col-actions {
-    min-width: 120px;
+    min-width: 60px;
+    max-width: 200px;
 }
 
 .col-actions div[class*=col-] {
