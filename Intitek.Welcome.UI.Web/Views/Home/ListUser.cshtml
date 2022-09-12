@@ -36,20 +36,18 @@
 
         .col-user-name {
             min-width: 210px;
-            max-width: 220px;           
-            min-height:53px;          
+            max-width: 220px; 
         }
 
         .col-user-fullname {
             min-width: 210px;
-            max-width: 220px;           
-            min-height: 53px;           
+            max-width: 220px;               
         }
 
         table.grid-table .grid-header > .grid-header-title {
             display: inline-block;
-            white-space: nowrap;         
-            min-height: 53px;
+            white-space: nowrap;
+            min-width: 100px;
         }
 
         .col-user-agency {
@@ -64,9 +62,6 @@
             width: 450px !important;
         }
 
-        
-
-
         .col-user-email {
             min-width: 190px;
             max-width: 190px;
@@ -76,6 +71,16 @@
         input[type="date"] {
             position: relative;
         }
+
+        .wrapper {
+            /* position: absolute; */
+            z-index: 11;
+        }
+
+        #content.reader-wrapper {
+            z-index: 0;           
+        }
+
     </style>
 }
 
@@ -83,10 +88,8 @@
     @Html.Partial("_header")
 </div>
 <div class="wrapper">
-    <div id="content">
-        <br />
-        <br />
-        <br />
+    <div id="content" class="reader-wrapper">
+        <br /><br /><br /><br />
         <div class="row page-breadcrumb">
             <div class="col">
                 <nav aria-label="breadcrumb" class="pt-2">

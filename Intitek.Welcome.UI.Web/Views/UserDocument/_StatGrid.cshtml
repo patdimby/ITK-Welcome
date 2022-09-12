@@ -41,7 +41,8 @@
                                 <td class="grid-cell" data-name="Name">@elt.Name</td>
                                 <td class="grid-cell nopadding" data-name="Couleur">
                                     <div class="progress-@elt.Couleur">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; background=@elt.Couleur"><span class="value"></span> </div>
+                                        <div class="progress-bar-@elt.Couleur" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100%; background=@elt.Couleur; text-align: center;">
+                                        <span class="value" style="display:table; margin-left: auto; margin-right: auto;">@elt.Sticker</span> </div>
                                     </div>
                                 </td>
                                 @if (!string.IsNullOrEmpty(elt.Label))

@@ -82,8 +82,7 @@ namespace Intitek.Welcome.Service.Back
         public string TeamColor { get; set; } = "white";
         public string Label { get; set; }
         public Labels ColorTrace { get; set; } = new Labels();
-
-
+        public string Sticker { get; set; }
         public string Flag { get; set; }
         public string pX { get; set; }
         public string pY { get; set; }
@@ -227,9 +226,10 @@ namespace Intitek.Welcome.Service.Back
     {
         public ColorLabel()
         {
-
+            //
         }
 
+        public string Sticker { get; set; }
         public string Color { get; set; }
         public string Label { get; set; }
     }
@@ -239,7 +239,7 @@ namespace Intitek.Welcome.Service.Back
         public int X { get; set; } // white 
         public int Y { get; set; } // orange
         public int Z { get; set; } // green
-        public int Length { get; set; }
+        public int Length { get; set; }       
         
 
         public Labels()
@@ -330,6 +330,17 @@ namespace Intitek.Welcome.Service.Back
             var col = new Labels(collabs.Count);
             foreach (var c in collabs)
             {
+                if (c.Email == "hrazafindrabary@groupeastek.mg")
+                {
+                    Console.WriteLine("ok");
+                }
+                var nbDoc = new [] { c.ToRead, c.ToTested, c.ToApproved, c.NotApproved, c.NotTested }.Max();
+                var treated = new[] { c.NotApproved, c.NotTested, c.NotRead }.Max();
+                if (treated > 0)               
+                {
+                    c.Sticker = treated.ToString() + " / " + nbDoc.ToString() + " document";
+                    if(treated > 1) { c.Sticker += "(s)"; }
+                }
                 ToRead += c.ToRead;
                 ToTested += c.ToTested;
                 ToApproved += c.ToApproved;
@@ -402,6 +413,7 @@ namespace Intitek.Welcome.Service.Back
                             if (allSens == elt.Collaborateurs.Count)
                             {
                                 c.TeamColor = "green";
+                                c.Sticker = "";
                                 c.Label = elt.Collaborateurs.Count + "/" + elt.Collaborateurs.Count;
                             }
                             else
@@ -419,10 +431,11 @@ namespace Intitek.Welcome.Service.Back
                             if (arr[0] == arr[1])
                             {
                                 c.TeamColor = "green";
+                                c.Sticker = "";
                             }
                         }                                  
                     }
-                    UserState.Add(new ColorLabel { Color = c.TeamColor, Label = c.Label });
+                    UserState.Add(new ColorLabel { Color = c.TeamColor, Label = c.Label, Sticker=c.Sticker });
                 }
                 
             }            

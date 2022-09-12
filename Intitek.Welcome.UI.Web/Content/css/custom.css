@@ -990,6 +990,21 @@ Progress bar
     background-color: #5969ff;
 }
 
+.progress-bar-orange {
+    background-color: orange;
+    color:white;
+}
+
+.progress-bar-red {
+    background-color: red;
+    color: white;
+}
+
+.progress-bar-green {
+    background-color: green;
+    color: white;
+}
+
 .primary-progress-bar {
     background-color: #5969ff;
 }
@@ -7393,17 +7408,27 @@ input:checked + .slider:before {
 /*LOGO LOGIN DIV*/
 
 .logo-div {
-    /* padding-left: 10%; */
+    padding-left: 10%;
+    padding-top: 2em;
+    text-align: initial;
 }
 
     .logo-div img {
-        /*width: 256px;*/
+        height: 128px;
+        padding: 0px 0px 30px 0px
+    }
+
+.logo-div-dev {
+}
+
+    .logo-div-dev img {
         height: 188px;
-        padding: 0px 0px 30px 0px;
+        padding: 0px 0px 30px 0px
     }
 
 
 /*FORMULAIRE PAR ETAPE*/
+
 
 .menupluriEtape {
     justify-content: center;
@@ -8651,16 +8676,27 @@ table.abm_home_table tfoot {
 }
 
 
+.dropdown-content2 {
+    display: none;
+    background-color: #fff;
+    min-width: 200px;
+    left: 8px;
+    margin: -5px 0 0 0;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);   
+    border-radius: 10px;
+    padding: 10px;
+}
+
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
-    position: absolute;
     background-color: #fff;
     min-width: 200px;
     left: 8px;
     margin: -5px 0 0 0;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+   /* position: absolute;
+    z-index: 1; */
     border-radius: 10px;
     padding: 10px;
 }
@@ -8728,7 +8764,6 @@ select:focus,
 
 .filter-content {
     display: none;
-    position: absolute;
     /* top: 17%;
     left: 10%; */
     text-align: left;
@@ -8737,7 +8772,8 @@ select:focus,
     margin: 5px 0 0 0;
     border: 0.5px solid var(--grey-color);
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    position: absolute;
+    z-index: 1; 
     border-radius: 5px;
     padding: 10px;
 }

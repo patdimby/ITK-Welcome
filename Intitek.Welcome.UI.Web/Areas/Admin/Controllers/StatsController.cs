@@ -946,12 +946,8 @@ namespace Intitek.Welcome.UI.Web.Areas.Admin.Controllers
             }
 
             vm.EmployeesList = new List<IntOption>() { new IntOption() { Value = 0, Text = Resource.EmployeesAll }, new IntOption() { Value = Options.True, Text = Resource.EmployeesActif }, new IntOption() { Value = Options.False, Text = Resource.EmployeesInactif } };
-                       
-
-            statsRequest.StatType = StatsRequestType.Manager;
-                       
-            var stats = _statsService.GetStats(statsRequest, false);
-          
+            statsRequest.StatType = StatsRequestType.Manager;                       
+            var stats = _statsService.GetStats(statsRequest, false);          
             GetStatsResponse reponse = new GetStatsResponse();
             reponse.SetManagerStats(stats);
             vm.SetResponse(reponse);
@@ -970,9 +966,6 @@ namespace Intitek.Welcome.UI.Web.Areas.Admin.Controllers
             reponseRythme.CorrectDataSet();
             reponseRythme.GetDatasets(stats);
             vm.Datasets = reponseRythme.Datasets;
-
-           
-
             return View("Manager", vm);
         }       
       

@@ -198,7 +198,11 @@ namespace Intitek.Welcome.Service.Back
                     var notRead = statsUser.Where(x => !x.IsRead.HasValue).Count();
                     var read = statsUser.Where(x => x.IsRead.HasValue).Count();
                     var notApproved = statsUser.Where(x => (x.Approbation.HasValue && x.Approbation == 1) && !x.IsApproved.HasValue).Count();
-                    var notTested = statsUser.Where(x => (x.Test.HasValue && x.Test == 1) && !x.IsTested.HasValue).Count();                    
+                    var notTested = statsUser.Where(x => (x.Test.HasValue && x.Test == 1) && !x.IsTested.HasValue).Count(); 
+                    if(userID == 10417)
+                    {
+                        System.Console.WriteLine("ok");
+                    }
                     if (notRead > 0) this.NotRead += 1;
                     if (notApproved > 0) this.NotApproved += 1;
                     if (notTested > 0) this.NotTested += 1;
