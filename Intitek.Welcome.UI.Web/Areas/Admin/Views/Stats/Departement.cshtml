@@ -364,7 +364,10 @@
                                 $("#FormButton").append("<div class=\"alert alert-danger fade in\" role=\"alert\"><a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>" + responseHtml + "</div>");
                                 closeLoading();
                             }
-                        });
+                    });
+                    setTimeout(function () {
+                        $("#FormButton").show();
+                    }, 5000);        
                     event.preventDefault();
                 }
             });
