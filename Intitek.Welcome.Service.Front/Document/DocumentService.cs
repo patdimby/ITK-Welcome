@@ -616,6 +616,79 @@ namespace Intitek.Welcome.Service.Front
             var lst = query.ToList();
             return lst;
         }
+
+        public GetUserDocumentResponse GetListDocumentByUser(int UserID, int IDLang = 1)
+        {
+            IntitekUser user = _userrepository.FindBy(UserID);
+            var defaultLangID = _langrepository.FindBy(new Specification<Lang>(lg => lg.ID != IDLang)).FirstOrDefault().ID;
+            var lst = GetListAllDocumentByUser(UserID, IDLang, defaultLangID);
+            var query1 = lst.AsQueryable();
+            var query2 = lst.AsQueryable();
+            var query3 = lst.AsQueryable();
+            GetUserDocumentResponse response = new GetUserDocumentResponse();
+            response.Email = user.Email;
+            response.Id = UserID;
+            //DOCUMENTS NÉCESSITANT UNE ACTION DE VOTRE PART
+            query1 = query1.Where(x => !x.IsNoActionRequired);
+            query1 = query1.Where(x => !(x.IsRead != null
+                   && (x.Approbation == 1 ? x.IsApproved != null : true)
+                   && (x.Test == 1 ? x.IsTested != null : true)
+                  // && (x.Score.HasValue ? x.Score.Value >= x.ScoreMinimal.Value : true)
+                  ));
+            
+            if (user.Type == Constante.UserType_METIER)
+            {
+                query1 = query1.Where(x => x.isMetier);
+            }
+            else if (user.Type == Constante.UserType_STRUCTURE)
+            {
+                query1 = query1.Where(x => x.isStructure);
+            }           
+            response.LstActionDocuments = query1.ToList();
+            response.ActionsCount = response.LstActionDocuments.Count;
+            foreach (DocumentDTO item in response.LstActionDocuments)
+            {
+                if (item.Test.HasValue && item.Test == 1)
+                {
+                    item.UserQcm = this.FindByUserAndIdQcm(item.IdUser, item.ID, item.IdQcm.HasValue ? item.IdQcm.Value : -1, false);
+                }
+            }
+            //DOCUMENTS INFORMATIFS
+            query2 = query2.Where(x => x.IsNoActionRequired);
+            query2 = query2.Where(x => !(x.IsRead != null
+                  && (x.Approbation == 1 ? x.IsApproved != null : true)
+                  && (x.Test == 1 ? x.IsTested != null : true)
+                 ));
+           
+            if (user.Type == Constante.UserType_METIER)
+            {
+                query2 = query2.Where(x => x.isMetier);
+            }
+            else if (user.Type == Constante.UserType_STRUCTURE)
+            {
+                query2 = query2.Where(x => x.isStructure);
+            }          
+            response.NbInformatifDocuments = query2.Count();         
+            response.LstInformatifDocuments = query2.ToList();
+           
+            //DOCUMENTS DÉJÀ LUS ET REVUS
+            query3 = query3.Where(x => (x.IsRead != null
+                  && (x.Approbation == 1 ? x.IsApproved != null : true)
+                  && (x.Test == 1 ? x.IsTested != null : true)
+                 //&& (x.Score.HasValue ? x.Score.Value >= x.ScoreMinimal.Value : true)
+                 ));            
+            response.NbReadDocuments = query3.Count();           
+            response.LstReadDocuments = query3.ToList();
+            foreach (DocumentDTO item in response.LstReadDocuments)
+            {
+                if (item.Test.HasValue && item.Test == 1 && item.IsBoolTested)
+                {
+                    item.UserQcm = this.FindByUserAndIdQcm(item.IdUser, item.ID, item.IdQcm.HasValue ? item.IdQcm.Value : -1, false);
+                }
+            }
+            return response;
+        }
+
         public GetUserDocumentResponse GetAllListDocumentByUser(GetUserDocumentRequest request1, GetUserDocumentRequest request2, GetUserDocumentRequest request3)
         {
             IntitekUser user = _userrepository.FindBy(request1.UserID);

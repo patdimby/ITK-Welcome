@@ -21,5 +21,6 @@ namespace Intitek.Welcome.Service.Front
         //List<UserQcmDTO> FindAllUserQcmSuccess(int idUser, int maxDisplay, int idLang, int defaulltIdLang);
         List<HistoUserQcmDocVersionDTO> FindAllUserQcmSuccess(int idUser, int maxDisplay, int idLang, int defaulltIdLang);
         GetUserDocumentResponse GetAllListDocumentByUser(GetUserDocumentRequest request1, GetUserDocumentRequest request2, GetUserDocumentRequest request3);
+        GetUserDocumentResponse GetListDocumentByUser(int UserID, int IDLang);
     }
 }

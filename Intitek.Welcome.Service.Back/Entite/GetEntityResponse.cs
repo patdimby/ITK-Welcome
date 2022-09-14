@@ -1,4 +1,5 @@
 ﻿using Intitek.Welcome.Domain;
+using Intitek.Welcome.Service.Front;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,6 +88,11 @@ namespace Intitek.Welcome.Service.Back
         public string pX { get; set; }
         public string pY { get; set; }
         public string pZ { get; set; }
+        public GetUserDocumentResponse Response { get; set; } = new GetUserDocumentResponse();
+        public int NbActionDocuments { get; set; }
+        public int NbReadDocuments { get; set; }
+        public int Treated { get; set; }
+        public int ActionsCount { get; set; }
         public UserStats()
         {
             //
@@ -317,8 +323,8 @@ namespace Intitek.Welcome.Service.Back
                 foreach (var stat in reponse.DicoAgencyStats[i].ToList())
                 {
                     var user = new UserStats(_userService.GetUser(stat.UserId), stat.UserId);
-                    user.Copy(stat);
-                   Collaborateurs.Add(user);
+                    user.Copy(stat);                  
+                    Collaborateurs.Add(user);
                 }
             }
             return this;
@@ -330,24 +336,47 @@ namespace Intitek.Welcome.Service.Back
             var col = new Labels(collabs.Count);
             foreach (var c in collabs)
             {
-                if (c.Email == "hrazafindrabary@groupeastek.mg")
+                if(c.Note < 0)
                 {
-                    Console.WriteLine("ok");
+                    c.Sticker = c.NbReadDocuments.ToString() + " / " + c.NbReadDocuments.ToString() + " document";
+                    c.Label = c.NbReadDocuments.ToString() + "/" + c.NbReadDocuments.ToString() + " document";
+                    if(c.NbReadDocuments > 1)
+                    {
+                        c.Label += "s";
+                        c.Sticker += "s";
+                    }                    
                 }
-                var nbDoc = new [] { c.ToRead, c.ToTested, c.ToApproved, c.NotApproved, c.NotTested }.Max();
-                var treated = new[] { c.NotApproved, c.NotTested, c.NotRead }.Max();
-                if (treated > 0)               
+                if (c.Note == 0)
                 {
-                    c.Sticker = treated.ToString() + " / " + nbDoc.ToString() + " document";
-                    if(treated > 1) { c.Sticker += "(s)"; }
+                    c.Sticker = c.NbActionDocuments.ToString() + " / " + (c.NbActionDocuments+c.NbReadDocuments).ToString() + " document";
+                    c.Label = c.NbActionDocuments.ToString() + "/" + (c.NbActionDocuments + c.NbReadDocuments).ToString() + " document";
+                    if (c.NbActionDocuments > 1)
+                    {
+                        c.Label += "s";
+                        c.Sticker += "s";
+                    }
                 }
+                if (c.Note > 0)
+                {
+                    c.Sticker = c.NbActionDocuments.ToString() + " / " + (c.NbActionDocuments).ToString() + " document";
+                    c.Label = c.NbActionDocuments.ToString() + "/" + (c.NbActionDocuments).ToString() + " document";
+                    if (c.NbActionDocuments > 1)
+                    {
+                        c.Label += "s";
+                        c.Sticker += "s";
+                    }
+                }
+              /*  if (c.NbActionDocuments == 0)
+                {
+                    c.Couleur = "green";
+                } */
                 ToRead += c.ToRead;
                 ToTested += c.ToTested;
                 ToApproved += c.ToApproved;
                 NotApproved += c.NotApproved;
                 NotTested += c.NotTested;
                 NotRead += c.NotRead;
-
+                
                 if (c.ToRead == 0)
                 {
                     if (c.NotRead > 0)
@@ -393,14 +422,13 @@ namespace Intitek.Welcome.Service.Back
                 {
                     var count = _userService.GetManagerList(c.UserId).Count;
                     c.Label = "";
-                    c.TeamColor = "white";
+                    c.TeamColor = "white";                 
                     if (count > 0)
                     {
                         var elt = new ManagerStats(_statsService, _userService)
                         {
                             Id = c.UserId
                         };
-
                         elt.InitRequest();
                         if (elt != null)
                         {
@@ -412,8 +440,7 @@ namespace Intitek.Welcome.Service.Back
                             int allSens = elt.Collaborateurs.Where(x => x.Note == 1).Count();
                             if (allSens == elt.Collaborateurs.Count)
                             {
-                                c.TeamColor = "green";
-                                c.Sticker = "";
+                                c.TeamColor = "green";                              
                                 c.Label = elt.Collaborateurs.Count + "/" + elt.Collaborateurs.Count;
                             }
                             else
@@ -430,10 +457,10 @@ namespace Intitek.Welcome.Service.Back
                             var arr = c.Label.Split('/');
                             if (arr[0] == arr[1])
                             {
-                                c.TeamColor = "green";
-                                c.Sticker = "";
+                                c.TeamColor = "green";                                
                             }
-                        }                                  
+                            
+                        }                              
                     }
                     UserState.Add(new ColorLabel { Color = c.TeamColor, Label = c.Label, Sticker=c.Sticker });
                 }

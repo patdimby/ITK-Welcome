@@ -231,9 +231,17 @@ namespace Intitek.Welcome.UI.Web.Controllers
                 Id = userId
             };
             if(_userService.GetManagerList(userId).Count > 0)
-            {
+            {                              
                 _managerStats.InitRequest();
-                _managerStats.GetRetails();
+                foreach (var m in _managerStats.Collaborateurs)
+                {
+                    
+                    m.Response = _docService.GetListDocumentByUser(m.UserId, 1);
+                    m.ActionsCount = m.Response.ActionsCount;
+                    m.NbActionDocuments = m.Response.LstActionDocuments.Count;
+                    m.NbReadDocuments = m.Response.LstReadDocuments.Count;
+                }
+                _managerStats.GetRetails();               
             }
             grid1.IsReadOnly= isReadOnly;
             grid2.IsReadOnly = isReadOnly;

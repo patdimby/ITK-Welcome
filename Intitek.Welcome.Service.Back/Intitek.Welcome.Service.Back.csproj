@@ -670,6 +670,10 @@
       <Project>{d3301d60-456a-4ea4-b6e0-cd64331cb354}</Project>
       <Name>Intitek.Welcome.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Intitek.Welcome.Service.Front\Intitek.Welcome.Service.Front.csproj">
+      <Project>{16E64B9B-0AA4-4388-A36D-428F723C6C54}</Project>
+      <Name>Intitek.Welcome.Service.Front</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Intitek.Welcome.UI.Resources\Intitek.Welcome.UI.Resources.csproj">
       <Project>{EEA5F909-424B-4EB7-BC1E-0F835D26EAA6}</Project>
       <Name>Intitek.Welcome.UI.Resources</Name>
