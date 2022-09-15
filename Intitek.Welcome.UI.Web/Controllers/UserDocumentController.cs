@@ -94,6 +94,7 @@ namespace Intitek.Welcome.UI.Web.Controllers
         public ActionResult Index(int? id=null)
         {
             var userId = GetUserIdConnected();
+            var concerned = GetUserIdConnected();
             var userConnected = GetUserConnected();
             
             //STATISTIQUES           
@@ -183,6 +184,7 @@ namespace Intitek.Welcome.UI.Web.Controllers
             int indexGrid = 1;
             GetUserDocumentRequest initrequest1 = this.GeRequestGrid(userId, indexGrid);
             GetUserDocumentRequest request1 = base.GetGridRequestSession(initrequest1);
+            request1.UserID = userId;
             request1.IDLang = idLang;
             request1.IDDefaultLang = defaulltIdLang ;
             var codeLangDefault = _langService.Get(new GetLangRequest() { Id = defaulltIdLang }).CodeLangue;
@@ -191,6 +193,7 @@ namespace Intitek.Welcome.UI.Web.Controllers
             indexGrid = 2;
             GetUserDocumentRequest initrequest2 = this.GeRequestGrid(userId, indexGrid);
             GetUserDocumentRequest request2 = base.GetGridRequestSession(initrequest2);
+            request2.UserID = userId;
             request2.IDLang = idLang;
             request2.IDDefaultLang = defaulltIdLang;
 
@@ -199,6 +202,7 @@ namespace Intitek.Welcome.UI.Web.Controllers
             GetUserDocumentRequest initrequest3 = this.GeRequestGrid(userId, indexGrid);
             GetUserDocumentRequest request3 = base.GetGridRequestSession(initrequest3);
             request3.IDLang = idLang;
+            request3.UserID = userId;
             request3.IDDefaultLang = defaulltIdLang;
 
             GetUserDocumentResponse response = _docService.GetAllListDocumentByUser(request1, request2, request3);
