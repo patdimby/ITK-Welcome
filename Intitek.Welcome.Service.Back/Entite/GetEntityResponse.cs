@@ -338,7 +338,7 @@ namespace Intitek.Welcome.Service.Back
             {
                 if(c.Note < 0)
                 {
-                    c.Sticker = c.NbReadDocuments.ToString() + " / " + c.NbReadDocuments.ToString() + " document";
+                    c.Sticker = c.NbReadDocuments.ToString() + "/" + c.NbReadDocuments.ToString() + " document";
                     c.Label = c.NbReadDocuments.ToString() + "/" + c.NbReadDocuments.ToString() + " document";
                     if(c.NbReadDocuments > 1)
                     {
@@ -348,7 +348,7 @@ namespace Intitek.Welcome.Service.Back
                 }
                 if (c.Note == 0)
                 {
-                    c.Sticker = c.NbActionDocuments.ToString() + " / " + (c.NbActionDocuments+c.NbReadDocuments).ToString() + " document";
+                    c.Sticker = c.NbActionDocuments.ToString() + "/" + (c.NbActionDocuments+c.NbReadDocuments).ToString() + " document";
                     c.Label = c.NbActionDocuments.ToString() + "/" + (c.NbActionDocuments + c.NbReadDocuments).ToString() + " document";
                     if (c.NbActionDocuments > 1)
                     {
@@ -358,7 +358,7 @@ namespace Intitek.Welcome.Service.Back
                 }
                 if (c.Note > 0)
                 {
-                    c.Sticker = c.NbActionDocuments.ToString() + " / " + (c.NbActionDocuments).ToString() + " document";
+                    c.Sticker = c.NbActionDocuments.ToString() + "/" + (c.NbActionDocuments).ToString() + " document";
                     c.Label = c.NbActionDocuments.ToString() + "/" + (c.NbActionDocuments).ToString() + " document";
                     if (c.NbActionDocuments > 1)
                     {
