@@ -992,16 +992,19 @@ Progress bar
 
 .progress-bar-orange {
     background-color: orange;
-    color:white;
+    text-align: center;
+    color: white;
 }
 
 .progress-bar-red {
     background-color: red;
+    text-align: center;
     color: white;
 }
 
 .progress-bar-green {
     background-color: green;
+    text-align: center;
     color: white;
 }
 
