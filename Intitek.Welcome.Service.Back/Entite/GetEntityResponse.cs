@@ -350,10 +350,17 @@ namespace Intitek.Welcome.Service.Back
                 {
                     c.Sticker = c.NbReadDocuments.ToString() + "/" + (c.NbActionDocuments+c.NbReadDocuments).ToString() + " document";
                     c.Label = c.NbReadDocuments.ToString() + "/" + (c.NbActionDocuments + c.NbReadDocuments).ToString() + " document";
-                    if (c.NbActionDocuments > 1)
+                    if (c.NbReadDocuments > 1)
                     {
                         c.Label += "s";
                         c.Sticker += "s";
+                    }
+                    else
+                    {
+                        if (c.NbReadDocuments == 0)
+                        {
+                            c.Couleur = "red";
+                        }
                     }
                 }
                 if (c.Note > 0)
